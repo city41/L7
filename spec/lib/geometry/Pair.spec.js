@@ -21,7 +21,7 @@ describe("Pair", function() {
 		});
 	});
 
-	describe("mutability", function() {
+	describe("immutability", function() {
 		it("should be immutable", function() {
 			var w = 7, h = 12, pair = new L7.Pair(w,h);
 			pair.width = 44;
@@ -112,6 +112,45 @@ describe("Pair", function() {
 			expect(down).not.toEqual(pair);
 		});
 		
+	});
+
+	describe("operations", function() {
+		it("should add", function() {
+			var p = L7.p(3, 4);
+			var p2 = L7.p(5, 6);
+			var p3 = p.add(p2);
+
+			expect(p3.x).toEqual(p.x + p2.x);
+			expect(p3.y).toEqual(p.y + p2.y);
+
+			var x = 4;
+			var y = 6;
+			var p4 = p.add(x, y);
+
+			expect(p4.x).toEqual(p.x + x);
+			expect(p4.y).toEqual(p.y + y);
+		});
+
+		it("should subtract", function() {
+			var p = L7.p(3, 4);
+			var p2 = L7.p(5, 6);
+			var p3 = p.subtract(p2);
+
+			expect(p3.x).toEqual(p.x - p2.x);
+			expect(p3.y).toEqual(p.y - p2.y);
+
+			var x = 4;
+			var y = 6;
+			var p4 = p.subtract(x, y);
+
+			expect(p4.x).toEqual(p.x - x);
+			expect(p4.y).toEqual(p.y - y);
+
+			var p5 = p.delta(p3);
+
+			expect(p5.x).toEqual(p.x - p3.x);
+			expect(p5.y).toEqual(p.y - p3.y);
+		});
 	});
 
 	describe("utility functions", function() {
