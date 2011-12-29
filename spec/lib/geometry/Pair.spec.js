@@ -78,6 +78,42 @@ describe("Pair", function() {
 		});
 	});
 
+	describe("traversal", function() {
+		it("should go up", function() {
+			var pair = L7.p(1,2);
+			var up = pair.up();
+
+			expect(up.x).toEqual(pair.x);
+			expect(up.y).toEqual(pair.y - 1);
+			expect(up).not.toEqual(pair);
+		});
+		it("should go right", function() {
+			var pair = L7.p(1,2);
+			var right = pair.right();
+
+			expect(right.x).toEqual(pair.x + 1);
+			expect(right.y).toEqual(pair.y);
+			expect(right).not.toEqual(pair);
+		});
+		it("should go left", function() {
+			var pair = L7.p(1,2);
+			var left = pair.left();
+
+			expect(left.x).toEqual(pair.x - 1);
+			expect(left.y).toEqual(pair.y);
+			expect(left).not.toEqual(pair);
+		});
+		it("should go down", function() {
+			var pair = L7.p(1,2);
+			var down = pair.down();
+
+			expect(down.x).toEqual(pair.x);
+			expect(down.y).toEqual(pair.y + 1);
+			expect(down).not.toEqual(pair);
+		});
+		
+	});
+
 	describe("utility functions", function() {
 		it("L7.s should create a pair object", function() {
 			var w = 44;
