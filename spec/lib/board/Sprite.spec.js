@@ -6,6 +6,12 @@ describe("Sprite", function() {
 
 			expect(sprite.color).toEqual(color);
 		});
+		it("should be mutable in color", function() {
+			var sprite = new L7.Sprite('red');
+			expect(sprite.color).toBe('red');
+			sprite.color = 'orange';
+			expect(sprite.color).toBe('orange');
+		});
 	});
 
 	describe("render", function() {
