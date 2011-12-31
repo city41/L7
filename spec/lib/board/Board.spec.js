@@ -79,5 +79,77 @@ describe("Board", function() {
 		});
 	});
 
+	describe("actor operations", function() {
+		it("should indicate if an actor is out of bounds", function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var actor = {
+				pieces: [
+					{ position: L7.p(0, 0) },
+					{ position: L7.p(1, 2) },
+					{ position: L7.p(4, 2) }
+				]
+			};
+
+			expect(board.isOutOfBounds(actor)).toBe(true);
+
+			var actor2 = {
+				pieces: [
+					{ position: L7.p(0, 0) },
+					{ position: L7.p(1, 1) },
+					{ position: L7.p(2, 2) }
+				]
+			};
+
+			expect(board.isOutOfBounds(actor2)).toBe(false);
+		});
+
+		it("should add an actor properly", function() {
+			var board = new L7.Board({ width: 2, height: 2 });
+
+			var actor = {
+				pieces: [
+					{ position: L7.p(1, 1) },
+					{ position: L7.p(0, 0) }
+				]
+			};
+
+			board.addActor(actor);
+
+			expect(board.actors.length).toBe(1);
+			
+			actor.pieces.forEach(function(piece) {
+				var tile = board.tileAt(piece.position);
+				expect(tile.inhabitants.indexOf(piece) > -1 ).toBe(true);
+			});
+
+			expect(actor.board).toEqual(board);
+		});
+
+		it("should move an actor", function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var actor = {
+				pieces: [
+					{ position: L7.p(1,1) }
+				]
+			};
+
+			board.moveActor({
+				actor: actor,
+				delta: L7.p(1,1)
+			});
+
+			expect(actor.pieces[0].position.x).toEqual(2);
+			expect(actor.pieces[0].position.y).toEqual(2);
+		});
+		
+	});
 });
 
