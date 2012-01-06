@@ -24,9 +24,41 @@ describe("Actor", function() {
 
 			expect(a.position.x).toEqual(0);
 			expect(a.position.y).toEqual(0);
-			expect(a.sprite).toBeDefined();
-			expect(a.sprite.length > 0).toBe(true);
+			expect(a.color).toBeDefined();
+			expect(a.color.length > 0).toBe(true);
 			expect(a.shape[0][0]).toEqual(L7.Actor.ANCHOR);
+		});
+
+		it("should create pieces based on the provided shape", function() {
+			debugger;
+			var color = 'red';
+			var a = new L7.Actor({
+				shape: [
+					[1, 1],
+					[1, 5]
+				],
+				position: L7.p(2, 2),
+				color: color
+			});
+
+			expect(a.pieces.length).toEqual(4);
+
+			expect(a.pieces[0].position.x).toEqual(1);
+			expect(a.pieces[0].position.y).toEqual(1);
+
+			expect(a.pieces[1].position.x).toEqual(2);
+			expect(a.pieces[1].position.y).toEqual(1);
+
+			expect(a.pieces[2].position.x).toEqual(1);
+			expect(a.pieces[2].position.y).toEqual(2);
+
+			expect(a.pieces[3].position.x).toEqual(2);
+			expect(a.pieces[3].position.y).toEqual(2);
+			expect(a.pieces[3].isAnchor).toBe(true);
+
+			a.pieces.forEach(function(piece) {
+				expect(piece.color).toEqual(color);
+			});
 		});
 	});
 });

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Invader demo</title>
+
+	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
+	<script type="text/javascript" src="../lib/bootstrap.js"></script>
+  <script type="text/javascript" src="../lib/util/Array.js"></script>
+	<script type="text/javascript" src="../lib/geometry/Pair.js"></script>
+	<script type="text/javascript" src="../lib/board/Piece.js"></script>
+	<script type="text/javascript" src="../lib/board/Tile.js"></script>
+	<script type="text/javascript" src="../lib/board/Row.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/kernel/Kernel.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		var a = new L7.Actor({
+			keyInputs: {
+				r: {
+					repeat: true,
+					handler: function() {
+						this.rotate();
+					}
+				},
+				left: {
+					repeat: true,
+					handler: function() {
+						this.left(1);
+					}
+				},
+				right: {
+					repeat: true,
+					handler: function() {
+						this.right(1);
+					}
+				},
+				up: {
+					repeat: true,
+					handler: function() {
+						this.up(1);
+					}
+				},
+				down: {
+					repeat: true,
+					handler: function() {
+						this.down(1);
+					}
+				}
+			},
+			position: L7.p(9, 6),
+			shape: [
+				[0,0,1,0,0,0,0,0,1,0,0],
+				[0,0,0,1,0,0,0,1,0,0,0],
+				[0,0,1,1,1,1,1,1,1,0,0],
+				[0,1,1,0,1,1,1,0,1,1,0],
+				[1,1,1,1,1,5,1,1,1,1,1],
+				[1,0,1,1,1,1,1,1,1,0,1],
+				[1,0,1,0,0,0,0,0,1,0,1],
+				[0,0,0,1,1,0,1,1,0,0,0]
+			],
+			color: 'red',
+			whenOutOfBounds: function() {
+				this.goBack();
+			}
+		});
+
+		var board = new L7.Board({
+			width: 22,
+			height: 20,
+			borderWidth: 6,
+			tileSize: 20
+		});
+
+		var c = ['#003388', '#223499', '#000055'];
+
+		board.tiles.forEach(function(tile, index) {
+			tile.color = c[index % c.length];
+		});
+
+		board.addActor(a);
+
+		new L7.Kernel(board).go();
+	</script>
+</body>
+</html>
+
+
+

@@ -115,6 +115,15 @@ describe("Pair", function() {
 	});
 
 	describe("operations", function() {
+		it("should clone", function() {
+			var p1 = L7.p(3, 4);
+			var p2 = p1.clone();
+
+			expect(p2.x).toEqual(p1.x);
+			expect(p2.y).toEqual(p1.y);
+			expect(p1 === p2).toBe(false);
+		});
+
 		it("should add", function() {
 			var p = L7.p(3, 4);
 			var p2 = L7.p(5, 6);
@@ -129,6 +138,16 @@ describe("Pair", function() {
 
 			expect(p4.x).toEqual(p.x + x);
 			expect(p4.y).toEqual(p.y + y);
+		});
+
+		it("should add when the other pair has a zero", function() {
+			var p = L7.p(2, 3);
+			var p2 = L7.p(0, 4);
+
+			var p3 = p.add(p2);
+
+			expect(p3.x).toEqual(2);
+			expect(p3.y).toEqual(7);
 		});
 
 		it("should subtract", function() {
@@ -150,6 +169,16 @@ describe("Pair", function() {
 
 			expect(p5.x).toEqual(p.x - p3.x);
 			expect(p5.y).toEqual(p.y - p3.y);
+		});
+
+		it("should subtract when the other pair has a zero", function() {
+			var p = L7.p(3, 4);
+			var p2 = L7.p(5, 0);
+			var p3 = p.subtract(p2);
+
+			expect(p3.x).toEqual(p.x - p2.x);
+			expect(p3.y).toEqual(p.y - p2.y);
+
 		});
 	});
 

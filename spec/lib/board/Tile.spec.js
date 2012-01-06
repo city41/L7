@@ -154,7 +154,7 @@ describe("Tile", function() {
 	});
 
 	describe("rendering", function() {
-		it("should not render if it doesnt have a sprite", function() {
+		it("should not render if it doesnt have a color and no inhabitants", function() {
 			var context = document.createElement('canvas').getContext('2d');
 
 			var tile = new L7.Tile({
@@ -164,18 +164,34 @@ describe("Tile", function() {
 
 			spyOn(context, 'fillRect');
 
-			tile.render(context);
+			var tileSize = 3;
+			tile.render(0, context, tileSize);
 
 			expect(context.fillRect).not.toHaveBeenCalled();
 		});
 
-		it("Should tell its inhabitants to render", function() {
+		it("should render if it does have a color but no inhabitants", function() {
+			var context = document.createElement('canvas').getContext('2d');
+
+			var tile = new L7.Tile({
+				x: 0,
+				y: 0,
+				color: 'orange'
+			});
+
+			var tileSize = 3;
+			spyOn(context, 'fillRect');
+
+			tile.render(0, context, tileSize);
+
+			expect(context.fillRect).toHaveBeenCalled();
+		});
+
+		it("should render its inhabitants", function() {
 			var passedContext;
 
 			var inhabitant = {
-				render: function(context) {
-					passedContext = context;
-				}
+				color: 'blue'
 			};
 
 			var tile = new L7.Tile({
@@ -184,10 +200,14 @@ describe("Tile", function() {
 				inhabitants: [inhabitant]
 			});
 
-			var context = {};
-			tile.render(context);
+			var context = document.createElement('canvas').getContext('2d');
 
-			expect(passedContext).toEqual(context);
+			spyOn(context, 'fillRect');
+
+			var tileSize = 4;
+			tile.render(0, context, tileSize);
+
+			expect(context.fillRect).toHaveBeenCalled();
 		});
 	});
 
