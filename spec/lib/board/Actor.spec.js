@@ -61,4 +61,156 @@ describe("Actor", function() {
 			});
 		});
 	});
+
+	describe("movement", function() {
+		it("should goTo the specified place", function() {
+			var initialPosition = L7.p(1,1);
+
+			var a = new L7.Actor({
+				position: initialPosition
+			});
+
+			var board = {
+				moveActor: function() {}
+			};
+
+			a.board = board;
+
+			spyOn(board, 'moveActor');
+
+			var newPosition = L7.p(3,3);
+			a.goTo(newPosition);
+
+			expect(a.position.equals(newPosition)).toBe(true);
+			expect(a._lastPosition.equals(initialPosition)).toBe(true);
+			expect(board.moveActor).toHaveBeenCalled();
+		});
+
+		it("should invoke onGoTo and proceed if true is returned", function() {
+			var passedCurPiecePos, passedProposedPiecePos;
+			var initialPosition = L7.p(1,1);
+
+			var a = new L7.Actor({
+				position: initialPosition,
+				onGoTo: function(curPiecePos, proposedPiecePos) {
+					passedCurPiecePos = curPiecePos;
+					passedProposedPiecePos = proposedPiecePos;
+					return true;
+				}
+			});
+
+			var newPosition = L7.p(3,3);
+			a.goTo(newPosition);
+
+			expect(passedCurPiecePos[0].x).toEqual(initialPosition.x);
+			expect(passedCurPiecePos[0].y).toEqual(initialPosition.y);
+
+			expect(passedProposedPiecePos[0].x).toEqual(newPosition.x);
+			expect(passedProposedPiecePos[0].y).toEqual(newPosition.y);
+
+			expect(a.position).toEqual(newPosition);
+		});
+
+		it("should not move if onGoTo returns false", function() {
+			var initialPosition = L7.p(1,1);
+
+			var a = new L7.Actor({
+				position: initialPosition,
+				onGoTo: function() {
+					return false;
+				}
+			});
+
+			var newPosition = L7.p(3,3);
+			a.goTo(newPosition);
+
+			expect(a.position).toEqual(initialPosition);
+		});
+
+		it("should invoke onOutOfBounds if it went out of bounds", function() {
+			var a = new L7.Actor({
+				onOutOfBounds: function() {}
+			});
+
+			spyOn(a, 'onOutOfBounds');
+
+			var board = {
+				isOutOfBounds: function() {
+					return true;
+				},
+				moveActor: function() {}
+			};
+
+			a.board = board;
+
+			a.goTo(L7.p(2,2));
+
+			expect(a.onOutOfBounds).toHaveBeenCalled();
+		});
+
+		it("should go left", function() {
+			var initialPosition = L7.p(12,2);
+			var a = new L7.Actor({
+				position: initialPosition
+			});
+
+			a.left(3);
+
+			expect(a.position.x).toEqual(initialPosition.x - 3);
+			expect(a.position.y).toEqual(initialPosition.y);
+		});
+	
+		it("should go right", function() {
+			var initialPosition = L7.p(12,2);
+			var a = new L7.Actor({
+				position: initialPosition
+			});
+
+			a.right(3);
+
+			expect(a.position.x).toEqual(initialPosition.x + 3);
+			expect(a.position.y).toEqual(initialPosition.y);
+		});
+
+		it("should go up", function() {
+			var initialPosition = L7.p(12,20);
+			var a = new L7.Actor({
+				position: initialPosition
+			});
+
+			a.up(3);
+
+			expect(a.position.x).toEqual(initialPosition.x);
+			expect(a.position.y).toEqual(initialPosition.y - 3);
+		});
+
+		it("should go down", function() {
+			var initialPosition = L7.p(12,2);
+			var a = new L7.Actor({
+				position: initialPosition
+			});
+
+			a.down(3);
+
+			expect(a.position.x).toEqual(initialPosition.x);
+			expect(a.position.y).toEqual(initialPosition.y + 3);
+		});
+
+		it("should go back", function() {
+			var initialPosition = L7.p(12,2);
+			var a = new L7.Actor({
+				position: initialPosition
+			});
+
+			a.down(3);
+
+			expect(a.position.x).toEqual(initialPosition.x);
+			expect(a.position.y).toEqual(initialPosition.y + 3);
+
+			a.goBack();
+
+			expect(a.position.y).toEqual(initialPosition.y);
+		});
+
+	});
 });

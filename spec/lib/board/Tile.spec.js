@@ -153,64 +153,6 @@ describe("Tile", function() {
 		});
 	});
 
-	describe("rendering", function() {
-		it("should not render if it doesnt have a color and no inhabitants", function() {
-			var context = document.createElement('canvas').getContext('2d');
-
-			var tile = new L7.Tile({
-				x: 0,
-				y: 0
-			});
-
-			spyOn(context, 'fillRect');
-
-			var tileSize = 3;
-			tile.render(0, context, tileSize);
-
-			expect(context.fillRect).not.toHaveBeenCalled();
-		});
-
-		it("should render if it does have a color but no inhabitants", function() {
-			var context = document.createElement('canvas').getContext('2d');
-
-			var tile = new L7.Tile({
-				x: 0,
-				y: 0,
-				color: 'orange'
-			});
-
-			var tileSize = 3;
-			spyOn(context, 'fillRect');
-
-			tile.render(0, context, tileSize);
-
-			expect(context.fillRect).toHaveBeenCalled();
-		});
-
-		it("should render its inhabitants", function() {
-			var passedContext;
-
-			var inhabitant = {
-				color: 'blue'
-			};
-
-			var tile = new L7.Tile({
-				x: 0,
-				y: 0,
-				inhabitants: [inhabitant]
-			});
-
-			var context = document.createElement('canvas').getContext('2d');
-
-			spyOn(context, 'fillRect');
-
-			var tileSize = 4;
-			tile.render(0, context, tileSize);
-
-			expect(context.fillRect).toHaveBeenCalled();
-		});
-	});
-
 	describe("traversal", function() {
 		it("should return nothing if it has no board", function() {
 			var tile = new L7.Tile({

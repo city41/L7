@@ -14,10 +14,13 @@
 	<script type="text/javascript" src="../lib/board/Board.js"></script>
 	<script type="text/javascript" src="../lib/board/Actor.js"></script>
 	<script type="text/javascript" src="../lib/kernel/Kernel.js"></script>
+	<script type="text/javascript" src="../lib/kernel/Keys.js"></script>
 
 </head>
 <body>
 	<script type="text/javascript">
+		L7.Keys.init();
+
 		var a = new L7.Actor({
 			keyInputs: {
 				r: {
@@ -63,16 +66,18 @@
 				[0,0,0,1,1,0,1,1,0,0,0]
 			],
 			color: 'red',
-			whenOutOfBounds: function() {
+			onOutOfBounds: function() {
 				this.goBack();
 			}
 		});
 
+		window.mya = a;
+
 		var board = new L7.Board({
-			width: 22,
-			height: 20,
-			borderWidth: 6,
-			tileSize: 20
+			width: 90,
+			height: 60,
+			borderWidth: 2,
+			tileSize: 9
 		});
 
 		var c = ['#003388', '#223499', '#000055'];

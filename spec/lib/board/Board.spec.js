@@ -197,20 +197,20 @@ describe("Board", function() {
 	});
 
 	describe('rendering', function() {
-		it('should have each tile render', function() {
+		it('should ask each tile for its color', function() {
 			var board = new L7.Board({
 				width: 2,
 				height: 2
 			});
 
 			board.tiles.forEach(function(tile) {
-				spyOn(tile, 'render');
+				spyOn(tile, 'getColor');
 			});
 
 			board.render(0);
 
 			board.tiles.forEach(function(tile) {
-				expect(tile.render).toHaveBeenCalled();
+				expect(tile.getColor).toHaveBeenCalled();
 			});
 		});
 	});
