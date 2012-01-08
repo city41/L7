@@ -23,10 +23,10 @@
 		L7.Keys.init();
 
 		var board = new L7.Board({
-			width: 90,
-			height: 60,
+			width: 70,
+			height: 40,
 			borderWidth: 2,
-			tileSize: 10
+			tileSize: 12
 		});
 
 		var c = ['#003388', '#223499', '#000055', 'black'];
@@ -40,10 +40,7 @@
 		return Math.round(Math.random() * max);
 	}
 
-	for(var i = 4; i < board.width; i += 9) {
-	for(var k = 1; k < board.height; k += 8) {
-		var a = new L7.Actor({
-			keyInputs: {
+	var ki = {
 				r: {
 					repeat: true,
 					handler: function() {
@@ -74,7 +71,12 @@
 						this.down(1);
 					}
 				}
-			},
+			};
+
+	for(var i = 4; i < board.width; i += 9) {
+	for(var k = 1; k < board.height; k += 8) {
+		var a = new L7.Actor({
+			keyInputs: (i === 4 && k === 1) ? ki : undefined, 
 			position: L7.p(i, k),
 			shape: [
 				[0,0,1,0,0,0,0,0,1,0,0],
