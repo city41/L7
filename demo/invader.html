@@ -30,17 +30,18 @@
 		});
 
 		var c = ['#003388', '#223499', '#000055', 'black'];
+			
 
 		board.tiles.forEach(function(tile, index) {
-			tile.color = c[index % c.length];
+			tile.color = L7.Color.toArray(c[index % c.length]);
 		});
 	
 	function rand(max) {
 		return Math.round(Math.random() * max);
 	}
 
-	for(var i = 0; i < board.width; i += 9) {
-	for(var k = 0; k < board.height; k += 8) {
+	for(var i = 4; i < board.width; i += 9) {
+	for(var k = 1; k < board.height; k += 8) {
 		var a = new L7.Actor({
 			keyInputs: {
 				r: {
@@ -85,9 +86,9 @@
 				[1,0,1,0,0,0,0,0,1,0,1],
 				[0,0,0,1,1,0,1,1,0,0,0]
 			],
-			color: 'rgba(255, 0, 0, .5)',
+			/*color: 'rgba(255, 0, 0, .5)',*/
 			/*color: '#FF0000',*/
-			/*color: [255, 0, 0, 255],*/
+			color: [k * 4, i * 3, 0, 128],
 			/*onOutOfBounds: function() {*/
 				/*this.goBack();*/
 			/*}*/
