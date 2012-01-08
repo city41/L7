@@ -54,7 +54,7 @@ describe("Color", function() {
 
 	describe('conversion', function() {
 		it('should return an array if it is already one', function() {
-			var array = [200, 100, 34, 123];
+			var array = [200, 100, 34, .5];
 
 			var asArray = L7.Color.toArray(array);
 			expect(asArray).toEqual(array);
@@ -69,7 +69,7 @@ describe("Color", function() {
 			expect(asArray[0]).toBe(255);
 			expect(asArray[1]).toBe(parseInt('DD', 16));
 			expect(asArray[2]).toBe(parseInt('CC', 16));
-			expect(asArray[3]).toBe(255);
+			expect(asArray[3]).toBe(1);
 		});
 
 		it('should convert a built in into array', function() {
@@ -81,7 +81,7 @@ describe("Color", function() {
 			expect(asArray[0]).toBe(255);
 			expect(asArray[1]).toBe(0);
 			expect(asArray[2]).toBe(0);
-			expect(asArray[3]).toBe(255);
+			expect(asArray[3]).toBe(1);
 		});
 
 		it('should convert an rgb string into an array', function() {
@@ -94,7 +94,7 @@ describe("Color", function() {
 			expect(asArray[0]).toBe(r);
 			expect(asArray[1]).toBe(g);
 			expect(asArray[2]).toBe(b);
-			expect(asArray[3]).toBe(255);
+			expect(asArray[3]).toBe(1);
 		});
 
 		it('should convert an rgba string into an array', function() {
@@ -107,7 +107,7 @@ describe("Color", function() {
 			expect(asArray[0]).toBe(r);
 			expect(asArray[1]).toBe(g);
 			expect(asArray[2]).toBe(b);
-			expect(asArray[3]).toBe(Math.round(255 * a));
+			expect(asArray[3]).toBe(a);
 		});
 	});
 
@@ -115,7 +115,7 @@ describe("Color", function() {
 		it('should composite two colors', function() {
 			var c1 = 'rgba(255, 0, 0, 1)';
 			var c2 = 'rgba(0, 0, 255, .5)';
-			var expected = [127, 0, 128, 255];
+			var expected = [128, 0, 128, 1];
 
 			var composited = L7.Color.composite(c1, c2);
 
