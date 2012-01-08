@@ -30,7 +30,6 @@ describe("Actor", function() {
 		});
 
 		it("should create pieces based on the provided shape", function() {
-			debugger;
 			var color = 'red';
 			var a = new L7.Actor({
 				shape: [

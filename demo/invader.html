@@ -15,12 +15,32 @@
 	<script type="text/javascript" src="../lib/board/Actor.js"></script>
 	<script type="text/javascript" src="../lib/kernel/Kernel.js"></script>
 	<script type="text/javascript" src="../lib/kernel/Keys.js"></script>
+	<script type="text/javascript" src="../lib/color/Color.js"></script>
 
 </head>
 <body>
 	<script type="text/javascript">
 		L7.Keys.init();
 
+		var board = new L7.Board({
+			width: 90,
+			height: 60,
+			borderWidth: 2,
+			tileSize: 10
+		});
+
+		var c = ['#003388', '#223499', '#000055', 'black'];
+
+		board.tiles.forEach(function(tile, index) {
+			tile.color = c[index % c.length];
+		});
+	
+	function rand(max) {
+		return Math.round(Math.random() * max);
+	}
+
+	for(var i = 0; i < board.width; i += 9) {
+	for(var k = 0; k < board.height; k += 8) {
 		var a = new L7.Actor({
 			keyInputs: {
 				r: {
@@ -54,7 +74,7 @@
 					}
 				}
 			},
-			position: L7.p(9, 6),
+			position: L7.p(i, k),
 			shape: [
 				[0,0,1,0,0,0,0,0,1,0,0],
 				[0,0,0,1,0,0,0,1,0,0,0],
@@ -65,28 +85,18 @@
 				[1,0,1,0,0,0,0,0,1,0,1],
 				[0,0,0,1,1,0,1,1,0,0,0]
 			],
-			color: 'red',
-			onOutOfBounds: function() {
-				this.goBack();
-			}
+			color: 'rgba(255, 0, 0, .5)',
+			/*color: '#FF0000',*/
+			/*color: [255, 0, 0, 255],*/
+			/*onOutOfBounds: function() {*/
+				/*this.goBack();*/
+			/*}*/
 		});
 
-		window.mya = a;
-
-		var board = new L7.Board({
-			width: 91,
-			height: 60,
-			borderWidth: 2,
-			tileSize: 10
-		});
-
-		var c = ['#003388', '#223499', '#000055'];
-
-		board.tiles.forEach(function(tile, index) {
-			tile.color = c[index % c.length];
-		});
 
 		board.addActor(a);
+		}
+		}
 
 		new L7.Kernel(board).go();
 	</script>
