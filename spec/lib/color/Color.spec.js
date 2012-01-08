@@ -117,7 +117,7 @@ describe("Color", function() {
 			var c2 = 'rgba(0, 0, 255, .5)';
 			var expected = [127, 0, 128, 255];
 
-			var composited = L7.Color.composite([c1, c2]);
+			var composited = L7.Color.composite(c1, c2);
 
 			expect(expected[0]).toEqual(composited[0]);
 			expect(expected[1]).toEqual(composited[1]);

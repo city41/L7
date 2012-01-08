@@ -1,0 +1,26 @@
+
+		var board = new L7.Board({
+			width: 90,
+			height: 60,
+			borderWidth: 2,
+			tileSize: 10
+		});
+
+rainbow
+-------
+manual: 20.5
+auto: 19.7
+
+
+red
+----
+manual: 25.7
+auto: 20.5
+
+
+four colors
+-----
+manual: 20.3
+auto: 12.1
+
+
