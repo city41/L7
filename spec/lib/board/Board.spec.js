@@ -41,15 +41,13 @@ describe("Board", function() {
 			});
 
 			for(var i = 0; i < height; ++i) {
-				expect(board.row(i)).toBeDefined();
 				for(var k = 0; k < width; ++k) {
-					var tile = board.row(i).at(k);
+					var tile = board.tileAt(L7.p(i, k));
 					expect(tile).toBeDefined();
 				}
 			}
 
-			expect(board.row(30)).toBeUndefined();
-			expect(board.row(0).at(50)).toBeUndefined();
+			expect(board.tileAt(L7.p(5, 6))).toBeFalsy();
 
 			expect(board.tiles.length).toEqual(width * height);
 		});
@@ -82,23 +80,7 @@ describe("Board", function() {
 			expect(tile).toBeDefined();
 
 			var tile2 = board.tileAt(L7.p(20, 0));
-			expect(tile2).toBeUndefined();
-		});
-
-		it("should return rows with each", function() {
-			var width = 3, height = 2;
-			var board = new L7.Board({ width: width, height: height });
-			var expectedTileCount = width * height;
-
-			var count = 0;
-			board.each(function(row) {
-				row.each(function(tile) {
-					expect(tile).toBeDefined();
-					++count;
-				});
-			});
-
-			expect(count).toEqual(expectedTileCount);
+			expect(tile2).toBeFalsy();
 		});
 	});
 
