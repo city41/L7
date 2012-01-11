@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="../lib/board/Piece.js"></script>
 	<script type="text/javascript" src="../lib/board/Tile.js"></script>
 	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
 	<script type="text/javascript" src="../lib/board/Actor.js"></script>
 	<script type="text/javascript" src="../lib/kernel/Kernel.js"></script>
 	<script type="text/javascript" src="../lib/kernel/Keys.js"></script>
@@ -27,8 +28,13 @@
 			height: 50,
 			borderWidth: 3,
 			tileSize: 10,
-			container: document.getElementById('container')
+			container: document.getElementById('container'),
+			viewportWidth: 30,
+			viewportHeight: 20,
+			viewportAnchor: L7.p(4, 4)
 		});
+
+		window.board = board;
 
 		var c = ['#003388', '#223499', '#000055', 'black'];
 			
@@ -101,6 +107,17 @@
 		board.addActor(a);
 		}
 		}
+
+		board.addActor(new L7.Actor({
+			timers: {
+				scroll: {
+					handler: function() {
+						board.scrollY(1)
+					},
+					interval: 1000
+				}
+			}
+		}));
 
 		new L7.Kernel(board).go();
 	</script>
