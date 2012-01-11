@@ -178,7 +178,22 @@ describe("Pair", function() {
 
 			expect(p3.x).toEqual(p.x - p2.x);
 			expect(p3.y).toEqual(p.y - p2.y);
+		});
 
+		it('should negate', function() {
+			var p = L7.p(3, 0);
+			var n = p.negate();
+
+			expect(n.x).toEqual(-p.x);
+			expect(n.y).toEqual(-p.y);
+		});
+		it('should multiply', function() {
+			var p = L7.p(3, 4);
+			var scale = 3;
+			var s = p.multiply(scale);
+
+			expect(s.x).toEqual(p.x * scale);
+			expect(s.y).toEqual(p.y * scale);
 		});
 	});
 

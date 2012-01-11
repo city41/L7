@@ -212,4 +212,75 @@ describe("Actor", function() {
 		});
 
 	});
+
+	describe('timers', function() {
+		it('should not invoke a timer if it is not enabled', function() {
+			var actor = new L7.Actor({
+				timers: {
+					mytimer: {
+						enabled: false,
+						interval: 50,
+						handler: function() {
+						}
+					}
+				}
+			});
+
+			spyOn(actor.timers.mytimer, 'handler');
+
+			actor.update(100);
+
+			expect(actor.timers.mytimer.handler).not.toHaveBeenCalled();
+
+			actor.timers.mytimer.enabled = function() { return false; }
+
+			actor.update(100);
+
+			expect(actor.timers.mytimer.handler).not.toHaveBeenCalled();
+		});
+
+		it('should invoke a timers handler if it has no enabled property', function() {
+			var actor = new L7.Actor({
+				timers: {
+					mytimer: {
+						interval: 50,
+						handler: function() {
+						}
+					}
+				}
+			});
+
+			spyOn(actor.timers.mytimer, 'handler');
+
+			actor.update(100);
+
+			expect(actor.timers.mytimer.handler).toHaveBeenCalled();
+		});
+
+		it('should invoke a timer if its enabled is (or returns) true', function() {
+			var actor = new L7.Actor({
+				timers: {
+					mytimer: {
+						enabled: true,
+						interval: 50,
+						handler: function() {
+						}
+					}
+				}
+			});
+
+			spyOn(actor.timers.mytimer, 'handler');
+
+			actor.update(100);
+
+			expect(actor.timers.mytimer.handler).toHaveBeenCalled();
+
+			actor.timers.mytimer.enabled = function() { return true; }
+
+			actor.update(100);
+
+			expect(actor.timers.mytimer.handler).toHaveBeenCalled();
+
+		});
+	});
 });

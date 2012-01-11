@@ -8,3 +8,15 @@
 
 
 
+
+
+
+
+
+TESTS NEEDED
+----- 
+Board
+=====
+removeActor
+row
+column
