@@ -6,17 +6,10 @@
 
 -- text/number tiles
 
+-- multiple boards
+	-- transitions
 
 
 
 
 
-
-
-TESTS NEEDED
------ 
-Board
-=====
-removeActor
-row
-column
