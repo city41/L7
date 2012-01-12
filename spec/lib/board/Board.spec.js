@@ -183,7 +183,7 @@ describe("Board", function() {
 			expect(board.isOutOfBounds(actor2)).toBe(false);
 		});
 
-		it("should add an actor properly", function() {
+		it("should add an actor", function() {
 			var board = new L7.Board({
 				width: 2,
 				height: 2
@@ -208,6 +208,44 @@ describe("Board", function() {
 			});
 
 			expect(actor.board).toEqual(board);
+		});
+
+		it('should remove an actor', function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
+
+			var actor = {
+				pieces: [{
+					position: L7.p(1, 1)
+				},
+				{
+					position: L7.p(0, 0)
+				}]
+			};
+
+			board.addActor(actor);
+
+			expect(board.actors.length).toBe(1);
+
+			actor.pieces.forEach(function(piece) {
+				var tile = board.tileAt(piece.position);
+				expect(tile.inhabitants.indexOf(piece) > -1).toBe(true);
+			});
+
+			expect(actor.board).toEqual(board);
+
+			board.removeActor(actor);
+
+			expect(board.actors.length).toBe(0);
+
+			actor.pieces.forEach(function(piece) {
+				var tile = board.tileAt(piece.position);
+				expect(tile.inhabitants.indexOf(piece) < 0).toBe(true);
+			});
+
+			expect(actor.board).toBeFalsy();
 		});
 
 		it("should move an actor", function() {
