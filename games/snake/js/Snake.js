@@ -103,6 +103,8 @@
 				this.grow();
 			}
 			this._directionPending = false;
+
+			this.board.scrollCenterOn(this.position);
 		},
 
 		grow: function() {

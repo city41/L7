@@ -196,5 +196,50 @@ describe("Board", function() {
 			});
 		});
 	});
+
+	describe('scrolling', function() {
+		it('should scroll in the y direction', function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
+
+			board.tiles.forEach(function(tile) {
+				spyOn(tile, 'getColor');
+			});
+
+			board.scrollY(1);
+			board.render(0);
+
+			for(var i = 0; i < board.width; ++i) {
+				var topTile = board.tileAt(L7.p(i, 0));
+				expect(topTile.getColor).not.toHaveBeenCalled();
+				var nextTile = board.tileAt(L7.p(i, 1));
+				expect(nextTile.getColor).toHaveBeenCalled();
+			}
+		});
+
+		it('should scroll in the x direction', function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
+
+			board.tiles.forEach(function(tile) {
+				spyOn(tile, 'getColor');
+			});
+
+			board.scrollX(1);
+			board.render(0);
+
+			for(var i = 0; i < board.height; ++i) {
+				var topTile = board.tileAt(L7.p(0, i));
+				expect(topTile.getColor).not.toHaveBeenCalled();
+				var nextTile = board.tileAt(L7.p(1, i));
+				expect(nextTile.getColor).toHaveBeenCalled();
+			}
+		});
+		
+	});
 });
 

@@ -9,7 +9,11 @@
 	snk.go = function(containerId) {
 		var board = new L7.Board({
 			width: 20,
-			height: 20,
+			height: 60,
+			viewportAnchor: L7.p(0, 0),
+			viewportWidth: 20,
+			viewportHeight: 20,
+			preventOverscroll: true,
 			tileSize: 30,
 			defaultTileColor: [50, 50, 50, 1],
 			borderWidth: 6,
@@ -19,7 +23,7 @@
 		var snake = new snk.Snake({
 			position: L7.p(4, 4),
 			direction: snk.Direction.East,
-			rate: 200
+			rate: 150
 		});
 
 		board.addActor(snake);
@@ -46,14 +50,6 @@
 
 		board.row(-1).forEach(function(position) {
 			if(position.x > 0 && position.x < board.width - 1) {
-				board.addActor(new snk.Wall({
-					position: position
-				}));
-			}
-		});
-
-		board.column(7).forEach(function(position) {
-			if(position.y > 0 && position.y < 8) {
 				board.addActor(new snk.Wall({
 					position: position
 				}));

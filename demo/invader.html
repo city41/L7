@@ -31,7 +31,8 @@
 			container: document.getElementById('container'),
 			viewportWidth: 30,
 			viewportHeight: 20,
-			viewportAnchor: L7.p(4, 4)
+			viewportAnchor: L7.p(0, 10),
+			preventOverscroll: true
 		});
 
 		window.board = board;
@@ -112,9 +113,9 @@
 			timers: {
 				scroll: {
 					handler: function() {
-						board.scrollY(1)
+						board.scrollY(-1)
 					},
-					interval: 1000
+					interval: 300
 				}
 			}
 		}));
