@@ -40,8 +40,8 @@ describe("Board", function() {
 				tileSize: tileSize
 			});
 
-			for(var i = 0; i < height; ++i) {
-				for(var k = 0; k < width; ++k) {
+			for (var i = 0; i < height; ++i) {
+				for (var k = 0; k < width; ++k) {
 					var tile = board.tileAt(L7.p(i, k));
 					expect(tile).toBeDefined();
 				}
@@ -84,6 +84,69 @@ describe("Board", function() {
 		});
 	});
 
+	describe("tile queries", function() {
+		it('should return the column', function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var x = 1;
+			var column = board.column(x);
+
+			column.forEach(function(tile, y) {
+				expect(tile.position.x).toEqual(x);
+				expect(tile.position.y).toEqual(y);
+			});
+		});
+
+		it('should return a column using negative indexing', function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var x = -1;
+			var column = board.column(x);
+
+			column.forEach(function(tile, y) {
+				expect(tile.position.x).toEqual(2);
+				expect(tile.position.y).toEqual(y);
+			});
+		});
+
+		it('should return the row', function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var y = 1;
+			var row = board.row(y);
+
+			row.forEach(function(tile, x) {
+				expect(tile.position.x).toEqual(x);
+				expect(tile.position.y).toEqual(y);
+			});
+		});
+
+		it('should return a row using negative indexing', function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var y = -1;
+			var row = board.row(y);
+
+			row.forEach(function(tile, x) {
+				expect(tile.position.x).toEqual(x);
+				expect(tile.position.y).toEqual(2);
+			});
+		});
+		
+	});
+
 	describe("actor operations", function() {
 		it("should indicate if an actor is out of bounds", function() {
 			var board = new L7.Board({
@@ -92,43 +155,56 @@ describe("Board", function() {
 			});
 
 			var actor = {
-				pieces: [
-					{ position: L7.p(0, 0) },
-					{ position: L7.p(1, 2) },
-					{ position: L7.p(4, 2) }
-				]
+				pieces: [{
+					position: L7.p(0, 0)
+				},
+				{
+					position: L7.p(1, 2)
+				},
+				{
+					position: L7.p(4, 2)
+				}]
 			};
 
 			expect(board.isOutOfBounds(actor)).toBe(true);
 
 			var actor2 = {
-				pieces: [
-					{ position: L7.p(0, 0) },
-					{ position: L7.p(1, 1) },
-					{ position: L7.p(2, 2) }
-				]
+				pieces: [{
+					position: L7.p(0, 0)
+				},
+				{
+					position: L7.p(1, 1)
+				},
+				{
+					position: L7.p(2, 2)
+				}]
 			};
 
 			expect(board.isOutOfBounds(actor2)).toBe(false);
 		});
 
 		it("should add an actor properly", function() {
-			var board = new L7.Board({ width: 2, height: 2 });
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
 
 			var actor = {
-				pieces: [
-					{ position: L7.p(1, 1) },
-					{ position: L7.p(0, 0) }
-				]
+				pieces: [{
+					position: L7.p(1, 1)
+				},
+				{
+					position: L7.p(0, 0)
+				}]
 			};
 
 			board.addActor(actor);
 
 			expect(board.actors.length).toBe(1);
-			
+
 			actor.pieces.forEach(function(piece) {
 				var tile = board.tileAt(piece.position);
-				expect(tile.inhabitants.indexOf(piece) > -1 ).toBe(true);
+				expect(tile.inhabitants.indexOf(piece) > - 1).toBe(true);
 			});
 
 			expect(actor.board).toEqual(board);
@@ -141,25 +217,25 @@ describe("Board", function() {
 			});
 
 			var actor = {
-				pieces: [
-					{ position: L7.p(1,1) }
-				]
+				pieces: [{
+					position: L7.p(1, 1)
+				}]
 			};
 
 			board.moveActor({
 				actor: actor,
-				delta: L7.p(1,1)
+				delta: L7.p(1, 1)
 			});
 
 			expect(actor.pieces[0].position.x).toEqual(2);
 			expect(actor.pieces[0].position.y).toEqual(2);
 		});
-		
+
 	});
 
 	describe('updating', function() {
 		it("should have each actor update", function() {
-			var actors = [ new L7.Actor(), new L7.Actor(), new L7.Actor() ];
+			var actors = [new L7.Actor(), new L7.Actor(), new L7.Actor()];
 			var board = new L7.Board({
 				width: 3,
 				height: 3
@@ -211,7 +287,7 @@ describe("Board", function() {
 			board.scrollY(1);
 			board.render(0);
 
-			for(var i = 0; i < board.width; ++i) {
+			for (var i = 0; i < board.width; ++i) {
 				var topTile = board.tileAt(L7.p(i, 0));
 				expect(topTile.getColor).not.toHaveBeenCalled();
 				var nextTile = board.tileAt(L7.p(i, 1));
@@ -232,14 +308,14 @@ describe("Board", function() {
 			board.scrollX(1);
 			board.render(0);
 
-			for(var i = 0; i < board.height; ++i) {
+			for (var i = 0; i < board.height; ++i) {
 				var topTile = board.tileAt(L7.p(0, i));
 				expect(topTile.getColor).not.toHaveBeenCalled();
 				var nextTile = board.tileAt(L7.p(1, i));
 				expect(nextTile.getColor).toHaveBeenCalled();
 			}
 		});
-		
+
 	});
 });
 

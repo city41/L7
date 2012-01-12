@@ -28,30 +28,30 @@
 
 		board.addActor(snake);
 
-		board.column(0).forEach(function(position) {
+		board.column(0).forEach(function(tile) {
 			board.addActor(new snk.Wall({
-				position: position
+				position: tile.position
 			}));
 		});
 
-		board.column(-1).forEach(function(position) {
+		board.column(-1).forEach(function(tile) {
 			board.addActor(new snk.Wall({
-				position: position
+				position: tile.position
 			}));
 		});
 
-		board.row(0).forEach(function(position) {
-			if(position.x > 0 && position.x < board.width - 1) {
+		board.row(0).forEach(function(tile) {
+			if(tile.position.x > 0 && tile.position.x < board.width - 1) {
 				board.addActor(new snk.Wall({
-					position: position
+					position: tile.position
 				}));
 			}
 		});
 
-		board.row(-1).forEach(function(position) {
-			if(position.x > 0 && position.x < board.width - 1) {
+		board.row(-1).forEach(function(tile) {
+			if(tile.position.x > 0 && tile.position.x < board.width - 1) {
 				board.addActor(new snk.Wall({
-					position: position
+					position: tile.position
 				}));
 			}
 		});
