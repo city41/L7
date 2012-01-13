@@ -39,6 +39,10 @@ each level can get you up to 3 golden apples
 		-- immune to dying from hitting wall
 
 
+-- compete against another snake
+	-- eat more apples than he does
+	-- try to get him to die (activate a switch at the right time, etc)
+
 
 
 death animations
@@ -56,4 +60,4 @@ probably dumb ideas
 push a turnstile around to operate something
 	-- probably wont work on a tile engine
 
-
+-- split into a bunch of small snakes and control all at the same time
