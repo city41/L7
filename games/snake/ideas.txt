@@ -1,0 +1,59 @@
+switches
+	-- enable bridges
+	-- move portals
+	-- enable portals
+
+portals
+	-- directional
+	-- non directional (same direction as going in)
+
+race another snake to end of level
+
+snake through asteroid field
+	-- move snake up and down, dodge asteroids as you go
+	-- eat apples on the way
+
+snake gets bigger -> go slower
+snake gets smaller -> go faster
+-- hit a button: shed a segment
+-- eat apple: gain segment
+
+have really tight maze areas where ideally snake is slow to survive
+-- give bonus for beating level faster
+
+each level can get you up to 3 golden apples
+	-- get all regular apples -> 1 golden apple
+	-- beat level in certain time -> 1 golden apple
+	-- ????
+
+-- speed up arrows (ala mario kart)
+	-- speed your way through a tricky area
+	-- speed through a level for a higher bonus
+
+-- walls with openings that move back and forth, need to get through them without getting hit
+
+
+-- giant maze levels
+		-- really big (scrolling)
+		-- complicated maze
+		-- immune to dying from hitting wall
+
+
+
+
+death animations
+=======
+-- when crash into a wall "squish" and have blood splurt out
+
+
+
+
+
+
+
+probably dumb ideas
+=======
+push a turnstile around to operate something
+	-- probably wont work on a tile engine
+
+

@@ -31,6 +31,25 @@
 
 		board.addActor(snake);
 
+		board.row(10, 11, 12).forEach(function(tile) {
+			board.addActor(new snk.Water({
+				position: tile.position
+			}));
+		});
+
+		board.rect(5, 10, 2, 3).forEach(function(tile) {
+			board.addActor(new snk.Bridge({
+				position: tile.position
+			}));
+		});
+
+		board.rect(12, 10, 1, 3).forEach(function(tile) {
+			board.addActor(new snk.Bridge({
+				position: tile.position
+			}));
+		});
+
+
 		board.column(0).forEach(function(tile) {
 			board.addActor(new snk.Wall({
 				position: tile.position
@@ -66,19 +85,27 @@
 
 		board.addActor(portal);
 
+		function getEmptyPosition() {
+			var position;
+			do {
+				position = L7.p(rand(1, board.width - 1), rand(1, board.height - 1))
+			} while (board.tileAt(position).inhabitants.length > 0);
+
+			return position;
+		}
+
 		function _setUpLevel(level) {
 			var appleCount = 0;
 			for (var i = 0; i < level + 1; ++i) {
+				var position = getEmptyPosition();
 				var apple = new snk.Apple({
-					position: L7.p(rand(1, board.width - 1), rand(1, board.height - 1))
+					position: position
 				});
-				apple.on('death', function() {
-					--_appleCount;
-					if (_appleCount <= 0) {
-						++_level;
+				apple.on('death', function() {--_appleCount;
+					if (_appleCount <= 0) {++_level;
 						_appleCount = _setUpLevel(_level, board);
 
-						if(snake.timers.move.interval > 50) {
+						if (snake.timers.move.interval > 50) {
 							snake.timers.move.interval -= 20;
 						}
 
@@ -95,8 +122,7 @@
 						});
 					}
 				});
-				board.addActor(apple);
-				++appleCount;
+				board.addActor(apple); ++appleCount;
 			}
 			return appleCount;
 		}

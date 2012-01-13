@@ -145,6 +145,37 @@ describe("Board", function() {
 			});
 		});
 		
+		it('should return all the rows', function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var y = 1;
+			var y2 =2;
+			var row = board.row(y, y2);
+
+			expect(row.length).toBe(6);
+
+			row.forEach(function(tile) {
+				expect(tile.position.y === y || tile.position.y === y2).toBe(true);
+			});
+		});
+
+		it('should return the queried rect', function() {
+			var board = new L7.Board({
+				width: 4,
+				height: 4
+			});
+
+			var tiles = board.rect(1, 1, 2, 2);
+
+			expect(tiles.length).toEqual(4);
+			expect(tiles.indexOf(board.tileAt(1, 1)) > -1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(1, 2)) > -1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(2, 2)) > -1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(2, 1)) > -1).toBe(true);
+		});
 	});
 
 	describe("actor operations", function() {
