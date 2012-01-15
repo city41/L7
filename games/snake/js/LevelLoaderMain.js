@@ -1,4 +1,7 @@
 (function() {
+	var _remainingApples;
+	var _kernel;
+
 	function rand(min, max) {
 		var range = max - min;
 		return Math.floor(Math.random() * range) + min;
@@ -6,9 +9,49 @@
 
 	window.snk = window.snk || {};
 
+	function showCongrats() {
+		var image = new Image();
+		image.onload = function() {
+			var loader = new L7.LevelLoader({
+				boardConfig: {
+					tileSize: 24,
+					defaultTileColor: [20, 30, 40, 1],
+					borderWidth: 4
+				},
+				legend: {
+					'#000000': {
+						constructor: snk.Water
+					}
+				},
+				image: image
+			});
+
+			var level = loader.load();
+
+			var waterTiles = level.board.query(function(tile) {
+				return tile.has('water');
+			});
+
+			var shimmer = new Shimmer({
+				tiles: waterTiles,
+				minAlpha: 0.3,
+				maxAlpha: 0.6,
+				baseRate: 1000,
+				rateVariance: .2
+			});
+
+			level.board.addDaemon(shimmer);
+			colorIslands(level.board);
+
+			_kernel.replaceBoard(level.board);
+		};
+
+		image.src = 'GoodJob.png';
+	}
+
 	function colorIslands(board) {
 		var islandTiles = board.query(function(tile) {
-			return (!tile.has('water') && !tile.has('bridge'));
+			return (!tile.has('water') && ! tile.has('bridge'));
 		});
 
 		islandTiles.forEach(function(tile) {
@@ -27,6 +70,23 @@
 			return tile.has('bridge');
 		}).forEach(function(tile) {
 			tile.inhabitants.first.color = [L7.rand(180, 193), L7.rand(60, 120), L7.rand(30, 69), 1];
+		});
+	}
+
+	function hookIntoApples(board) {
+		var appleTiles = board.query(function(tile) {
+			return tile.has('apple');
+		});
+
+		_remainingApples = appleTiles.length;
+
+		appleTiles.forEach(function(tile) {
+			var apple = tile.inhabitants.first.owner;
+			apple.on('death', function(apple) {--_remainingApples;
+				if (_remainingApples === 0) {
+					showCongrats();
+				}
+			});
 		});
 	}
 
@@ -93,10 +153,12 @@
 			});
 
 			colorIslands(level.board);
+			hookIntoApples(level.board);
 
 			level.board.addDaemon(shimmer);
 
-			new L7.Kernel(level.board).go();
+			_kernel = new L7.Kernel(level.board);
+			_kernel.go();
 		};
 
 		image.src = 'BridgeLevel.png';
