@@ -195,6 +195,34 @@ describe("Pair", function() {
 			expect(s.x).toEqual(p.x * scale);
 			expect(s.y).toEqual(p.y * scale);
 		});
+
+		it('should dot', function() {
+			var p = L7.p(0, 4);
+			var p2 = L7.p(8, 12);
+
+			var dot = p.dot(p2);
+
+			expect(dot).toEqual(p.x * p2.x + p.y * p2.y);
+		});
+
+		it('should return the distanceFrom', function() {
+			var p = L7.p(5, 5);
+			var p2 = L7.p(5, 10);
+
+			var actualDistance = p.distanceFrom(p2);
+
+			expect(actualDistance).toBe(5);
+
+			var otherWay = p2.distanceFrom(p);
+
+			expect(otherWay).toBe(5);
+
+			// more complex example, classic 3,4,5 triangle
+			var p3 = L7.p(1, 1);
+			var p4 = L7.p(4, 5);
+
+			expect(p3.distanceFrom(p4)).toBe(5);
+		});
 	});
 
 	describe("utility functions", function() {

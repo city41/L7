@@ -126,27 +126,6 @@ describe("Actor", function() {
 			expect(a.position).toEqual(initialPosition);
 		});
 
-		it("should invoke onOutOfBounds if it went out of bounds", function() {
-			var a = new L7.Actor({
-				onOutOfBounds: function() {}
-			});
-
-			spyOn(a, 'onOutOfBounds');
-
-			var board = {
-				isOutOfBounds: function() {
-					return true;
-				},
-				moveActor: function() {}
-			};
-
-			a.board = board;
-
-			a.goTo(L7.p(2,2));
-
-			expect(a.onOutOfBounds).toHaveBeenCalled();
-		});
-
 		it("should go left", function() {
 			var initialPosition = L7.p(12,2);
 			var a = new L7.Actor({

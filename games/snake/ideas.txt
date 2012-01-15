@@ -21,6 +21,9 @@ snake gets smaller -> go faster
 have really tight maze areas where ideally snake is slow to survive
 -- give bonus for beating level faster
 
+level with lots if islands and bridges and/or portals
+	-- a radar to show where the nearest apple is
+
 each level can get you up to 3 golden apples
 	-- get all regular apples -> 1 golden apple
 	-- beat level in certain time -> 1 golden apple

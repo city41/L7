@@ -300,6 +300,26 @@ describe("Board", function() {
 			expect(actor.pieces[0].position.y).toEqual(2);
 		});
 
+		it("should invoke onOutOfBounds if it went out of bounds", function() {
+			var a = new L7.Actor({
+				onOutOfBounds: function() {}
+			});
+
+			spyOn(a, 'onOutOfBounds');
+
+			var board = new L7.Board({
+				width: 1,
+				height: 1
+			});
+
+			board.moveActor({
+				actor: a,
+				from: L7.p(1, 1),
+				to: L7.p(10, 10)
+			});
+
+			expect(a.onOutOfBounds).toHaveBeenCalled();
+		});
 	});
 
 	describe('updating', function() {

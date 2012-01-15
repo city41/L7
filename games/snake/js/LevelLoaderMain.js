@@ -54,9 +54,14 @@
 				image: image
 			});
 
-			var board = loader.load();
+			var level = loader.load();
 
-			new L7.Kernel(board).go();
+			level.board.addDaemon(new snk.RadarDaemon({
+				apples: _.clone(level.actors['#FF0000']),
+				snake: level.actors['#0000FF'].first
+			}));
+
+			new L7.Kernel(level.board).go();
 		};
 
 		image.src = 'BridgeLevel.png';

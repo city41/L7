@@ -4,7 +4,7 @@
 		color: [150, 20, 0, 1],
 		die: function() {
 			this.board.removeActor(this);
-			this.fireEvent('death');
+			this.fireEvent('death', this);
 		}
 	};
 
