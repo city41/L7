@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>effects demo</title>
+
+	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
+	<script type="text/javascript" src="../lib/bootstrap.js"></script>
+  <script type="text/javascript" src="../lib/util/Array.js"></script>
+  <script type="text/javascript" src="../lib/util/Util.js"></script>
+	<script type="text/javascript" src="../lib/geometry/Pair.js"></script>
+	<script type="text/javascript" src="../lib/board/Piece.js"></script>
+	<script type="text/javascript" src="../lib/board/Tile.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/kernel/Kernel.js"></script>
+	<script type="text/javascript" src="../lib/kernel/Keys.js"></script>
+	<script type="text/javascript" src="../lib/color/Color.js"></script>
+
+	<script type="text/javascript" src="Disco.js"></script>
+	<script type="text/javascript" src="Shimmer.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		L7.Keys.init();
+
+		var board = new L7.Board({
+			width: 41,
+			height: 40,
+			borderWidth: 3,
+			tileSize: 20
+		});
+
+		window.board = board;
+
+		var c = ['#003388', '#223499', '#000055', 'black'];
+			
+
+		board.tiles.forEach(function(tile, index) {
+			tile.color = L7.Color.toArray(c[index % c.length]);
+		});
+
+		var disco = new Disco({
+			tiles: board.rect(5, 5, 6, 8),
+			rate: 500,
+			width: 6
+		});
+
+		/*board.addDaemon(disco);*/
+
+		/*var shimmerTiles = board.rect(14, 7, 6, 8);*/
+		var shimmerTiles = board.tiles;
+		shimmerTiles.forEach(function(tile) {
+			tile.color = [30, 50, 180, 1];
+			/*tile.color = [210, 90, 20, 1];*/
+		});
+
+		var shimmer = new Shimmer({
+			tiles: shimmerTiles,
+			minAlpha: 0.2,
+			maxAlpha: 0.8,
+			baseRate: 1000,
+			rateVariance: .2,
+			/*color: [200, 200, 0, 1]*/
+		});
+
+		board.addDaemon(shimmer);
+
+		new L7.Kernel(board).go();
+	</script>
+</body>
+</html>
+
+
+
