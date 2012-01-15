@@ -1,7 +1,7 @@
 (function() {
 	var _bridgeConfig = {
 		team: 'bridge',
-		color: [100, 120, 50, 1],
+		color: [193, 116, 47, 1]
 	};
 
 	snk.Bridge = function(config) {

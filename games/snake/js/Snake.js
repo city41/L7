@@ -64,10 +64,12 @@
 		},
 		die: function() {
 			this.goSnakeBack();
-			this.pieces[0].color = [255, 0, 0, 1];
+			this.pieces.forEach(function(piece) {
+				piece.color = [255, 0, 0, 1];
+			});
 			this.active = false;
 		},
-		color: [200, 180, 0, 1],
+		color: [134, 198, 126, 1],
 		active: true,
 
 		goSnakeBack: function() {
@@ -130,7 +132,7 @@
 
 		actor.pieces = [new L7.Piece({
 			position: actor.position,
-			color: [50, 190, 20, 1],
+			color: [98, 124, 95, 1],
 			owner: actor
 		})];
 

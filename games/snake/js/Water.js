@@ -1,7 +1,7 @@
 (function() {
 	var _waterConfig = {
 		team: 'water',
-		color: [180, 180, 245, 1],
+		color: [80, 80, 245, 1],
 		hitDetection: {
 			snake: function(tile, actor) {
 				if(!tile.has('bridge')) {
