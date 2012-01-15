@@ -176,6 +176,29 @@ describe("Board", function() {
 			expect(tiles.indexOf(board.tileAt(2, 2)) > -1).toBe(true);
 			expect(tiles.indexOf(board.tileAt(2, 1)) > -1).toBe(true);
 		});
+
+		it('should return tiles based on the predicate', function() {
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			var actor = new L7.Actor({
+				team: 'foo',
+				position: L7.p(1,1)
+			});
+
+			board.addActor(actor);
+
+			var tiles = board.query(function(tile) {
+				return tile.has('foo');
+			});
+
+			expect(tiles.length).toBe(1);
+			expect(tiles.first.position.x).toEqual(actor.position.x);
+			expect(tiles.first.position.y).toEqual(actor.position.y);
+			expect(tiles.first.inhabitants.length).toBe(1);
+		});
 	});
 
 	describe("actor operations", function() {
