@@ -14,9 +14,9 @@
 		image.onload = function() {
 			var loader = new L7.LevelLoader({
 				boardConfig: {
-					tileSize: 24,
+					tileSize: 16,
 					defaultTileColor: [20, 30, 40, 1],
-					borderWidth: 4
+					borderWidth: 2
 				},
 				legend: {
 					'#000000': {
@@ -35,9 +35,10 @@
 			var shimmer = new Shimmer({
 				tiles: waterTiles,
 				minAlpha: 0.3,
-				maxAlpha: 0.6,
-				baseRate: 1000,
-				rateVariance: .2
+				maxAlpha: 0.9,
+				baseRate: 500,
+				rateVariance: .2,
+				color: [0, 0, 200, 1]
 			});
 
 			level.board.addDaemon(shimmer);
@@ -55,7 +56,7 @@
 		});
 
 		islandTiles.forEach(function(tile) {
-			tile.color = [L7.rand(220, 240), L7.rand(220, 240), L7.rand(210, 220), 1];
+			tile.color = [L7.rand(160, 190), L7.rand(160, 190), L7.rand(100, 120), 1];
 		});
 
 		var appleTiles = board.query(function(tile) {
@@ -126,9 +127,9 @@
 			viewportWidth: 30,
 			viewportHeight: 30,
 			preventOverscroll: true,
-			tileSize: 24,
+			tileSize: 16,
 			defaultTileColor: [20, 30, 40, 1],
-			borderWidth: 4
+			borderWidth: 2
 		};
 
 		image.onload = function() {
@@ -148,7 +149,7 @@
 				tiles: waterTiles,
 				minAlpha: 0.3,
 				maxAlpha: 0.6,
-				baseRate: 1000,
+				baseRate: 700,
 				rateVariance: .2
 			});
 
