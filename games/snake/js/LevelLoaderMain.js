@@ -38,7 +38,7 @@
 				maxAlpha: 0.9,
 				baseRate: 500,
 				rateVariance: .2,
-				color: [0, 0, 200, 1]
+				color: [0, 0, 100, 1]
 			});
 
 			level.board.addDaemon(shimmer);
