@@ -383,6 +383,24 @@ describe("Board", function() {
 				expect(tile.getColor).toHaveBeenCalled();
 			});
 		});
+
+		it('should ask each tile for its scale', function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
+
+			board.tiles.forEach(function(tile) {
+				spyOn(tile, 'getScale');
+			});
+
+			board.render(0);
+
+			board.tiles.forEach(function(tile) {
+				expect(tile.getScale).toHaveBeenCalled();
+			});
+		});
+
 	});
 
 	describe('scrolling', function() {

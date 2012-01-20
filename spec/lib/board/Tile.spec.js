@@ -267,5 +267,61 @@ describe("Tile", function() {
 		});
 
 	});
+
+	describe('rendering parameters', function() {
+		it('should return no scale if one is not set', function() {
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2
+			});
+
+			var scale = tile.getScale();
+
+			expect(scale).not.toBeDefined();
+		});
+
+		it('should set its scale from the config', function() {
+			var scale = 2.3;
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2,
+				scale: 2.3
+			});
+
+			var returnedScale = tile.getScale();
+
+			expect(returnedScale).toEqual(scale);
+		});
+
+		it('should set its scale arbitrarily', function() {
+			var scale = 2.3;
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2
+			});
+
+			tile.scale = scale;
+
+			var returnedScale = tile.getScale();
+
+			expect(returnedScale).toEqual(scale);
+		});
+
+		it('should return the inhabitants scale', function() {
+			var inhabitantScale = 45;
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2,
+				scale: 3
+			});
+
+			tile.add({
+				scale: inhabitantScale
+			});
+
+			var returnedScale = tile.getScale();
+			expect(returnedScale).toEqual(inhabitantScale);
+		});
+	});
 });
 

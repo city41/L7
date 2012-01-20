@@ -28,8 +28,8 @@
 		L7.Keys.init();
 
 		var board = new L7.Board({
-			width: 75,
-			height: 55,
+			width: 50,
+			height: 35,
 			borderWidth: 2,
 			tileSize: 15
 		});
@@ -63,17 +63,23 @@
 			rateVariance: 0.2
 		});
 
-		//board.addDaemon(shimmer);
+		board.addDaemon(shimmer);
 
 		var scaler = new Scaler({
-			tiles: shimmerTiles,
-			minScale: 0.2,
-			maxScale: 1.0,
+			tiles: board.rect(10, 10, 1, 1).concat(board.rect(20,20, 1, 1)),
+			minScale: 0.05,
+			maxScale: 9.0,
 			baseRate: 1200,
-			rateVariance: 0.2
+			rateVariance: 0.7
 		});
 
 		board.addDaemon(scaler);
+
+		/*board.rect(5, 5, 30, 1).forEach(function(tile, index, array) {*/
+			/*tile.scale = (index / array.length) * 4;*/
+			/*tile.color = [255 * tile.scale, 0, 0, 1];*/
+
+		/*});*/
 
 		new L7.Kernel(board).go();
 	</script>
