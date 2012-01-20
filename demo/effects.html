@@ -20,6 +20,7 @@
 
 	<script type="text/javascript" src="Disco.js"></script>
 	<script type="text/javascript" src="Shimmer.js"></script>
+	<script type="text/javascript" src="Scaler.js"></script>
 
 </head>
 <body>
@@ -48,9 +49,6 @@
 			width: 6
 		});
 
-		/*board.addDaemon(disco);*/
-
-		/*var shimmerTiles = board.rect(14, 7, 6, 8);*/
 		var shimmerTiles = board.tiles;
 		shimmerTiles.forEach(function(tile) {
 			tile.color = [30, 50, 180, 1];
@@ -62,11 +60,20 @@
 			minAlpha: 0.2,
 			maxAlpha: 0.8,
 			baseRate: 1200,
-			rateVariance: .2,
-			/*color: [200, 200, 0, 1]*/
+			rateVariance: 0.2
 		});
 
-		board.addDaemon(shimmer);
+		//board.addDaemon(shimmer);
+
+		var scaler = new Scaler({
+			tiles: shimmerTiles,
+			minScale: 0.2,
+			maxScale: 1.0,
+			baseRate: 1200,
+			rateVariance: 0.2
+		});
+
+		board.addDaemon(scaler);
 
 		new L7.Kernel(board).go();
 	</script>
