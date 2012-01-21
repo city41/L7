@@ -208,7 +208,7 @@ describe("Tile", function() {
 			tile.board = board;
 
 			var result = tile.left();
-			
+
 			expect(result).toEqual(expectedResult);
 			expect(passedPosition.equals({
 				x: 0,
@@ -233,7 +233,7 @@ describe("Tile", function() {
 			tile.board = board;
 
 			var result = tile.right();
-			
+
 			expect(result).toEqual(expectedResult);
 			expect(passedPosition.equals({
 				x: 2,
@@ -258,7 +258,7 @@ describe("Tile", function() {
 			tile.board = board;
 
 			var result = tile.down();
-			
+
 			expect(result).toEqual(expectedResult);
 			expect(passedPosition.equals({
 				x: 1,
@@ -269,141 +269,208 @@ describe("Tile", function() {
 	});
 
 	describe('rendering parameters', function() {
-		it('should return no scale if one is not set', function() {
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2
+		describe('getScale', function() {
+			it('should return falsy if no scale is set', function() {
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2
+				});
+
+				var scale = tile.getScale();
+
+				expect(scale).toBeFalsy();
 			});
 
-			var scale = tile.getScale();
+			it('should set its scale from the config', function() {
+				var scale = 2.3;
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2,
+					scale: 2.3
+				});
 
-			expect(scale).not.toBeDefined();
+				var returnedScale = tile.getScale();
+
+				expect(returnedScale).toEqual(scale);
+			});
+
+			it('should set its scale arbitrarily', function() {
+				var scale = 2.3;
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2
+				});
+
+				tile.scale = scale;
+
+				var returnedScale = tile.getScale();
+
+				expect(returnedScale).toEqual(scale);
+			});
+
+			it('should return the inhabitants scale if inhabitant has a color', function() {
+				var inhabitantScale = 45;
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2,
+					scale: 3
+				});
+
+				tile.add({
+					scale: inhabitantScale,
+					color: [255, 255, 255, 1]
+				});
+
+				var returnedScale = tile.getScale();
+				expect(returnedScale).toEqual(inhabitantScale);
+			});
+
+			it('should return the tile\'s scale if the inhabitant has no color', function() {
+				var inhabitantScale = 45;
+				var tileScale = 3;
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2,
+					scale: tileScale
+				});
+
+				tile.add({
+					scale: inhabitantScale
+				});
+
+				var returnedScale = tile.getScale();
+				expect(returnedScale).toEqual(tileScale);
+			});
 		});
 
-		it('should set its scale from the config', function() {
-			var scale = 2.3;
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2,
-				scale: 2.3
+		describe('getColor', function() {
+			it('should return falsy if it has no color', function() {
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2
+				});
+
+				var color = tile.getColor();
+				expect(color).toBeFalsy();
 			});
 
-			var returnedScale = tile.getScale();
+			it('should return its color', function() {
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2,
+					color: [255, 0, 0, 1]
+				});
 
-			expect(returnedScale).toEqual(scale);
-		});
-
-		it('should set its scale arbitrarily', function() {
-			var scale = 2.3;
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2
+				var color = tile.getColor();
+				expect(color).toBe('rgba(255,0,0,1)');
 			});
 
-			tile.scale = scale;
+			it('should return its inhabitants opaque color', function() {
+				var tile = new L7.Tile({
+					x: 1,
+					y: 2,
+					color: [255, 0, 0, 1]
+				});
 
-			var returnedScale = tile.getScale();
+				tile.add({
+					color: [255, 255, 0, 1]
+				});
 
-			expect(returnedScale).toEqual(scale);
-		});
+				var color = tile.getColor();
 
-		it('should return the inhabitants scale', function() {
-			var inhabitantScale = 45;
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2,
-				scale: 3
+				expect(color).toBe('rgba(255,255,0,1)');
 			});
 
-			tile.add({
-				scale: inhabitantScale
+			it('should return a composite if inhabitants color is not opaque', function() {
+				var tileColor = [255, 0, 0, 1];
+				var inhabColor = [255, 255, 0, .6];
+				var expected = L7.Color.composite(tileColor.slice(0), inhabColor);
+
+				var tile = new L7.Tile({
+					x: 1,
+					y: 1,
+					color: tileColor
+				});
+
+				tile.add({
+					color: inhabColor
+				});
+
+				var color = tile.getColor();
+
+				expect(color).toEqual(L7.Color.toCssString(expected));
 			});
 
-			var returnedScale = tile.getScale();
-			expect(returnedScale).toEqual(inhabitantScale);
-		});
+			it('should return its own color if inhabitant has no color', function() {
+				var tile = new L7.Tile({
+					x: 1,
+					y: 1,
+					color: [255, 0, 0, 1]
+				});
 
-		it('should return falsy if it has no color', function() {
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2
+				tile.add({});
+
+				var color = tile.getColor();
+
+				expect(color).toEqual('rgba(255,0,0,1)');
 			});
 
-			var color = tile.getColor();
-			expect(color).toBeFalsy();
-		});
+			it('should return a composite of its color and its overlay color', function() {
+				var tileColor = [255, 255, 0, 1];
+				var overlayColor = [0, 123, 33, .3];
+				var expected = L7.Color.composite(tileColor.slice(0), overlayColor);
 
-		it('should return its color', function() {
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2,
-				color: [255, 0, 0, 1]
+				var tile = new L7.Tile({
+					x: 1,
+					y: 1,
+					color: tileColor
+				});
+
+				tile.overlayColor = overlayColor;
+
+				var color = tile.getColor();
+
+				expect(color).toEqual(L7.Color.toCssString(expected));
 			});
 
-			var color = tile.getColor();
-			expect(color).toBe('rgba(255,0,0,1)');
-		});
+			it('should return its overlay color if the overlay color is opaque', function() {
+				var tileColor = [255, 255, 0, 1];
+				var overlayColor = [0, 123, 33, 1];
 
+				var tile = new L7.Tile({
+					x: 1,
+					y: 1,
+					color: tileColor
+				});
 
-		it('should return its inhabitants opaque color', function() {
-			var tile = new L7.Tile({
-				x: 1,
-				y: 2,
-				color: [255, 0, 0, 1]
+				tile.overlayColor = overlayColor;
+
+				var color = tile.getColor();
+
+				expect(color).toEqual(L7.Color.toCssString(overlayColor));
 			});
 
-			tile.add({
-				color: [255, 255, 0, 1]
+			it('should return a composite of its color, its overlay color and its inhabitant color', function() {
+				var tileColor = [255, 255, 0, 1];
+				var overlayColor = [0, 123, 33, .3];
+				var inhabitantColor = [122, 44, 55, .7];
+				var expected = L7.Color.composite(tileColor.slice(0), inhabitantColor, overlayColor);
+
+				var tile = new L7.Tile({
+					x: 1,
+					y: 1,
+					color: tileColor
+				});
+
+				tile.overlayColor = overlayColor;
+				tile.add({
+					color: inhabitantColor
+				});
+
+				var color = tile.getColor();
+
+				expect(color).toEqual(L7.Color.toCssString(expected));
 			});
-
-			var color = tile.getColor();
-
-			expect(color).toBe('rgba(255,255,0,1)');
-		});
-
-		it('should return a composite if inhabitants color is not opaque', function() {
-			var tileColor = [255, 0, 0, 1];
-			var inhabColor = [255, 255, 0, .6];
-			var expected = L7.Color.composite(tileColor.slice(0), inhabColor);
-
-			var tile = new L7.Tile({
-				x: 1,
-				y: 1,
-				color: tileColor
-			});
-
-			tile.add({
-				color: inhabColor
-			});
-
-			var color = tile.getColor();
-
-			expect(color).toEqual(L7.Color.toCssString(expected));
-		});
-
-		it('should return its own color if inhabitant has no color', function() {
-			var tile = new L7.Tile({
-				x: 1,
-				y: 1,
-				color: [255, 0, 0, 1]
-			});
-
-			tile.add({});
-
-			var color = tile.getColor();
-
-			expect(color).toEqual('rgba(255,0,0,1)');
-		});
-
-		it('should return a composite of its color and its overlay color', function() {
-
-		});
-
-		it('should return its overlay color if the overlay color is opaque', function() {
-		});
-		
-		it('should return a composite of its color, its overlay color and its inhabitant color', function() {
-
 		});
 	});
 });
