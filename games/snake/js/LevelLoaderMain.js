@@ -52,11 +52,11 @@
 
 	function colorIslands(board) {
 		var islandTiles = board.query(function(tile) {
-			return (!tile.has('water') && ! tile.has('bridge'));
+			return tile.has('island');
 		});
 
 		islandTiles.forEach(function(tile) {
-			tile.color = [L7.rand(160, 190), L7.rand(160, 190), L7.rand(100, 120), 1];
+			tile.inhabitants.first.color = [L7.rand(160, 190), L7.rand(160, 190), L7.rand(100, 120), 1];
 		});
 
 		var appleTiles = board.query(function(tile) {
@@ -93,9 +93,14 @@
 
 	snk.go = function() {
 		var legend = {
-			// water
+			// Hole
 			'#000000': {
-				constructor: snk.Water
+				constructor: snk.Hole
+			},
+
+			// Island
+			'#FF0000': {
+				constructor: snk.Island
 			},
 
 			// bridge
@@ -128,7 +133,6 @@
 			viewportHeight: 30,
 			preventOverscroll: true,
 			tileSize: 16,
-			defaultTileColor: [20, 30, 40, 1],
 			borderWidth: 2
 		};
 

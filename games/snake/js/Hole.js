@@ -1,7 +1,6 @@
 (function() {
-	var _waterConfig = {
-		team: 'water',
-		color: [20, 20, 220, 1],
+	var _holeConfig = {
+		team: 'hole',
 		hitDetection: {
 			snake: function(tile, actor) {
 				if(!tile.has('bridge')) {
@@ -11,10 +10,11 @@
 		}
 	};
 
-	snk.Water = function(config) {
-		var actor = new L7.Actor(_.extend(config, _waterConfig));
+	snk.Hole = function(config) {
+		var actor = new L7.Actor(_.extend(config, _holeConfig));
 		return actor;
 	};
 
 })();
+
 

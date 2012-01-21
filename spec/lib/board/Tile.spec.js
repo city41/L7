@@ -322,6 +322,89 @@ describe("Tile", function() {
 			var returnedScale = tile.getScale();
 			expect(returnedScale).toEqual(inhabitantScale);
 		});
+
+		it('should return falsy if it has no color', function() {
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2
+			});
+
+			var color = tile.getColor();
+			expect(color).toBeFalsy();
+		});
+
+		it('should return its color', function() {
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2,
+				color: [255, 0, 0, 1]
+			});
+
+			var color = tile.getColor();
+			expect(color).toBe('rgba(255,0,0,1)');
+		});
+
+
+		it('should return its inhabitants opaque color', function() {
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2,
+				color: [255, 0, 0, 1]
+			});
+
+			tile.add({
+				color: [255, 255, 0, 1]
+			});
+
+			var color = tile.getColor();
+
+			expect(color).toBe('rgba(255,255,0,1)');
+		});
+
+		it('should return a composite if inhabitants color is not opaque', function() {
+			var tileColor = [255, 0, 0, 1];
+			var inhabColor = [255, 255, 0, .6];
+			var expected = L7.Color.composite(tileColor.slice(0), inhabColor);
+
+			var tile = new L7.Tile({
+				x: 1,
+				y: 1,
+				color: tileColor
+			});
+
+			tile.add({
+				color: inhabColor
+			});
+
+			var color = tile.getColor();
+
+			expect(color).toEqual(L7.Color.toCssString(expected));
+		});
+
+		it('should return its own color if inhabitant has no color', function() {
+			var tile = new L7.Tile({
+				x: 1,
+				y: 1,
+				color: [255, 0, 0, 1]
+			});
+
+			tile.add({});
+
+			var color = tile.getColor();
+
+			expect(color).toEqual('rgba(255,0,0,1)');
+		});
+
+		it('should return a composite of its color and its overlay color', function() {
+
+		});
+
+		it('should return its overlay color if the overlay color is opaque', function() {
+		});
+		
+		it('should return a composite of its color, its overlay color and its inhabitant color', function() {
+
+		});
 	});
 });
 
