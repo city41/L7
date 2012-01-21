@@ -367,6 +367,42 @@ describe("Board", function() {
 	});
 
 	describe('rendering', function() {
+		it('should render the border fill', function() {
+			var borderFill = '#ff0000';
+			var board = new L7.Board({
+				width: 1,
+				height: 1,
+				tileSize: 1,
+				borderWidth: 1,
+				borderFill: borderFill
+			});
+
+			spyOn(board.canvas.getContext('2d'), 'fillRect');
+
+			board.render(0);
+
+			expect(board.canvas.getContext('2d').fillRect).toHaveBeenCalled();
+
+			expect(board.canvas.getContext('2d').fillStyle).toEqual(borderFill);
+		});
+
+		it('should clear rect if the border has no color', function() {
+			var board = new L7.Board({
+				width: 1,
+				height: 1,
+				tileSize: 1,
+				borderWidth: 1
+			});
+
+			spyOn(board.canvas.getContext('2d'), 'fillRect');
+			spyOn(board.canvas.getContext('2d'), 'clearRect');
+
+			board.render(0);
+			expect(board.canvas.getContext('2d').fillRect).not.toHaveBeenCalled();
+			expect(board.canvas.getContext('2d').clearRect).toHaveBeenCalled();
+
+		});
+		
 		it('should ask each tile for its color', function() {
 			var board = new L7.Board({
 				width: 2,
