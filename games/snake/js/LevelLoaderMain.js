@@ -9,13 +9,17 @@
 		image.onload = function() {
 			var loader = new L7.LevelLoader({
 				boardConfig: {
-					tileSize: 16,
+					tileSize: 9,
 					defaultTileColor: [20, 30, 40, 1],
-					borderWidth: 2
+					borderWidth: 1,
+					borderFill: 'black'
 				},
 				legend: {
 					'#000000': {
 						constructor: snk.Water
+					},
+					'#FF0000': {
+						constructor: snk.Island
 					}
 				},
 				image: image
@@ -32,8 +36,7 @@
 				minAlpha: 0.3,
 				maxAlpha: 0.9,
 				baseRate: 500,
-				rateVariance: .2,
-				color: [0, 0, 100, 1]
+				rateVariance: .2
 			});
 
 			level.board.addDaemon(shimmer);
@@ -124,7 +127,8 @@
 
 		var boardConfig = {
 			tileSize: 16,
-			borderWidth: 2,
+			borderWidth: 3,
+			borderFill: 'black',
 			parallaxRatio: 1
 		};
 
@@ -138,11 +142,11 @@
 			var level = loader.load();
 
 			var waterBoard = new L7.Board({
-				width: 100,
-				height: 100,
-				tileSize: 9,
+				width: 40,
+				height: 40,
+				tileSize: 32,
 				borderWidth: 1,
-				parallaxRatio: 0.55
+				parallaxRatio: 0.25
 			});
 
 			waterBoard.tiles.forEach(function(tile) {
