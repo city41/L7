@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="../lib/board/Board.js"></script>
 	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
 	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/game/Viewport.js"></script>
 	<script type="text/javascript" src="../lib/game/Game.js"></script>
 	<script type="text/javascript" src="../lib/game/Keys.js"></script>
 	<script type="text/javascript" src="../lib/color/Color.js"></script>
@@ -34,11 +35,8 @@
 			tileSize: 15
 		});
 
-		window.board = board;
-
 		var c = ['#003388', '#223499', '#000055', 'black'];
 			
-
 		board.tiles.forEach(function(tile, index) {
 			tile.color = L7.Color.toArray(c[index % c.length]);
 		});
@@ -52,7 +50,6 @@
 		var shimmerTiles = board.tiles;
 		shimmerTiles.forEach(function(tile) {
 			tile.color = [30, 50, 180, 1];
-			/*tile.color = [210, 90, 20, 1];*/
 		});
 
 		var shimmer = new Shimmer({
@@ -75,13 +72,7 @@
 
 		board.addDaemon(scaler);
 
-		/*board.rect(5, 5, 30, 1).forEach(function(tile, index, array) {*/
-			/*tile.scale = (index / array.length) * 4;*/
-			/*tile.color = [255 * tile.scale, 0, 0, 1];*/
-
-		/*});*/
-
-		new L7.Kernel(board).go();
+		new L7.Game(board).go();
 	</script>
 </body>
 </html>

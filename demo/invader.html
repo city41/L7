@@ -13,13 +13,13 @@
 	<script type="text/javascript" src="../lib/board/Board.js"></script>
 	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
 	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/game/Viewport.js"></script>
 	<script type="text/javascript" src="../lib/game/Game.js"></script>
 	<script type="text/javascript" src="../lib/game/Keys.js"></script>
 	<script type="text/javascript" src="../lib/color/Color.js"></script>
 
 </head>
 <body>
-	<div id="container" style="width: 340px; height: 540px; margin-left: auto; margin-right: auto; margin-top: 40px"></div>
 	<script type="text/javascript">
 		L7.Keys.init();
 
@@ -27,15 +27,8 @@
 			width: 30,
 			height: 50,
 			borderWidth: 3,
-			tileSize: 10,
-			container: document.getElementById('container'),
-			viewportWidth: 30,
-			viewportHeight: 20,
-			viewportAnchor: L7.p(0, 10),
-			preventOverscroll: true
+			tileSize: 10
 		});
-
-		window.board = board;
 
 		var c = ['#003388', '#223499', '#000055', 'black'];
 			
@@ -81,11 +74,9 @@
 				}
 			};
 
-	for(var i = 4; i < board.width; i += 9) {
-	for(var k = 1; k < board.height; k += 8) {
 		var a = new L7.Actor({
-			keyInputs: (i === 4 && k === 1) ? ki : undefined, 
-			position: L7.p(i, k),
+			keyInputs: ki,
+			position: L7.p(10, 10),
 			shape: [
 				[0,0,1,0,0,0,0,0,1,0,0],
 				[0,0,0,1,0,0,0,1,0,0,0],
@@ -96,31 +87,13 @@
 				[1,0,1,0,0,0,0,0,1,0,1],
 				[0,0,0,1,1,0,1,1,0,0,0]
 			],
-			/*color: 'rgba(255, 0, 0, .5)',*/
-			/*color: '#FF0000',*/
-			color: [k * 4, i * 3, 0, .5],
-			/*onOutOfBounds: function() {*/
-				/*this.goBack();*/
-			/*}*/
+			color: [255, 0, 0, 1]
 		});
 
 
 		board.addActor(a);
-		}
-		}
 
-		board.addActor(new L7.Actor({
-			timers: {
-				scroll: {
-					handler: function() {
-						board.scrollY(-1)
-					},
-					interval: 300
-				}
-			}
-		}));
-
-		new L7.Kernel(board).go();
+		new L7.Game(board).go();
 	</script>
 </body>
 </html>

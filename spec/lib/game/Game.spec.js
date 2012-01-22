@@ -30,5 +30,22 @@ describe('Game', function() {
 			expect(game.canvas.height).toEqual(h);
 			expect(game.canvas.parentElement).toEqual(document.body);
 		});
+
+		it('should create everything it needs from just a board', function() {
+			var board = new L7.Board({
+				width: 5,
+				height: 5,
+				borderWidth: 2,
+				tileSize: 10
+			});
+		
+			var game = new L7.Game(board);
+
+			expect(game.viewport.width).toEqual(board.width * (board.tileSize + board.borderWidth) + board.borderWidth);
+			expect(game.viewport.height).toEqual(board.height * (board.tileSize + board.borderWidth) + board.borderWidth);
+			expect(game.canvas).toBeTruthy();
+			expect(game.board).toEqual(board);
+			expect(board.viewport).toEqual(game.viewport);
+		});
 	});
 });
