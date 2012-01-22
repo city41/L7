@@ -24,47 +24,65 @@
 	<script type="text/javascript">
 		L7.Keys.init();
 
+		var farBackground = new L7.Board({
+			width: 201,
+			height: 200,
+			tileSize: 20,
+			borderWidth: 1,
+			borderFill: 'black',
+			parallaxRatio: 0.3,
+			isFarBg: true
+		});
+
+		var fbc = ['red', 'darkred'];
+			
+		farBackground.tiles.forEach(function(tile, index) {
+			tile.color = L7.Color.toArray(fbc[index % fbc.length]);
+		});
+
+
 		var background = new L7.Board({
 			width: 90,
 			height: 120,
-			borderWidth: 1,
-			tileSize: 8,
+			borderWidth: 2,
+			tileSize: 30,
 			borderFill: 'black',
-			parallaxRatio: 0.75
+			parallaxRatio: 0.65
 		});
 
-		var c = ['#003388', '#223499', '#000055', 'black'];
+		var c = ['#003388', '#223499', 'orange', '#000055'];
 			
 		background.tiles.forEach(function(tile, index) {
-			tile.color = L7.Color.toArray(c[index % c.length]);
+			var color = c[index % c.length];
+			tile.color = color != 'orange' && L7.Color.toArray(c[index % c.length]);
 		});
 
 		var foreground = new L7.Board({
 			width: 31,
 			height: 50,
-			borderWidth: 2,
-			tileSize: 24,
-			parallaxRatio: 1
+			borderWidth: 3,
+			tileSize: 48,
+			parallaxRatio: 1.1
 		});
 
 		foreground.tiles.forEach(function(tile, index) {
 			if(index % 2 === 0) {
-				tile.color = [200, 150, 10, 0.5];
+				tile.color = [200, 150, 10, 1];
 			}
 		});
 
 		var parallax = new L7.ParallaxBoard({
-			boards: [background, foreground]
+			boards: [farBackground, background, foreground]
 		});
 
 		var game = new L7.Game({
-			width: 200,
-			height: 300,
+			width: 500,
+			height: 500,
 			board: parallax
 		});
 
 		var a = new L7.Actor({
-			color: [255, 0, 0, 1],
+			color: [200, 150, 10, 1],
 			position: L7.p(5, 5),
 			keyInputs: {
 				left: {

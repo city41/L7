@@ -63,9 +63,9 @@
 		board.addDaemon(shimmer);
 
 		var scaler = new Scaler({
-			tiles: board.rect(10, 10, 1, 1).concat(board.rect(20,20, 1, 1)),
-			minScale: 0.05,
-			maxScale: 9.0,
+			tiles: board.tiles,
+			minScale: 0.2,
+			maxScale: 2.0,
 			baseRate: 1200,
 			rateVariance: 0.7
 		});
