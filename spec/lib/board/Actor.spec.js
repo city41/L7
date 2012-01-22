@@ -24,8 +24,6 @@ describe("Actor", function() {
 
 			expect(a.position.x).toEqual(0);
 			expect(a.position.y).toEqual(0);
-			expect(a.color).toBeDefined();
-			expect(a.color.length > 0).toBe(true);
 			expect(a.shape[0][0]).toEqual(L7.Actor.ANCHOR);
 		});
 
