@@ -1,11 +1,6 @@
 (function() {
 	var _remainingApples;
-	var _kernel;
-
-	function rand(min, max) {
-		var range = max - min;
-		return Math.floor(Math.random() * range) + min;
-	}
+	var _game;
 
 	window.snk = window.snk || {};
 
@@ -44,7 +39,7 @@
 			level.board.addDaemon(shimmer);
 			colorIslands(level.board);
 
-			_kernel.replaceBoard(level.board);
+			_game.replaceBoard(level.board);
 		};
 
 		image.src = 'GoodJob.png';
@@ -128,12 +123,9 @@
 		var image = new Image();
 
 		var boardConfig = {
-			viewportAnchor: L7.p(0, 20),
-			viewportWidth: 30,
-			viewportHeight: 30,
-			preventOverscroll: true,
 			tileSize: 16,
-			borderWidth: 2
+			borderWidth: 2,
+			parallaxRatio: 1
 		};
 
 		image.onload = function() {
@@ -145,25 +137,44 @@
 
 			var level = loader.load();
 
-			var waterTiles = level.board.query(function(tile) {
-				return tile.has('water');
+			var waterBoard = new L7.Board({
+				width: 100,
+				height: 100,
+				tileSize: 9,
+				borderWidth: 1,
+				parallaxRatio: 0.55
+			});
+
+			waterBoard.tiles.forEach(function(tile) {
+				tile.add(new snk.Water({
+					position: tile.position.clone()
+				}));
 			});
 
 			var shimmer = new Shimmer({
-				tiles: waterTiles,
+				tiles: waterBoard.tiles,
 				minAlpha: 0.3,
 				maxAlpha: 0.6,
 				baseRate: 700,
 				rateVariance: .2
 			});
 
+			waterBoard.addDaemon(shimmer);
+
 			colorIslands(level.board);
 			hookIntoApples(level.board);
 
-			level.board.addDaemon(shimmer);
+			var p = new L7.ParallaxBoard({
+				boards: [waterBoard, level.board]
+			});
 
-			_kernel = new L7.Kernel(level.board);
-			_kernel.go();
+			_game = new L7.Game({
+				board: p,
+				width: 300,
+				height: 300
+			});
+
+			_game.go();
 		};
 
 		image.src = 'BridgeLevel.png';

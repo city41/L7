@@ -1,6 +1,7 @@
 (function() {
 	var _holeConfig = {
 		team: 'hole',
+		color: [0, 0, 0, 0],
 		hitDetection: {
 			snake: function(tile, actor) {
 				if(!tile.has('bridge')) {
