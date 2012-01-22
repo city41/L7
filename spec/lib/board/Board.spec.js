@@ -52,7 +52,7 @@ describe("Board", function() {
 			expect(board.tiles.length).toEqual(width * height);
 		});
 
-		it("should create a canvas", function() {
+		it("should not create a canvas", function() {
 			var tileSize = 4;
 			var borderWidth = 2;
 			var board = new L7.Board({
@@ -62,10 +62,7 @@ describe("Board", function() {
 				borderWidth: borderWidth
 			});
 
-			expect(board.canvas).toBeDefined();
-			expect(board.canvas.width).toEqual(board.size.width * tileSize + ((board.size.width + 1) * borderWidth));
-			expect(board.canvas.height).toEqual(board.size.height * tileSize + ((board.size.height + 1) * borderWidth));
-			expect(board.canvas.parentElement).toEqual(document.body);
+			expect(board.canvas).toBeFalsy();
 		});
 	});
 
@@ -377,13 +374,16 @@ describe("Board", function() {
 				borderFill: borderFill
 			});
 
-			spyOn(board.canvas.getContext('2d'), 'fillRect');
+			var canvas = document.createElement('canvas');
+			var context = canvas.getContext('2d');
 
-			board.render(0);
+			spyOn(context, 'fillRect');
 
-			expect(board.canvas.getContext('2d').fillRect).toHaveBeenCalled();
+			board.render(0, context, 0, 0, 0);
 
-			expect(board.canvas.getContext('2d').fillStyle).toEqual(borderFill);
+			expect(context.fillRect).toHaveBeenCalled();
+
+			expect(context.fillStyle).toEqual(borderFill);
 		});
 
 		it('should clear rect if the border has no color', function() {
@@ -394,12 +394,15 @@ describe("Board", function() {
 				borderWidth: 1
 			});
 
-			spyOn(board.canvas.getContext('2d'), 'fillRect');
-			spyOn(board.canvas.getContext('2d'), 'clearRect');
+			var canvas = document.createElement('canvas');
+			var context = canvas.getContext('2d');
 
-			board.render(0);
-			expect(board.canvas.getContext('2d').fillRect).not.toHaveBeenCalled();
-			expect(board.canvas.getContext('2d').clearRect).toHaveBeenCalled();
+			spyOn(context, 'fillRect');
+			spyOn(context, 'clearRect');
+
+			board.render(0, context, 0, 0, 0);
+			expect(context.fillRect).not.toHaveBeenCalled();
+			expect(context.clearRect).toHaveBeenCalled();
 
 		});
 		
@@ -413,7 +416,9 @@ describe("Board", function() {
 				spyOn(tile, 'getColor');
 			});
 
-			board.render(0);
+			var canvas = document.createElement('canvas');
+			var context = canvas.getContext('2d');
+			board.render(0, context, 0, 0, 0);
 
 			board.tiles.forEach(function(tile) {
 				expect(tile.getColor).toHaveBeenCalled();
@@ -430,7 +435,9 @@ describe("Board", function() {
 				spyOn(tile, 'getScale');
 			});
 
-			board.render(0);
+			var canvas = document.createElement('canvas');
+			var context = canvas.getContext('2d');
+			board.render(0, context, 0, 0, 0);
 
 			board.tiles.forEach(function(tile) {
 				expect(tile.getScale).toHaveBeenCalled();
@@ -443,43 +450,41 @@ describe("Board", function() {
 		it('should scroll in the y direction', function() {
 			var board = new L7.Board({
 				width: 2,
-				height: 2
+				height: 2,
+				tileSize: 10,
+				borderWidth: 1
 			});
+			
+			var viewport = {
+				scrollY: function(amount) {}
+			};
 
-			board.tiles.forEach(function(tile) {
-				spyOn(tile, 'getColor');
-			});
+			spyOn(viewport, 'scrollY');
+			board.viewport = viewport;
 
 			board.scrollY(1);
-			board.render(0);
 
-			for (var i = 0; i < board.width; ++i) {
-				var topTile = board.tileAt(L7.p(i, 0));
-				expect(topTile.getColor).not.toHaveBeenCalled();
-				var nextTile = board.tileAt(L7.p(i, 1));
-				expect(nextTile.getColor).toHaveBeenCalled();
-			}
+			expect(viewport.scrollY).toHaveBeenCalledWith(11);
 		});
 
 		it('should scroll in the x direction', function() {
 			var board = new L7.Board({
 				width: 2,
-				height: 2
+				height: 2,
+				tileSize: 10,
+				borderWidth: 1
 			});
+			
+			var viewport = {
+				scrollX: function(amount) {}
+			};
 
-			board.tiles.forEach(function(tile) {
-				spyOn(tile, 'getColor');
-			});
+			spyOn(viewport, 'scrollX');
+			board.viewport = viewport;
 
 			board.scrollX(1);
-			board.render(0);
 
-			for (var i = 0; i < board.height; ++i) {
-				var topTile = board.tileAt(L7.p(0, i));
-				expect(topTile.getColor).not.toHaveBeenCalled();
-				var nextTile = board.tileAt(L7.p(1, i));
-				expect(nextTile.getColor).toHaveBeenCalled();
-			}
+			expect(viewport.scrollX).toHaveBeenCalledWith(11);
 		});
 
 	});
