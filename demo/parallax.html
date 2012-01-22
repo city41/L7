@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Parallax demo</title>
+
+	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
+	<script type="text/javascript" src="../lib/bootstrap.js"></script>
+  <script type="text/javascript" src="../lib/util/Array.js"></script>
+	<script type="text/javascript" src="../lib/geometry/Pair.js"></script>
+	<script type="text/javascript" src="../lib/board/Piece.js"></script>
+	<script type="text/javascript" src="../lib/board/Tile.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/board/ParallaxBoard.js"></script>
+	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/game/Viewport.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/game/Keys.js"></script>
+	<script type="text/javascript" src="../lib/color/Color.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		L7.Keys.init();
+
+		var background = new L7.Board({
+			width: 90,
+			height: 120,
+			borderWidth: 1,
+			tileSize: 8,
+			borderFill: 'black',
+			parallaxRatio: 0.75
+		});
+
+		var c = ['#003388', '#223499', '#000055', 'black'];
+			
+		background.tiles.forEach(function(tile, index) {
+			tile.color = L7.Color.toArray(c[index % c.length]);
+		});
+
+		var foreground = new L7.Board({
+			width: 31,
+			height: 50,
+			borderWidth: 2,
+			tileSize: 24,
+			parallaxRatio: 1
+		});
+
+		foreground.tiles.forEach(function(tile, index) {
+			if(index % 2 === 0) {
+				tile.color = [200, 150, 10, 0.5];
+			}
+		});
+
+		var parallax = new L7.ParallaxBoard({
+			boards: [background, foreground]
+		});
+
+		var game = new L7.Game({
+			width: 200,
+			height: 300,
+			board: parallax
+		});
+
+		var a = new L7.Actor({
+			color: [255, 0, 0, 1],
+			position: L7.p(5, 5),
+			keyInputs: {
+				left: {
+					repeat: true,
+					handler: function() {
+						game.viewport.scrollX(-2);
+					}
+				},
+				right: {
+					repeat: true,
+					handler: function() {
+						game.viewport.scrollX(2);
+					}
+				},
+				up: {
+					repeat: true,
+					handler: function() {
+						game.viewport.scrollY(-2);
+					}
+				},
+				down: {
+					repeat: true,
+					handler: function() {
+						game.viewport.scrollY(2);
+					}
+				}
+
+			}
+		});
+
+		foreground.addActor(a);
+	
+		game.go();
+
+
+	</script>
+</body>
+</html>
+
+
+
+
