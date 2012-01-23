@@ -142,9 +142,9 @@
 			var level = loader.load();
 
 			var waterBoard = new L7.Board({
-				width: 40,
-				height: 40,
-				tileSize: 32,
+				width: 400,
+				height: 400,
+				tileSize: 8,
 				borderWidth: 1,
 				parallaxRatio: 0.25
 			});
