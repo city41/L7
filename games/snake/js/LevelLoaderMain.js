@@ -116,7 +116,7 @@
 				constructor: snk.Snake,
 				config: {
 					direction: snk.Direction.East,
-					rate: 200,
+					rate: 2,
 					size: 2,
 					shouldGrow: true
 				}
