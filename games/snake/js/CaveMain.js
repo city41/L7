@@ -16,6 +16,11 @@
 				constructor: snk.Hole
 			},
 
+			// finish area
+			'#CC00FF': {
+				constructor: snk.FinishArea
+			},
+
 			// apple
 			'#FF0000': {
 				constructor: snk.Apple
@@ -23,7 +28,7 @@
 
 			// snake
 			'#0000FF': {
-				constructor: snk.Snake,
+				constructor: snk.PullSnake,
 				config: {
 					direction: snk.Direction.East,
 					rate: 200,
@@ -50,6 +55,14 @@
 			});
 
 			var level = loader.load();
+
+			level.board.query(function(tile) {
+				return tile.has('finish');
+			}).forEach(function(tile, index) {
+				if(index & 1 === 1) {
+					tile.inhabitants.last.color = [0, 0, 0, 1];
+				}
+			});
 
 			var wallBoard = new L7.Board({
 				width: 100,
