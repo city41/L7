@@ -27,15 +27,15 @@
 			},
 
 			// snake
-			'#0000FF': {
-				constructor: snk.PullSnake,
-				config: {
-					direction: snk.Direction.East,
-					rate: 200,
-					size: 2,
-					shouldGrow: true
-				}
-			}
+			//'#0000FF': {
+				//constructor: snk.PullSnake,
+				//config: {
+					//direction: snk.Direction.East,
+					//rate: 200,
+					//size: 2,
+					//shouldGrow: true
+				//}
+			//}
 		};
 
 		var image = new Image();
@@ -55,6 +55,9 @@
 			});
 
 			var level = loader.load();
+			level.board.addFreeActor(new snk.FreeSnake({
+				position: L7.p(10, 50)
+			}));
 
 			level.board.query(function(tile) {
 				return tile.has('finish');

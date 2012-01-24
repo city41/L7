@@ -81,6 +81,35 @@ describe("Board", function() {
 		});
 	});
 
+	it('should return a tile with tilAtPixels', function() {
+		var board = new L7.Board({
+			width: 4,
+			height: 4,
+			tileSize: 9,
+			borderWidth: 1
+		});
+
+		var tile = board.tileAtPixels(7, 6);
+		expect(tile.position.x).toEqual(0);
+		expect(tile.position.y).toEqual(0);
+
+		var tile2 = board.tileAtPixels(0, 0);
+		expect(tile2.position.x).toEqual(0);
+		expect(tile2.position.y).toEqual(0);
+
+		var tile3 = board.tileAtPixels(9, 9);
+		expect(tile3.position.x).toEqual(0);
+		expect(tile3.position.y).toEqual(0);
+
+		var tile4 = board.tileAtPixels(10, 10);
+		expect(tile4.position.x).toEqual(1);
+		expect(tile4.position.y).toEqual(1);
+
+		var tile5 = board.tileAtPixels(32, 12);
+		expect(tile5.position.x).toEqual(3);
+		expect(tile5.position.y).toEqual(1);
+	});
+
 	describe("tile queries", function() {
 		it('should return the column', function() {
 			var board = new L7.Board({
@@ -299,6 +328,22 @@ describe("Board", function() {
 			expect(actor.board).toBeFalsy();
 		});
 
+		it('should add a free actor', function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
+
+			var actor = {
+			};
+
+			board.addFreeActor(actor);
+
+			expect(board.freeActors.length).toBe(1);
+
+			expect(actor.board).toEqual(board);
+		});
+
 		it("should move an actor", function() {
 			var board = new L7.Board({
 				width: 3,
@@ -361,6 +406,26 @@ describe("Board", function() {
 				expect(actor.update).toHaveBeenCalled();
 			});
 		});
+
+		it("should have each free actor update", function() {
+			var actors = [new L7.Actor(), new L7.Actor(), new L7.Actor()];
+			var board = new L7.Board({
+				width: 3,
+				height: 3
+			});
+
+			actors.forEach(function(actor) {
+				spyOn(actor, 'update');
+				board.addFreeActor(actor);
+			});
+
+			board.update(0);
+
+			actors.forEach(function(actor) {
+				expect(actor.update).toHaveBeenCalled();
+			});
+		});
+
 	});
 
 	describe('rendering', function() {
@@ -452,6 +517,44 @@ describe("Board", function() {
 			});
 		});
 
+		it('should ask each free actor for its color and position', function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2,
+				tileSize: 2
+			});
+
+			var colorAskedFor = false;
+			var positionAskedFor = false;
+
+			var actor = {
+				
+			};
+			Object.defineProperty(actor, 'color', {
+				get: function() {
+					colorAskedFor = true;
+					return [255, 0, 0, 1];
+				}
+			});
+			Object.defineProperty(actor, 'position', {
+				get: function() {
+					positionAskedFor = true;
+					return L7.p(1, 1);
+				}
+			});
+
+			board.addFreeActor(actor);
+
+			var canvas = document.createElement('canvas');
+			canvas.width = 200;
+			canvas.height = 200;
+
+			var context = canvas.getContext('2d');
+			board.render(0, context, 0, 0, 0);
+
+			expect(colorAskedFor).toBe(true);
+			expect(positionAskedFor).toBe(true);
+		});
 	});
 
 	describe('scrolling', function() {
