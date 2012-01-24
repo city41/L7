@@ -11,6 +11,10 @@
 				constructor: snk.Island
 			},
 
+			'#0000FF': {
+				constructor: snk.Island
+			},
+
 			// Wall
 			'#00FF00': {
 				constructor: snk.Hole
@@ -23,7 +27,7 @@
 
 			// apple
 			'#FF0000': {
-				constructor: snk.Apple
+				constructor: [snk.Island, snk.Apple]
 			},
 
 			// snake
@@ -56,7 +60,7 @@
 
 			var level = loader.load();
 			level.board.addFreeActor(new snk.FreeSnake({
-				position: L7.p(10, 50)
+				position: L7.p(10, 120)
 			}));
 
 			level.board.query(function(tile) {

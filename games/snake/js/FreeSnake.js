@@ -1,8 +1,8 @@
 (function() {
 	var _snakeConfig = {
 		color: [100, 100, 200, 1],
-		movementVelocity: 0.05,
-		pullVelocity: 0.03,
+		movementVelocity: 0.2,
+		pullVelocity: 0.2,
 		team: 'snake',
 		active: true,
 
@@ -32,13 +32,27 @@
 			up: {
 				repeat: true,
 				handler: function(delta) {
-					this.position = this.position.add(0, - this.movementVelocity * delta || 0);
+					var proposedPosition = this.position.add(0, - this.movementVelocity * delta || 0);
+					var tile = this.board.tileAtPixels(proposedPosition);
+
+					if(tile.has('hole')) {
+						this.position = L7.p(this.position.x, this.board.tileBottomInPixels(tile));
+					} else {
+						this.position = proposedPosition;
+					}
 				}
 			},
 			down: {
 				repeat: true,
 				handler: function(delta) {
-					this.position = this.position.add(0, this.movementVelocity * delta || 0);
+					var proposedPosition = this.position.add(0, this.movementVelocity * delta || 0);
+					var tile = this.board.tileAtPixels(proposedPosition.add(0, this.board.tileSize));
+
+					if(tile.has('hole')) {
+						this.position = L7.p(this.position.x, this.board.tileTopInPixels(tile.up()));
+					} else {
+						this.position = proposedPosition;
+					}
 				}
 			}
 		},
