@@ -3,8 +3,16 @@
 		team: 'apple',
 		color: [150, 20, 0, 1],
 		die: function() {
-			this.board.removeActor(this);
-			this.fireEvent('death', this);
+			if (!this.dying) {
+				this.dying = true;
+				this.board.addDaemon(new AppleDeath({
+					apple: this,
+					callback: function() {
+						this.board.removeActor(this);
+						this.fireEvent('death', this);
+					}
+				}));
+			}
 		}
 	};
 
@@ -14,5 +22,4 @@
 	};
 
 })();
-
 
