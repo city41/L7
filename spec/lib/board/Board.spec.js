@@ -81,33 +81,68 @@ describe("Board", function() {
 		});
 	});
 
-	it('should return a tile with tilAtPixels', function() {
-		var board = new L7.Board({
-			width: 4,
-			height: 4,
-			tileSize: 9,
-			borderWidth: 1
+	describe('tile pixel queries', function() {
+		it('should return a tile with tileAtPixels', function() {
+			var board = new L7.Board({
+				width: 4,
+				height: 4,
+				tileSize: 9,
+				borderWidth: 1
+			});
+
+			var tile = board.tileAtPixels(7, 6);
+			expect(tile.position.x).toEqual(0);
+			expect(tile.position.y).toEqual(0);
+
+			var tile2 = board.tileAtPixels(0, 0);
+			expect(tile2.position.x).toEqual(0);
+			expect(tile2.position.y).toEqual(0);
+
+			var tile3 = board.tileAtPixels(9, 9);
+			expect(tile3.position.x).toEqual(0);
+			expect(tile3.position.y).toEqual(0);
+
+			var tile4 = board.tileAtPixels(10, 10);
+			expect(tile4.position.x).toEqual(1);
+			expect(tile4.position.y).toEqual(1);
+
+			var tile5 = board.tileAtPixels(32, 12);
+			expect(tile5.position.x).toEqual(3);
+			expect(tile5.position.y).toEqual(1);
 		});
 
-		var tile = board.tileAtPixels(7, 6);
-		expect(tile.position.x).toEqual(0);
-		expect(tile.position.y).toEqual(0);
+		it("should return the tile's top in pixels", function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 3,
+				tileSize: 10,
+				borderWidth: 2
+			});
 
-		var tile2 = board.tileAtPixels(0, 0);
-		expect(tile2.position.x).toEqual(0);
-		expect(tile2.position.y).toEqual(0);
+			var tileY = 1;
+			var tile = board.tileAt(1, tileY);
 
-		var tile3 = board.tileAtPixels(9, 9);
-		expect(tile3.position.x).toEqual(0);
-		expect(tile3.position.y).toEqual(0);
+			var tileTopInPixels = board.tileTopInPixels(tile);
 
-		var tile4 = board.tileAtPixels(10, 10);
-		expect(tile4.position.x).toEqual(1);
-		expect(tile4.position.y).toEqual(1);
+			expect(tileTopInPixels).toEqual(tileY * (board.tileSize + board.borderWidth));
+		});
 
-		var tile5 = board.tileAtPixels(32, 12);
-		expect(tile5.position.x).toEqual(3);
-		expect(tile5.position.y).toEqual(1);
+		it("should return the tile's bottom in pixels", function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 3,
+				tileSize: 10,
+				borderWidth: 2
+			});
+
+			var tileY = 1;
+			var tile = board.tileAt(1, tileY);
+
+			var tileBottomInPixels = board.tileBottomInPixels(tile);
+
+			expect(tileBottomInPixels).toEqual(tileY * (board.tileSize + board.borderWidth) + board.tileSize);
+		});
+
 	});
 
 	describe("tile queries", function() {
@@ -132,7 +167,7 @@ describe("Board", function() {
 				height: 3
 			});
 
-			var x = -1;
+			var x = - 1;
 			var column = board.column(x);
 
 			column.forEach(function(tile, y) {
@@ -162,7 +197,7 @@ describe("Board", function() {
 				height: 3
 			});
 
-			var y = -1;
+			var y = - 1;
 			var row = board.row(y);
 
 			row.forEach(function(tile, x) {
@@ -170,7 +205,7 @@ describe("Board", function() {
 				expect(tile.position.y).toEqual(2);
 			});
 		});
-		
+
 		it('should return all the rows', function() {
 			var board = new L7.Board({
 				width: 3,
@@ -178,7 +213,7 @@ describe("Board", function() {
 			});
 
 			var y = 1;
-			var y2 =2;
+			var y2 = 2;
 			var row = board.row(y, y2);
 
 			expect(row.length).toBe(6);
@@ -197,10 +232,10 @@ describe("Board", function() {
 			var tiles = board.rect(1, 1, 2, 2);
 
 			expect(tiles.length).toEqual(4);
-			expect(tiles.indexOf(board.tileAt(1, 1)) > -1).toBe(true);
-			expect(tiles.indexOf(board.tileAt(1, 2)) > -1).toBe(true);
-			expect(tiles.indexOf(board.tileAt(2, 2)) > -1).toBe(true);
-			expect(tiles.indexOf(board.tileAt(2, 1)) > -1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(1, 1)) > - 1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(1, 2)) > - 1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(2, 2)) > - 1).toBe(true);
+			expect(tiles.indexOf(board.tileAt(2, 1)) > - 1).toBe(true);
 		});
 
 		it('should return tiles based on the predicate', function() {
@@ -211,7 +246,7 @@ describe("Board", function() {
 
 			var actor = new L7.Actor({
 				team: 'foo',
-				position: L7.p(1,1)
+				position: L7.p(1, 1)
 			});
 
 			board.addActor(actor);
@@ -311,7 +346,7 @@ describe("Board", function() {
 
 			actor.pieces.forEach(function(piece) {
 				var tile = board.tileAt(piece.position);
-				expect(tile.inhabitants.indexOf(piece) > -1).toBe(true);
+				expect(tile.inhabitants.indexOf(piece) > - 1).toBe(true);
 			});
 
 			expect(actor.board).toEqual(board);
@@ -334,8 +369,7 @@ describe("Board", function() {
 				height: 2
 			});
 
-			var actor = {
-			};
+			var actor = {};
 
 			board.addFreeActor(actor);
 
@@ -430,47 +464,36 @@ describe("Board", function() {
 
 	describe('rendering', function() {
 		//it('should render the border fill', function() {
-			//var borderFill = '#ff0000';
-			//var board = new L7.Board({
-				//width: 1,
-				//height: 1,
-				//tileSize: 1,
-				//borderWidth: 1,
-				//borderFill: borderFill
-			//});
-
-			//var canvas = document.createElement('canvas');
-			//var context = canvas.getContext('2d');
-
-			//spyOn(context, 'fillRect');
-
-			//board.render(0, context, 0, 0, 0);
-
-			//expect(context.fillRect).toHaveBeenCalled();
-
-			//expect(context.fillStyle).toEqual(borderFill);
+		//var borderFill = '#ff0000';
+		//var board = new L7.Board({
+		//width: 1,
+		//height: 1,
+		//tileSize: 1,
+		//borderWidth: 1,
+		//borderFill: borderFill
 		//});
-
+		//var canvas = document.createElement('canvas');
+		//var context = canvas.getContext('2d');
+		//spyOn(context, 'fillRect');
+		//board.render(0, context, 0, 0, 0);
+		//expect(context.fillRect).toHaveBeenCalled();
+		//expect(context.fillStyle).toEqual(borderFill);
+		//});
 		//it('should clear rect if the border has no color', function() {
-			//var board = new L7.Board({
-				//width: 1,
-				//height: 1,
-				//tileSize: 1,
-				//borderWidth: 1
-			//});
-
-			//var canvas = document.createElement('canvas');
-			//var context = canvas.getContext('2d');
-
-			//spyOn(context, 'fillRect');
-			//spyOn(context, 'clearRect');
-
-			//board.render(0, context, 0, 0, 0);
-			//expect(context.fillRect).not.toHaveBeenCalled();
-			//expect(context.clearRect).toHaveBeenCalled();
-
+		//var board = new L7.Board({
+		//width: 1,
+		//height: 1,
+		//tileSize: 1,
+		//borderWidth: 1
 		//});
-		
+		//var canvas = document.createElement('canvas');
+		//var context = canvas.getContext('2d');
+		//spyOn(context, 'fillRect');
+		//spyOn(context, 'clearRect');
+		//board.render(0, context, 0, 0, 0);
+		//expect(context.fillRect).not.toHaveBeenCalled();
+		//expect(context.clearRect).toHaveBeenCalled();
+		//});
 		it('should ask each tile for its color', function() {
 			var board = new L7.Board({
 				width: 2,
@@ -528,7 +551,7 @@ describe("Board", function() {
 			var positionAskedFor = false;
 
 			var actor = {
-				
+
 			};
 			Object.defineProperty(actor, 'color', {
 				get: function() {
@@ -565,7 +588,7 @@ describe("Board", function() {
 				tileSize: 10,
 				borderWidth: 1
 			});
-			
+
 			var viewport = {
 				scrollY: function(amount) {}
 			};
@@ -585,7 +608,7 @@ describe("Board", function() {
 				tileSize: 10,
 				borderWidth: 1
 			});
-			
+
 			var viewport = {
 				scrollX: function(amount) {}
 			};
