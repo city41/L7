@@ -1,8 +1,9 @@
 (function() {
 	var _snakeConfig = {
 		color: [100, 100, 200, 1],
-		movementVelocity: 0.2,
-		pullVelocity: 0.2,
+		movementVelocity: 0.3,
+		movementAcceleration: 0.002,
+		pullVelocity: 0.1,
 		team: 'snake',
 		active: true,
 
@@ -35,7 +36,9 @@
 			up: {
 				repeat: true,
 				handler: function(delta) {
-					var proposedPosition = this.position.add(0, - this.movementVelocity * delta || 0);
+					this.movementVelocity = this._calcMovementVelocity(this.movementVelocity, this.upAcceleration, this.maxUpVelocity, delta);
+
+					var proposedPosition = this.position.add(0, this.movementVelocity * delta || 0);
 					var tile = this.board.tileAtPixels(proposedPosition);
 
 					if (tile.has('hole')) {
@@ -48,6 +51,8 @@
 			down: {
 				repeat: true,
 				handler: function(delta) {
+					this.movementVelocity = this._calcMovementVelocity(this.movementVelocity, this.downAcceleration, this.maxDownVelocity, delta);
+
 					var proposedPosition = this.position.add(0, this.movementVelocity * delta || 0);
 					// for now, our height is equal to board.tileSize
 					var tile = this.board.tileAtPixels(proposedPosition.add(0, this.board.tileSize));
@@ -59,6 +64,30 @@
 					}
 				}
 			}
+		},
+
+		onNoKeyDown: function(delta) {
+			if(this.movementVelocity < 0) {
+				this.movementVelocity += this.downAcceleration * delta;
+			}
+			if(this.movementVelocity > 0) {
+				this.movementVelocity += this.upAcceleration * delta;
+			}
+		},
+
+		_calcMovementVelocity: function(currentVelocity, acceleration, maxVelocity, delta) {
+			currentVelocity += (acceleration * delta);
+
+			if(maxVelocity < 0 && currentVelocity < maxVelocity) {
+				currentVelocity = maxVelocity;
+			}
+
+			if(maxVelocity > 0 && currentVelocity > maxVelocity) {
+				currentVelocity = maxVelocity;
+			}
+
+			return currentVelocity;
+			
 		},
 
 		update: function(delta, timestamp) {
@@ -127,6 +156,13 @@
 
 	snk.FreeSnake = function(config) {
 		var actor = new L7.Actor(_.extend(config, _snakeConfig));
+		actor.maxUpVelocity = -Math.abs(actor.movementVelocity);
+		actor.maxDownVelocity = Math.abs(actor.movementVelocity);
+
+		actor.upAcceleration = -Math.abs(actor.movementAcceleration);
+		actor.downAcceleration = Math.abs(actor.movementAcceleration);
+		actor.movementVelocity = 0;
+
 		return actor;
 	};
 
