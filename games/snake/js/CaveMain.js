@@ -72,7 +72,7 @@
 			});
 
 			var wallBoard = new L7.Board({
-				width: 100,
+				width: 300,
 				height: 20,
 				tileSize: 24,
 				borderWidth: 2,
@@ -102,7 +102,7 @@
 
 			_game = new L7.Game({
 				board: p,
-				width: 20 * (level.board.tileSize + level.board.borderWidth),
+				width: 40 * (level.board.tileSize + level.board.borderWidth),
 				height: 20 * (level.board.tileSize + level.board.borderWidth)
 			});
 

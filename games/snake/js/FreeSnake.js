@@ -3,7 +3,7 @@
 		color: [100, 100, 200, 1],
 		movementVelocity: 0.3,
 		movementAcceleration: 0.002,
-		pullVelocity: 0.1,
+		pullVelocity: 0.17,
 		team: 'snake',
 		active: true,
 
