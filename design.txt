@@ -1,0 +1,103 @@
+Snake features/design doc
+--------------------------
+
+level features
+-------------
+-- snake gets sucked across level
+	-- at different speeds depending on the level
+	-- not necessarily higher level -> faster speeds, just depends on level design
+-- go horizontally and vertically, and can switch midlevel
+-- contain many apples to collect
+-- multiple paths to take, with varying risk/reward ratio
+-- hidden rooms with golden apples in them
+	-- hidden rooms wont necessarily have sucking, and revert to standard snake movement
+
+
+
+cause and effect
+-------------
+hitting a wall
+	-- whichever segment of the snake hits the wall is destroyed
+		-- typically it will be the first segment
+	-- if snake drops to zero segments, game is over
+	-- snake bounces back two tiles
+
+running over an apple
+	-- snake grows by one segment
+
+running over golden apple
+	-- snake grows by one segment
+
+running over velocity arrow
+	-- snake's velocity changes for set amount of time
+		-- either increases or decreases, depending on arrow
+
+
+
+
+
+snake physics (maybe????)
+-------------
+the snake's segments have a some what realistic physics reaction
+
+
+
+
+
+level end goals
+--------------
+-- reach finish line
+-- collect as many apples as possible
+-- find all the golden apples in each level
+-- maximize number of snake segments
+
+
+
+
+
+
+
+first time launch the game
+-------------
+the very first time game is launched, the classic snake scenario is invoked
+	-- user is in control of snake in classic cell phone snake game
+	-- monochrome "pee green"
+	-- 3 apples on board
+	-- standard snake movement
+
+once user eats two apples, the right wall explodes, leaving a hole
+	-- user is free to ignore hole! classic snake mode persists
+	-- if user goes in hole, advance to title screen
+
+
+subsequent launches
+------------
+user is taken to the title screen
+
+
+menu choices
+----------
+-- start normal game
+	-- proceed to level selection
+-- classic mode
+	-- play classic cell phone snake
+-- view scores
+-- about
+
+
+
+level select board
+----------
+-- shows all main levels
+-- shows whether a level is unlocked or not
+	-- unlocked: it is the first level, or the level before it has been beaten
+-- shows stats on each level
+	-- number of apples
+	-- number of golden apples
+	-- overall score (segment bonus applied)
+
+
+
+
+
+
