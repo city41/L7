@@ -111,6 +111,22 @@ describe("Board", function() {
 			expect(tile5.position.y).toEqual(1);
 		});
 
+		it("should return pixels with pixelsForTile", function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2,
+				tileSize: 9,
+				borderWidth: 1
+			});
+
+			var tile = board.tileAt(1, 1);
+
+			var pixels = board.pixelsForTile(tile);
+
+			expect(pixels.x).toEqual(10);
+			expect(pixels.y).toEqual(10);
+		});
+
 		it("should return the tile's top in pixels", function() {
 			var board = new L7.Board({
 				width: 2,
