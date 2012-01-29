@@ -32,13 +32,13 @@
 
 			// snake
 			//'#0000FF': {
-				//constructor: snk.PullSnake,
-				//config: {
-					//direction: snk.Direction.East,
-					//rate: 200,
-					//size: 2,
-					//shouldGrow: true
-				//}
+			//constructor: snk.PullSnake,
+			//config: {
+			//direction: snk.Direction.East,
+			//rate: 200,
+			//size: 2,
+			//shouldGrow: true
+			//}
 			//}
 		};
 
@@ -61,17 +61,35 @@
 			var level = loader.load();
 			var snake = new snk.SnakeShell({
 				position: L7.p(10, 120),
-				handler: new snk.PullHandler(),
+				isPixelPositioned: true,
+				handler: new snk.PullHandler({
+					board: level.board
+				}),
 				active: true,
 				color: [0, 0, 255, 1]
 			});
 
-			level.board.addFreeActor(snake);
+			level.board.addActor(new L7.Actor({
+				keyInputs: {
+					t: {
+						repeat: false,
+						handler: function() {
+							if (snake._handlers.length === 2) {
+								snake.popHandler();
+							} else {
+								snake.pushHandler(new snk.ClassicHandler({
+									board: level.board
+								}));
+							}
+						}
+					}
+				}
+			}));
 
 			level.board.query(function(tile) {
 				return tile.has('finish');
 			}).forEach(function(tile, index) {
-				if(index & 1 === 1) {
+				if (index & 1 === 1) {
 					tile.inhabitants.last.color = [0, 0, 0, 1];
 				}
 			});
@@ -117,5 +135,4 @@
 		image.src = 'CaveLevel.png';
 	};
 })();
-
 

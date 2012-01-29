@@ -77,6 +77,14 @@
 
 		init: function(snake, isFirstTime) {
 			_.extend(snake, this);
+
+			snake.position = snake.positionInPixels();
+			snake.isPixelPositioned = true;
+			
+			this.board.removeActor(snake);
+			this.board.removeFreeActor(snake);
+			this.board.addFreeActor(snake);
+
 			snake.maxUpVelocity = - Math.abs(snake.movementVelocity);
 			snake.maxDownVelocity = Math.abs(snake.movementVelocity);
 

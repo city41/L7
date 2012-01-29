@@ -1,12 +1,11 @@
 (function() {
 	snk.SnakeShell = function(config) {
+		L7.Actor.call(this, config);
 		_.extend(this, config);
 
 		this._handlers = [];
-		this.pieces = [];
 
 		this.pushHandler(config.handler);
-		this.grow(this.position);
 	};
 
 	snk.SnakeShell.prototype = new L7.Actor();
@@ -26,16 +25,27 @@
 			}
 		},
 
-		grow: function(position) {
-			this.pieces.add(position);
-		},
-
 		prune: function(index) {
 
 		},
 
 		render: function(context, offsetX, offsetY) {
 
+		},
+
+		positionInPixels: function() {
+			if(this.isPixelPositioned) {
+				return this.position;
+			} else {
+				return this.board.pixelsForTile(this.board.tileAt(this.position));
+			}
+		},
+		positionInTiles: function() {
+			if(this.isTilePositioned) {
+				return this.position;
+			} else {
+				return this.board.tileAtPixels(this.position).position;
+			}
 		}
 	});
 })();
