@@ -59,9 +59,14 @@
 			});
 
 			var level = loader.load();
-			level.board.addFreeActor(new snk.FreeSnake({
-				position: L7.p(10, 120)
-			}));
+			var snake = new snk.SnakeShell({
+				position: L7.p(10, 120),
+				handler: new snk.PullHandler(),
+				active: true,
+				color: [0, 0, 255, 1]
+			});
+
+			level.board.addFreeActor(snake);
 
 			level.board.query(function(tile) {
 				return tile.has('finish');
