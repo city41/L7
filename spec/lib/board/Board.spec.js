@@ -378,6 +378,24 @@ describe("Board", function() {
 			expect(actor.board).toEqual(board);
 		});
 
+		it("should remove a free actor", function() {
+			var board = new L7.Board({
+				width: 2,
+				height: 2
+			});
+
+			var actor = {};
+			board.addFreeActor(actor);
+
+			expect(board.freeActors.length).toBe(1);
+
+			expect(actor.board).toEqual(board);
+
+			board.removeFreeActor(actor);
+			expect(board.freeActors.length).toBe(0);
+			expect(actor.board).not.toBeDefined();
+		});
+
 		it("should move an actor", function() {
 			var board = new L7.Board({
 				width: 3,
