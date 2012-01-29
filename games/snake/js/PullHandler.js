@@ -79,7 +79,7 @@
 			_.extend(snake, this);
 
 			snake.position = snake.positionInPixels();
-			snake.isPixelPositioned = true;
+			snake.positioningType = 'pixel';
 			
 			this.board.removeActor(snake);
 			this.board.removeFreeActor(snake);

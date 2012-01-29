@@ -9,6 +9,6 @@
 Color.toCSSString
 	-- tiles are getting rgba(...) back, would rgb(...) or hex be faster?
 
-
+-- deal with board.promote properly
 
 

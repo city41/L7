@@ -34,14 +34,14 @@
 		},
 
 		positionInPixels: function() {
-			if(this.isPixelPositioned) {
+			if(this.positioningType === 'pixel') {
 				return this.position;
 			} else {
 				return this.board.pixelsForTile(this.board.tileAt(this.position));
 			}
 		},
 		positionInTiles: function() {
-			if(this.isTilePositioned) {
+			if(this.positioningType === 'tile') {
 				return this.position;
 			} else {
 				return this.board.tileAtPixels(this.position).position;

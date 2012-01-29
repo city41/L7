@@ -59,9 +59,10 @@
 			});
 
 			var level = loader.load();
+			window.board = level.board;
 			var snake = new snk.SnakeShell({
 				position: L7.p(10, 120),
-				isPixelPositioned: true,
+				positioningType: 'pixel',
 				handler: new snk.PullHandler({
 					board: level.board
 				}),

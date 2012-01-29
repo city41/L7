@@ -59,8 +59,10 @@
 				this.die();
 			},
 			apple: function(tile, actor) {
-				this.grow();
-				actor.die();
+				if(!actor.dying) {
+					this.grow();
+					actor.die();
+				}
 			},
 			wall: function() {
 				this.die();
@@ -135,7 +137,7 @@
 
 			snake.position = snake.positionInTiles();
 			snake.pieces.first.position = snake.position;
-			snake.isTilePositioned = true;
+			snake.positioningType = 'tile';
 
 			snake.direction = snk.Direction.East;
 

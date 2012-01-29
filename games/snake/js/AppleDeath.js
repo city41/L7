@@ -3,6 +3,7 @@
 		_.extend(this, config);
 		this.apple.pieces[0].scale = 1;
 		this.apple._deathCount = 150;
+		this.apple.board.promote(this.apple);
 	};
 
 	AppleDeath.prototype.update = function(delta, timestamp, board) {
