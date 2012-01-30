@@ -63,25 +63,33 @@
 			var snake = new snk.SnakeShell({
 				position: L7.p(10, 120),
 				positioningType: 'pixel',
-				handler: new snk.PullHandler({
+				handler: new snk.HorizontalPullHandler({
 					board: level.board
 				}),
 				active: true,
 				color: [0, 0, 255, 1]
 			});
 
+			var handlers = [
+				snake.handler,
+				new snk.VerticalPullHandler({
+						board: level.board
+				}),
+				new snk.ClassicHandler({
+						board: level.board
+				})
+			];
+			var curHandler = 0;
+
 			level.board.addActor(new L7.Actor({
 				keyInputs: {
 					t: {
 						repeat: false,
 						handler: function() {
-							if (snake._handlers.length === 2) {
-								snake.popHandler();
-							} else {
-								snake.pushHandler(new snk.ClassicHandler({
-									board: level.board
-								}));
-							}
+							curHandler += 1;
+							curHandler = curHandler % (handlers.length);
+							snake.popHandler();
+							snake.pushHandler(handlers[curHandler]);
 						}
 					}
 				}

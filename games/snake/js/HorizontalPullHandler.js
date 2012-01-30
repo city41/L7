@@ -1,9 +1,9 @@
 (function() {
-	snk.PullHandler = function(config) {
+	snk.HorizontalPullHandler = function(config) {
 		_.extend(this, config);
 	};
 
-	snk.PullHandler.prototype = {
+	snk.HorizontalPullHandler.prototype = {
 		movementVelocity: 0.3,
 		movementAcceleration: 0.002,
 		pullVelocity: 0.17,
