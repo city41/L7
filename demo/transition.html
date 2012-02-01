@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>transition demo</title>
+
+	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
+	<script type="text/javascript" src="../lib/bootstrap.js"></script>
+  <script type="text/javascript" src="../lib/util/Array.js"></script>
+  <script type="text/javascript" src="../lib/util/Util.js"></script>
+	<script type="text/javascript" src="../lib/geometry/Pair.js"></script>
+	<script type="text/javascript" src="../lib/board/Piece.js"></script>
+	<script type="text/javascript" src="../lib/board/Tile.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/game/Viewport.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/game/Keys.js"></script>
+	<script type="text/javascript" src="../lib/color/Color.js"></script>
+
+	<script type="text/javascript" src="../lib/transition/Fade.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		L7.Keys.init();
+
+		var board = new L7.Board({
+			width: 20,
+			height: 15,
+			borderWidth: 2,
+			borderFill: 'black',
+			tileSize: 15
+		});
+
+		var c = ['#003388', '#223499', '#000055', 'black'];
+			
+		board.tiles.forEach(function(tile, index) {
+			tile.color = L7.Color.toArray(c[index % c.length]);
+		});
+
+		var c2 = ['red', 'orange', 'yellow'];
+		var nextBoard = new L7.Board({
+			width: 20,
+			height: 15,
+			borderWidth: 2,
+			borderFill: 'black',
+			tileSize: 15
+		});
+
+		nextBoard.tiles.forEach(function(tile, index) {
+			tile.color = L7.Color.toArray(c2[index % c2.length]);
+		});
+
+		var game = new L7.Game(board);
+	
+		game.in(3000, function(game) {
+			//game.transition(new L7.Fade('white', 1000), nextBoard);
+		});
+		
+		game.go();
+	</script>
+</body>
+</html>
+
+
+
+
