@@ -19,7 +19,12 @@
 	<script type="text/javascript" src="../lib/game/Keys.js"></script>
 	<script type="text/javascript" src="../lib/color/Color.js"></script>
 
-	<script type="text/javascript" src="../lib/transition/Fade.js"></script>
+	<script type="text/javascript" src="../lib/transition/FadeBase.js"></script>
+	<script type="text/javascript" src="../lib/transition/FadeOut.js"></script>
+	<script type="text/javascript" src="../lib/transition/FadeIn.js"></script>
+	<script type="text/javascript" src="../lib/transition/FadeOutIn.js"></script>
+
+	<script type="text/javascript" src="Shimmer.js"></script>
 </head>
 <body>
 	<script type="text/javascript">
@@ -33,11 +38,20 @@
 			tileSize: 15
 		});
 
-		var c = ['#003388', '#223499', '#000055', 'black'];
+		var c = ['#003388', '#223499', '#000055' ];
 			
 		board.tiles.forEach(function(tile, index) {
 			tile.color = L7.Color.toArray(c[index % c.length]);
 		});
+		
+		var shimmer = new Shimmer({
+			tiles: board.tiles,
+			minAlpha: 0.2,
+			maxAlpha: 0.8,
+			baseRate: 1200,
+			rateVariance: 0.2
+		});
+		board.addDaemon(shimmer);
 
 		var c2 = ['red', 'orange', 'yellow'];
 		var nextBoard = new L7.Board({
@@ -52,10 +66,25 @@
 			tile.color = L7.Color.toArray(c2[index % c2.length]);
 		});
 
+		var nextShimmer = new Shimmer({
+			tiles: nextBoard.tiles,
+			minAlpha: 0.2,
+			maxAlpha: 0.8,
+			baseRate: 1200,
+			rateVariance: 0.2
+		});
+		nextBoard.addDaemon(nextShimmer);
+
 		var game = new L7.Game(board);
 	
 		game.in(3000, function(game) {
-			//game.transition(new L7.Fade('white', 1000), nextBoard);
+			game.replaceBoard(new L7.FadeOutIn({
+				color: 'white',
+				fromBoard: board,
+				toBoard: nextBoard,
+				duration: 5000,
+				game: game
+			}));
 		});
 		
 		game.go();
