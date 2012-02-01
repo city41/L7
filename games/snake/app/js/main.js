@@ -1,0 +1,6 @@
+(function() {
+		snake.go = function(){
+			
+		};
+})();
+
