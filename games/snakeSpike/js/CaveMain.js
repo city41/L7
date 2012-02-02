@@ -8,26 +8,30 @@
 		var legend = {
 			// Back of cave
 			'#FFFF00': {
-				constructor: snk.Island
+				tag: 'island',
+				color: [255, 255, 0, 1]
 			},
 
 			'#0000FF': {
-				constructor: snk.Island
+				tag: 'island',
+				color: [255, 255, 0, 1]
 			},
 
 			// Wall
 			'#00FF00': {
-				constructor: snk.Hole
+				tag: 'hole'
 			},
 
 			// finish area
 			'#CC00FF': {
-				constructor: snk.FinishArea
+				tag: 'finish',
+				color: [255, 255, 255, 1]
 			},
 
 			// apple
 			'#FF0000': {
-				constructor: [snk.Island, snk.Apple]
+				tag: 'island',
+				constructor: snk.Apple
 			},
 
 			// snake
@@ -99,7 +103,7 @@
 				return tile.has('finish');
 			}).forEach(function(tile, index) {
 				if (index & 1 === 1) {
-					tile.inhabitants.last.color = [0, 0, 0, 1];
+					tile.color = [0, 0, 0, 1];
 				}
 			});
 

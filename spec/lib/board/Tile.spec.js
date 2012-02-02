@@ -266,6 +266,18 @@ describe("Tile", function() {
 			})).toBe(true);
 		});
 
+		it('should return its tag for has', function() {
+			var tag = 'fooooo';
+			var tile = new L7.Tile({
+				x: 1,
+				y: 2
+			});
+
+			tile.tag = tag;
+
+			expect(tile.has(tag)).toBe(true);
+			expect(tile.has('somethingelse')).toBe(false);
+		});
 	});
 
 	describe('rendering parameters', function() {
