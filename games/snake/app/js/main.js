@@ -35,10 +35,10 @@
 
 	function _onSplashComplete(game) {
 		var nextBoard;
-		if (snake.Storage.present('hasPlayedBefore')) {
-			nextBoard = new snake.MainMenu
+		if (sg.Storage.present('hasPlayedBefore')) {
+			nextBoard = new sg.MainMenu
 		} else {
-			nextBoard = new snake.ClassicIntroBoard(_resources.classicBoard.image, game.width, game.height);
+			nextBoard = new sg.ClassicIntroBoard(_resources.classicBoard.image, game.width, game.height);
 		}
 
 		_game.replaceBoard(new L7.FadeOutIn({
@@ -50,9 +50,9 @@
 		}));
 	}
 
-	snake.go = function() {
+	sg.go = function() {
 		_loadResources(function() {
-			var splash = new snake.SplashBoard();
+			var splash = new sg.SplashBoard();
 
 			_game = new L7.Game({
 				board: splash,

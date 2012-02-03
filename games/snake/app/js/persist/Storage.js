@@ -5,7 +5,7 @@
 			return _prefix + key;
 		}
 
-		snake.Storage = {
+		sg.Storage = {
 			get: function(key) {
 				var jsonString = localStorage[k(key)];
 

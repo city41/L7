@@ -4,25 +4,25 @@
 			left: {
 				repeat: false,
 				handler: function() {
-					this.setDirection(snake.Direction.West);
+					this.setDirection(sg.Direction.West);
 				}
 			},
 			right: {
 				repeat: false,
 				handler: function() {
-					this.setDirection(snake.Direction.East);
+					this.setDirection(sg.Direction.East);
 				}
 			},
 			up: {
 				repeat: false,
 				handler: function() {
-					this.setDirection(snake.Direction.North);
+					this.setDirection(sg.Direction.North);
 				}
 			},
 			down: {
 				repeat: false,
 				handler: function() {
-					this.setDirection(snake.Direction.South);
+					this.setDirection(sg.Direction.South);
 				}
 			},
 		},
@@ -124,7 +124,7 @@
 		}
 	};
 
-	snake.ClassicSnake = function(config) {
+	sg.ClassicSnake = function(config) {
 		var actor = new L7.Actor(_.extend(config, _snakeConfig));
 
 		actor.timers.move.interval = config.rate;

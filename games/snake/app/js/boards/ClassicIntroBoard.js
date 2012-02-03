@@ -1,5 +1,5 @@
 (function() {
-	snake.ClassicIntroBoard = function(image, pixelWidth, pixelHeight) {
+	sg.ClassicIntroBoard = function(image, pixelWidth, pixelHeight) {
 		var borderWidth = 3;
 		var tileSize = pixelWidth / image.width - borderWidth;
 
@@ -20,7 +20,7 @@
 				},
 				'#FF0000': {
 					tag: 'floor',
-					constructor: snake.ClassicApple,
+					constructor: sg.ClassicApple,
 					color: [238, 244, 237, 1]
 				}
 			},
@@ -34,16 +34,16 @@
 
 		_.extend(this, level.board);
 
-		this.addActor(new snake.ClassicSnake({
+		this.addActor(new sg.ClassicSnake({
 			position: L7.p(8, 11),
-			direction: snake.Direction.North,
+			direction: sg.Direction.North,
 			size: 2,
 			active: true,
 			rate: 400
 		}));
 	};
 
-	snake.ClassicIntroBoard.prototype = {
+	sg.ClassicIntroBoard.prototype = {
 	};
 })();
 

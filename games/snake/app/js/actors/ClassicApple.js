@@ -8,7 +8,7 @@
 		}
 	};
 
-	snake.ClassicApple = function(config) {
+	sg.ClassicApple = function(config) {
 		var actor = new L7.Actor(_.extend(config, _appleConfig));
 		return actor;
 	};

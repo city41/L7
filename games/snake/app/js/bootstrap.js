@@ -1,7 +1,7 @@
 (function() {
 		var global = this;
-		global.snake = global.snake || {};
+		global.sg = global.sg || {};
 
-		global.snake.global = global;
+		global.sg.global = global;
 })();
 

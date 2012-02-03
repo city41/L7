@@ -1,9 +1,9 @@
 (function() {
-	snake.SplashBoard = function(config) {
+	sg.SplashBoard = function(config) {
 		_.extend(this, config);
 	};
 
-	snake.SplashBoard.prototype = {
+	sg.SplashBoard.prototype = {
 		update: function(delta) {
 		},
 		render: function(delta, context) {
