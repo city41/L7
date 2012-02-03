@@ -19,8 +19,9 @@
 					color: [61, 66, 61, 1]
 				},
 				'#FF0000': {
-					tag: 'apple',
-					color: [139, 142, 138, 1]
+					tag: 'floor',
+					constructor: snake.ClassicApple,
+					color: [238, 244, 237, 1]
 				}
 			},
 			boardConfig: {
@@ -32,6 +33,14 @@
 		var level = loader.load();
 
 		_.extend(this, level.board);
+
+		this.addActor(new snake.ClassicSnake({
+			position: L7.p(8, 11),
+			direction: snake.Direction.North,
+			size: 2,
+			active: true,
+			rate: 400
+		}));
 	};
 
 	snake.ClassicIntroBoard.prototype = {

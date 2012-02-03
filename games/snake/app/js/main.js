@@ -60,7 +60,7 @@
 				height: 320
 			});
 
-			_game.in(2000, _onSplashComplete);
+			_game.in(20, _onSplashComplete);
 
 			_game.go();
 		});
