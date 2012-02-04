@@ -125,6 +125,10 @@
 	};
 
 	sg.ClassicSnake = function(config) {
+		config = config || {
+			rate: 1000
+		};
+
 		var actor = new L7.Actor(_.extend(config, _snakeConfig));
 
 		actor.timers.move.interval = config.rate;
