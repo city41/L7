@@ -47,6 +47,9 @@ task :minify do
 		{ :in => minified, :out => "../lib_min/l7.min.js" }
 	]
 
+	puts ""
+	puts ""
+
 	files.each do |file_info|
 		dest = File.expand_path(file_info[:out])
   	File.open(dest, "w") { |file| file.write(file_info[:in]) }
