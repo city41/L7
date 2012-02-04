@@ -68,11 +68,10 @@
 				piece.color = [0, 0, 0, 1];
 			});
 			this.active = false;
+			this.dead = true;
 			this.board.borderFill = 'red';
 		},
 		color: [117, 130, 116, 1],
-		active: true,
-
 		goSnakeBack: function() {
 			this.pieces.forEach(function(piece) {
 				this.board.movePiece({
@@ -125,9 +124,11 @@
 	};
 
 	sg.ClassicSnake = function(config) {
-		config = config || {
-			rate: 1000
-		};
+		config = _.extend({
+			rate: 1000,
+			direction: sg.Direction.East,
+			active: false
+		}, config);
 
 		var actor = new L7.Actor(_.extend(config, _snakeConfig));
 
