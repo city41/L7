@@ -27,9 +27,15 @@
 				tile.overlayColor[3] += alphaChange;
 				var alpha = tile.overlayColor[3];
 
-				if(alpha > this.maxAlpha || alpha < this.minAlpha) {
-					tile.shimmerDirection *= -1;
-				} 
+				if(alpha > this.maxAlpha) {
+					tile.shimmerDirection = -1;
+					tile.overlayColor[3] = this.maxAlpha;
+				}
+
+				if(alpha < this.minAlpha) {
+					tile.shimmerDirection = 1;
+					tile.overlayColor[3] = this.minAlpha;
+				}
 			}, this);
 		}
 	};
