@@ -5,7 +5,7 @@
 		this._initTiles(this.tiles);
 	};
 
-	Shimmer.prototype= {
+	Shimmer.prototype = {
 		_initTiles: function(tiles) {
 			var fullRange = this.maxAlpha - this.minAlpha;
 
@@ -17,7 +17,8 @@
 				tile.shimmerRate = Math.floor(L7.rand(this.baseRate - this.baseRate * this.rateVariance, this.baseRate + this.baseRate * this.rateVariance));
 				tile.shimmerAlphaPerMilli = fullRange / tile.shimmerRate;
 				tile.shimmerDirection = 1;
-			}, this);
+			},
+			this);
 		},
 
 		update: function(delta, timestamp, board) {
@@ -27,16 +28,17 @@
 				tile.overlayColor[3] += alphaChange;
 				var alpha = tile.overlayColor[3];
 
-				if(alpha > this.maxAlpha) {
-					tile.shimmerDirection = -1;
+				if (alpha > this.maxAlpha) {
+					tile.shimmerDirection = - 1;
 					tile.overlayColor[3] = this.maxAlpha;
 				}
 
-				if(alpha < this.minAlpha) {
+				if (alpha < this.minAlpha) {
 					tile.shimmerDirection = 1;
 					tile.overlayColor[3] = this.minAlpha;
 				}
-			}, this);
+			},
+			this);
 		}
 	};
 

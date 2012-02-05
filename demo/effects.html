@@ -4,20 +4,7 @@
 	<meta charset="utf-8" />
 	<title>effects demo</title>
 
-	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
-	<script type="text/javascript" src="../lib/bootstrap.js"></script>
-  <script type="text/javascript" src="../lib/util/Array.js"></script>
-  <script type="text/javascript" src="../lib/util/Util.js"></script>
-	<script type="text/javascript" src="../lib/geometry/Pair.js"></script>
-	<script type="text/javascript" src="../lib/board/Piece.js"></script>
-	<script type="text/javascript" src="../lib/board/Tile.js"></script>
-	<script type="text/javascript" src="../lib/board/Board.js"></script>
-	<script type="text/javascript" src="../lib/board/HitManager.js"></script>
-	<script type="text/javascript" src="../lib/board/Actor.js"></script>
-	<script type="text/javascript" src="../lib/game/Viewport.js"></script>
-	<script type="text/javascript" src="../lib/game/Game.js"></script>
-	<script type="text/javascript" src="../lib/game/Keys.js"></script>
-	<script type="text/javascript" src="../lib/color/Color.js"></script>
+	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
 
 	<script type="text/javascript" src="Disco.js"></script>
 	<script type="text/javascript" src="Shimmer.js"></script>
@@ -29,16 +16,35 @@
 	<script type="text/javascript">
 		L7.Keys.init();
 
-		var board = new L7.Board({
-			width: 40,
-			height: 25,
-			borderWidth: 2,
-			tileSize: 15
-		});
+		var legend = {
+			'#000000': {
+					tag: 'rock'
+			},
+			'#0000FF': {
+					tag: 'water'
+			}
+		};
 
-		var c = ['blue' ];
+		var img = new Image();
+		img.onload = function() {
+			var levelLoader = new L7.LevelLoader({
+				boardConfig: {
+					borderWidth: 2,
+					tileSize: 18
+				},
+				image: img,
+				legend: legend
+			});
+
+			var level = levelLoader.load();
+
+		var board = level.board;
+
+		var c = ['#5555FF' ];
 			
-		board.tiles.forEach(function(tile, index) {
+board.query(function(tile) {
+	return true;
+}).forEach(function(tile, index) {
 			tile.color = L7.Color.toArray(c[index % c.length]);
 		});
 
@@ -62,11 +68,12 @@
 		//});
 
 		var wave = new Wave({
-			board: board,
+board: board,
+			waterTag: 'water',
 			baseAngle: 100,
 			direction: 'left',
-			baseSpeed: 2000,
-			baseInterval: 3000
+			baseSpeed: 1600,
+			baseInterval: 4000
 });
 		window.wave = wave;
 
@@ -83,7 +90,10 @@
 
 		//board.addDaemon(scaler);
 
-		new L7.Game(board).go();
+new L7.Game(board).go();
+};
+
+	img.src = 'city41.png';
 	</script>
 </body>
 </html>
