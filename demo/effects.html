@@ -24,13 +24,14 @@
 					tag: 'water'
 			}
 		};
-
+		
 		var img = new Image();
 		img.onload = function() {
 			var levelLoader = new L7.LevelLoader({
 				boardConfig: {
 					borderWidth: 2,
-					tileSize: 18
+					tileSize: 18,
+					borderFill: 'black'
 				},
 				image: img,
 				legend: legend

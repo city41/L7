@@ -30,7 +30,7 @@ Wave.prototype = {
 		}).forEach(function(tile) {
 			var actor = new L7.Actor({
 				position: tile.position,
-				color: [20, 10, 0, 1],
+				color: [255, 0, 0, 1],
 			});
 
 			actor.pieces.forEach(function(piece) {
@@ -162,7 +162,7 @@ Wave.prototype = {
 		if (this._oneWaveDone) {
 			this.board.actors.forEach(function(actor) {
 				var scale = actor.pieces.first.scale;
-				if (scale < 1.25) {
+				if (scale < 1.00) {
 					scale += delta * 0.0006;
 					actor.pieces.first.scale = scale;
 				} else if(!this._deshimmeredRocks) {
