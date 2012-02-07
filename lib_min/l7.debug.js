@@ -8,8 +8,285 @@
 })();
 
 (function() {
+	L7.AnimationFactory = function(owner, board) {
+		this._owner = owner;
+		this._board = board;
+		this._buildStack = [];
+	};
+
+	L7.AnimationFactory.prototype = {
+		_getBoard: function() {
+			return this._board || this._owner.board;
+		},
+		tween: function(config) {
+			config.targets = this._owner.pieces;
+			var tween = new L7.Tween(config);
+
+			if (this._buildStack.length === 0) {
+				this._getBoard().addDaemon(tween);
+			} else {
+				this._buildStack.last.children.add(tween);
+			}
+
+			return tween;
+		},
+		sequence: function(builder) {
+			var sequence = new L7.Sequence();
+
+			this._buildStack.push(sequence);
+			builder(this);
+			this._buildStack.pop();
+
+			if (this._buildStack.length === 0) {
+				this._getBoard().addDaemon(sequence);
+			} else {
+				this._buildStack.last.children.add(sequence);
+			}
+
+			return sequence;
+		},
+		together: function(builder) {
+			var together = new L7.Together();
+
+			this._buildStack.push(together);
+			builder(this);
+			this._buildStack.pop();
+
+			if (this._buildStack.length === 0) {
+				this._getBoard().addDaemon(together);
+			} else {
+				this._buildStack.last.children.add(together);
+			}
+
+			return together;
+		},
+
+		repeat: function(count, builder) {
+			var repeat = new L7.Repeat(count);
+
+			this._buildStack.push(repeat);
+			builder(this);
+			this._buildStack.pop();
+
+			if (this._buildStack.length === 0) {
+				this._getBoard().addDaemon(repeat);
+			} else {
+				this._buildStack.last.children.add(repeat);
+			}
+
+			return repeat;
+		}
+	};
+
+})();
+
+(function() {
+	L7.Repeat = function(count) {
+		this.children = [];
+		this._currentChild = 0;
+		this._curCount = 0;
+		this.count = count;
+	};
+
+	L7.Repeat.prototype = {
+		reset: function() {
+			this.done = false;
+			this._currentChild = 0;
+			this._curCount = 0;
+
+			this.children.forEach(function(child) {
+				child.reset();
+			});
+		},
+
+		update: function() {
+			// TODO: problem, this is causing "time leak"
+			// children might have less than delta to go, if so, they will only
+			// go as far as they need to, and the rest of the delta gets thrown away
+			// if there is left over delta, it should go to the next child
+
+			this.done = this._curCount >= this.count;
+
+			if(this.done) {
+				return;
+			}
+
+			var curChild = this.children[this._currentChild];
+
+			curChild.update.apply(curChild, arguments);
+
+
+			if(curChild.done) {
+				++this._currentChild;
+				if(this._currentChild >= this.children.length) {
+					this._currentChild = 0;
+					++this._curCount;
+					this.children.forEach(function(child) {
+						child.reset();
+					});
+				}
+			}
+			this.done = this._curCount >= this.count;
+		}
+	};
+})();
+
+
+(function() {
+	L7.Sequence = function() {
+		this.children = [];
+		this._currentChild = 0;
+	};
+
+	L7.Sequence.prototype = {
+		reset: function() {
+			this.done = false;
+			this._currentChild = 0;
+
+			this.children.forEach(function(child) {
+				child.reset();
+			});
+		},
+
+		update: function() {
+			// TODO: problem, this is causing "time leak"
+			// children might have less than delta to go, if so, they will only
+			// go as far as they need to, and the rest of the delta gets thrown away
+			// if there is left over delta, it should go to the next child
+			this.done = this._currentChild >= this.children.length;
+
+			if (this.done) {
+				return;
+			}
+
+			var curChild = this.children[this._currentChild];
+
+			curChild.update.apply(curChild, arguments);
+
+			if (curChild.done) {++this._currentChild;
+			}
+			this.done = this._currentChild >= this.children.length;
+		}
+	};
+})();
+
+(function() {
+	L7.Together = function() {
+		this.children = [];
+	};
+
+	L7.Together.prototype = {
+		reset: function() {
+			this.done = false;
+			this.children.forEach(function(child) {
+				child.reset();
+			});
+		},
+
+		update: function() {
+			// TODO: problem, this is causing "time leak"
+			// children might have less than delta to go, if so, they will only
+			// go as far as they need to, and the rest of the delta gets thrown away
+			// if there is left over delta, it should go to the next child
+
+			if(this.done) {
+				return;
+			}
+
+			var args = _.toArray(arguments);
+			var childNotDone = false;
+
+			this.children.forEach(function(child) {
+				child.update.apply(child, args);
+				if(!child.done) {
+					childNotDone = true;
+				}
+			});
+
+			this.done = !childNotDone;
+		}
+	};
+})();
+
+
+(function() {
+	L7.Tween = function(config) {
+		_.extend(this, config);
+		this.reset();
+	}
+
+	L7.Tween.prototype = {
+		reset: function() {
+			this._elapsed = 0;
+			this.done = this._elapsed >= this.duration;
+			this._initted = false;
+		},
+
+		_initTargets: function() {
+			this.targets.forEach(function(target) {
+				var value = this.from;
+				if(_.isArray(value)) {
+					value = value.slice(0);
+				}
+				target[this.property] = value;
+			}, this);
+		},
+
+		update: function(delta, timestamp, board) {
+			if(!this._initted) {
+				this._initTargets();
+				this._initted = true;
+			}
+
+			if(this.done) {
+				return;
+			}
+
+			var remaining = this.duration - this._elapsed;
+			delta = Math.min(remaining, delta);
+
+			this.targets.forEach(function(target) {
+				this._tween(target, delta);
+			}, this);
+
+			this._elapsed += delta;
+			this.done = this._elapsed >= this.duration;
+		},
+
+		_tween: function(target, delta) {
+			if(_.isArray(target[this.property])) {
+				this._tweenArray(target, delta);
+			} else if(_.isNumber(target[this.property])) {
+				this._tweenNumber(target, delta);
+			}
+		},
+
+		_tweenNumber: function(target, delta) {
+			var value = target[this.property];
+
+			var range = this.to - this.from;
+			var rate = range / this.duration;
+			var amount = rate * delta;
+			target[this.property] = value + amount;
+		},
+
+		_tweenArray: function(target, delta) {
+			var array = target[this.property];
+
+			array.forEach(function(value, i, a) {
+				var range = this.to[i] - this.from[i];
+				var rate = range / this.duration;
+				var amount = rate * delta;
+				a[i] = value + amount;
+			}, this);
+		}
+	};
+})();
+
+(function() {
 	L7.Actor = function(config) {
 		_.extend(this, config);
+		this.ani = new L7.AnimationFactory(this);
 
 		this.position = this.position || L7.p(0, 0);
 		this.shape = this.shape || [[5]];
@@ -58,7 +335,11 @@
 		},
 
 		_getColor: function(x, y) {
-			return this.color;
+			// TODO: this was written when colors were strings
+			// now that they are arrays, can only have one color per actor
+			//
+			return this.color.slice(0);
+
 			var color;
 			if (_.isString(this.color)) {
 				color = this.color;
@@ -85,7 +366,8 @@
 							position: piecePosition,
 							color: color,
 							isAnchor: this.shape[y][x] === L7.Actor.ANCHOR,
-							owner: this
+							owner: this,
+							scale: this.scale || 1
 						});
 						if (piece.isAnchor) {
 							this.anchorPiece = piece;
@@ -845,9 +1127,9 @@
 
 		toCssString: function(colorArray) {
 			if(colorArray.length === 3) {
-				return 'rgb(' + colorArray[0] + ',' + colorArray[1] + ',' + colorArray[2] + ')';
+				return 'rgb(' + Math.round(colorArray[0]) + ',' + Math.round(colorArray[1]) + ',' + Math.round(colorArray[2]) + ')';
 			} else {
-				return 'rgba(' + colorArray[0] + ',' + colorArray[1] + ',' + colorArray[2] + ',' +  (colorArray[3]) + ')';
+				return 'rgba(' + Math.round(colorArray[0]) + ',' + Math.round(colorArray[1]) + ',' + Math.round(colorArray[2]) + ',' +  Math.round(colorArray[3]) + ')';
 			}
 		},
 

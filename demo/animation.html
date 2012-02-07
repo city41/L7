@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Invader demo</title>
+
+	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/animation/AnimationFactory.js"></script>
+	<script type="text/javascript" src="../lib/animation/Tween.js"></script>
+	<script type="text/javascript" src="../lib/animation/Sequence.js"></script>
+	<script type="text/javascript" src="../lib/animation/Together.js"></script>
+	<script type="text/javascript" src="../lib/animation/Repeat.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		L7.Keys.init();
+
+		var board = new L7.Board({
+			width: 30,
+			height: 20,
+			borderWidth: 2,
+			tileSize: 20,
+			borderFill: 'black'
+		});
+
+		var c = ['#003388', '#223499', '#000055', 'black'];
+
+		board.tiles.forEach(function(tile, index) {
+			tile.color = L7.Color.toArray(c[index % c.length]);
+		});
+	
+		var ki = {
+			left: {
+				repeat: false,
+				handler: function() {
+					this.left(1);
+				}
+			},
+			right: {
+				repeat: false,
+				handler: function() {
+					this.right(1);
+				}
+			},
+			up: {
+				repeat: false,
+				handler: function() {
+					this.up(1);
+				}
+			},
+			down: {
+				repeat: false,
+				handler: function() {
+					this.down(1);
+				}
+			}
+		};
+
+		var a = new L7.Actor({
+			keyInputs: ki,
+			position: L7.p(10, 10),
+			shape: [
+				[0,0,1,0,0,0,0,0,1,0,0],
+				[0,0,0,1,0,0,0,1,0,0,0],
+				[0,0,1,1,1,1,1,1,1,0,0],
+				[0,1,1,0,1,1,1,0,1,1,0],
+				[1,1,1,1,1,5,1,1,1,1,1],
+				[1,0,1,1,1,1,1,1,1,0,1],
+				[1,0,1,0,0,0,0,0,1,0,1],
+				[0,0,0,1,1,0,1,1,0,0,0]
+			],
+			color: [255, 0, 0, 1],
+			scale: 1
+		});
+
+
+		board.addActor(a);
+
+		// TODO: repeat should just accept one child
+		// currently its basically Sequence
+		a.ani.repeat(Infinity, function(ani) {
+			ani.sequence(function(ani) {
+				ani.tween({
+					property: 'color',
+					from: [255, 0, 0, 1],
+					to: [0, 255, 0, 1],
+					duration: 5000
+				});
+				ani.tween({
+					property: 'scale',
+					from: 1,
+					to: 4,
+					duration: 5000
+				});
+				ani.together(function(ani) {
+					ani.tween({
+						property: 'scale',
+						from: 4,
+						to: 1,
+						duration: 3000
+					});
+					ani.tween({
+						property: 'color',
+						from: [0, 0, 255, 1],
+						to: [255, 255, 0, 1],
+						duration: 10000,
+						secondScale: true
+					});
+				});
+			});
+		});
+
+
+		new L7.Game(board).go();
+	</script>
+</body>
+</html>
+
+
+
+
