@@ -37,7 +37,7 @@ Wave.prototype = {
 				}
 				ani.tween({
 					property: 'color',
-					from: 'current',
+					from: this._darkWaterColor,
 					to: this._baseWaterColor,
 					duration: this._timeBetweenWaves
 				});

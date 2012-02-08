@@ -12,7 +12,6 @@
 	<script type="text/javascript" src="../lib/animation/Sequence.js"></script>
 	<script type="text/javascript" src="../lib/animation/Together.js"></script>
 	<script type="text/javascript" src="../lib/animation/Repeat.js"></script>
-	<script type="text/javascript" src="../lib/animation/Easing.js"></script>
 
 </head>
 <body>
@@ -79,22 +78,6 @@
 
 		board.addActor(a);
 
-		a.ani.sequence(function(ani) {
-			ani.tween({
-				property: 'scale',
-				from: 1,
-				to: 15,
-				duration: 5000,
-				easing: 'easeInCubic'
-			});
-			ani.tween({
-				property: 'scale',
-				from: 15,
-				to: 1,
-				duration: 3000
-			});
-		});
-		/*
 		a.ani.repeat(Infinity, function(ani) {
 			ani.sequence(function(ani) {
 				ani.tween({
@@ -110,9 +93,8 @@
 					property: 'scale',
 					from: 1,
 					to: 4,
-					duration: 10000,
-					//jitter: 0.2
-					//easing: 'easeInOutCubic'
+					duration: 5000,
+					jitter: 0.2
 				});
 				ani.together(function(ani) {
 					ani.tween({
@@ -131,7 +113,6 @@
 				});
 			});
 		});
-		*/
 
 		board.ani.tween({
 			filter: 'tiles',
