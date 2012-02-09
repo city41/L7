@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Animation demo</title>
+
+	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/color/Color.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/animation/AnimationFactory.js"></script>
+	<script type="text/javascript" src="../lib/animation/Tween.js"></script>
+	<script type="text/javascript" src="../lib/animation/Wait.js"></script>
+	<script type="text/javascript" src="../lib/animation/Sequence.js"></script>
+	<script type="text/javascript" src="../lib/animation/Together.js"></script>
+	<script type="text/javascript" src="../lib/animation/Repeat.js"></script>
+	<script type="text/javascript" src="../lib/animation/Shimmer.js"></script>
+	<script type="text/javascript" src="../lib/animation/Disco.js"></script>
+
+	<script type="text/javascript" src="SplashBoard.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		L7.Keys.init();
+
+		var image = new Image();
+		var tileSize = 33;
+		var borderWidth = 3;
+
+		image.onload = function() {
+			var image2 = new Image();
+	
+			image2.onload = function() {
+				var image3 = new Image();
+				image3.onload = function() {
+					var splash = new SplashBoard({
+						image: image,
+						waterImage: image2,
+						discoImage: image3,
+						tileSize: tileSize,
+						borderWidth: borderWidth,
+						borderFill: 'black',
+						rockColor: '#000000'
+					});
+	
+					new L7.Game({
+						board: splash,
+						width: image.width * (tileSize + borderWidth) + borderWidth,
+						height: image.height * (tileSize + borderWidth) + borderWidth
+					}).go();
+				};
+				image3.src = 'disco.png';
+			};
+
+			image2.src = 'water.png';
+		};
+
+		image.src = 'city41.png';
+	</script>
+</body>
+</html>
+
+
+
+

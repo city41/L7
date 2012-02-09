@@ -18,6 +18,41 @@
 		_getBoard: function() {
 			return this._board || this._owner.board;
 		},
+		disco: function(config) {
+			if (!config.targets) {
+				config.targets = this._owner.getAnimationTargets(config.filter);
+			}
+
+			var disco = new L7.Disco(config);
+
+			if (this._buildStack.length === 0) {
+				this._getBoard().addDaemon(disco);
+			} else {
+				this._buildStack.last.children.add(disco);
+			}
+
+			return disco;
+		},
+		shimmer: function(config) {
+			if (!config.targets) {
+				config.targets = this._owner.getAnimationTargets(config.filter);
+			}
+
+			var shimmer = new L7.Shimmer(config);
+
+			if (this._buildStack.length === 0) {
+				this._getBoard().addDaemon(shimmer);
+			} else {
+				this._buildStack.last.children.add(shimmer);
+			}
+
+			return shimmer;
+		},
+		setProperty: function(config) {
+			config.duration = 0;
+			config.from = config.to = config.value;
+			return this.tween(config);
+		},
 		tween: function(config) {
 			if (!config.targets) {
 				config.targets = this._owner.getAnimationTargets(config.filter);
@@ -78,10 +113,95 @@
 			}
 
 			return repeat;
+		},
+
+		wait: function(millis) {
+			var wait = new L7.Wait(millis);
+
+			if(this._buildStack.length === 0) {
+				this._getBoard().addDaemon(wait);
+			} else {
+				this._buildStack.last.children.add(wait);
+			}
+
+			return wait;
+		},
+
+		invoke: function(func) {
+			var invoke = new L7.Invoke(func);
+
+			if(this._buildStack.length === 0) {
+				this._getBoard().addDaemon(invoke);
+			} else {
+				this._buildStack.last.children.add(invoke);
+			}
+
+			return invoke;
 		}
 	};
 
 })();
+
+(function() {
+	var _majorOverlayColor = [255, 255, 255, 0.9];
+	var _minorOverlayColor = [255, 255, 255, 0.6];
+
+	L7.Disco = function(config) {
+		_.extend(this, config);
+		this.reset();
+	}
+
+	L7.Disco.prototype = {
+		reset: function() {
+			this.done = false;
+			this.even = true;
+			this._elapsed = 0;
+			this._discoCount = 0;
+		},
+
+		update: function(delta, timestamp, board) {
+			if(this.done) {
+				return;
+			}
+
+			this._elapsed += delta;
+
+			if (this._elapsed >= this.rate) {
+				this.even = !this.even;
+				this._doDisco(this.even, this.targets, this.width);
+				this._elapsed -= this.rate;
+				++this._discoCount;
+			}
+
+			this.done = this._discoCount >= 2;
+		},
+
+		_doDisco: function(even, tiles, width) {
+			for(var i = 0; i < tiles.length; ++i) {
+				var x = i % width;
+				if(x === 0) {
+					even = !even;
+				}
+
+				if(even) {
+					if((x & 1) === 0) {
+						tiles[i].overlayColor = _majorOverlayColor;
+					} else {
+						tiles[i].overlayColor = _minorOverlayColor;
+					}
+				} else {
+					if((x & 1) === 1) {
+						tiles[i].overlayColor = _majorOverlayColor;
+					} else {
+						tiles[i].overlayColor = _minorOverlayColor;
+					}
+				}
+			}
+		}
+	};
+})();
+
+
 
 /*
   Easing Equations v1.5
@@ -367,6 +487,30 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 
 (function() {
+	var _idCounter = 0;
+	L7.Invoke = function(func) {
+		this.func = func;
+		this.reset();
+	}
+
+	L7.Invoke.prototype = {
+		reset: function() {
+			this.done = false;
+		},
+
+		update: function(delta, timestamp, board) {
+			if(this.done) {
+				return;
+			}
+
+			this.func();
+			this.done = true;
+		}
+	};
+})();
+
+
+(function() {
 	L7.Repeat = function(count) {
 		this.children = [];
 		this._currentChild = 0;
@@ -457,6 +601,67 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
+	var _idCounter = 0;
+	L7.Shimmer = function(config) {
+		_.extend(this, config);
+		this.reset();
+	}
+
+	L7.Shimmer.prototype = {
+		reset: function() {
+			this.done = false;
+		},
+
+		_initTargets: function() {
+			var fullRange = this.maxAlpha - this.minAlpha;
+
+			var color = this.color || [255, 255, 255, 1];
+
+			this.targets.forEach(function(target) {
+				target.overlayColor = color.slice(0);
+				target.overlayColor[3] = L7.rand(this.minAlpha, this.maxAlpha);
+				target.shimmerRate = Math.floor(L7.rand(this.baseRate - this.baseRate * this.rateVariance, this.baseRate + this.baseRate * this.rateVariance));
+				target.shimmerAlphaPerMilli = fullRange / target.shimmerRate;
+				target.shimmerDirection = 1;
+			},
+			this);
+		},
+
+		update: function(delta, timestamp, board) {
+			if(!this._initted) {
+				this._initTargets();
+				this._initted = true;
+			}
+
+			if(this.done) {
+				return;
+			}
+
+			this.targets.forEach(function(target) {
+				var rate = target.shimmerAlphaPerMilli * target.shimmerDirection;
+				var alphaChange = delta * rate;
+				target.overlayColor[3] += alphaChange;
+				var alpha = target.overlayColor[3];
+
+				if (alpha > this.maxAlpha) {
+					target.shimmerDirection = - 1;
+					target.overlayColor[3] = this.maxAlpha;
+				}
+
+				if (alpha < this.minAlpha) {
+					target.shimmerDirection = 1;
+					target.overlayColor[3] = this.minAlpha;
+				}
+			},
+			this);
+
+			this.done = true;
+		}
+	};
+})();
+
+
+(function() {
 	L7.Together = function() {
 		this.children = [];
 	};
@@ -517,55 +722,65 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 		_initTargets: function() {
 			this.targets.forEach(function(target) {
+				target[this._saveProperty] = target[this.property];
+				if(_.isArray(target[this._saveProperty])) {
+					target[this._saveProperty] = target[this._saveProperty].slice(0);
+				}
+
 				var value = this.from;
-				if(_.isArray(value)) {
-					value = value.slice(0);
+
+				if (!_.isUndefined(value)) {
+					if (_.isArray(value)) {
+						value = value.slice(0);
+					}
+
+					target[this.property] = value;
 				}
-				if(this.restoreAfter) {
-					target[this._saveProperty] = target[this.property];
-				}
-				target[this.property] = value;
-			}, this);
+			},
+			this);
 		},
 
 		update: function(delta, timestamp, board) {
-			if(!this._initted) {
+			if (!this._initted) {
 				this._initTargets();
 				this._initted = true;
 			}
 
-			if(this.done) {
+			if (this.done) {
 				return;
 			}
 
 			this._elapsed += delta;
-			if(this._elapsed > this.duration) {
+			if (this._elapsed > this.duration) {
 				this._elapsed = this.duration;
 				this.done = true;
 			}
 
 			this.targets.forEach(function(target) {
 				this._tween(target);
-			}, this);
+			},
+			this);
 
-			if(this.done) {
+			if (this.done) {
 				this.targets.forEach(function(target) {
-					if(this.restoreAfter) {
+					if (this.restoreAfter) {
 						target[this.property] = target[this._saveProperty];
 					}
 					delete target[this._saveProperty];
 					delete target[this._nonJitteredProperty];
-				}, this);
+				},
+				this);
 			}
 		},
 
 		_tween: function(target) {
-			if(_.isArray(target[this.property])) {
+			if (_.isArray(target[this.property])) {
 				var array = target[this.property];
-				for(var i = 0; i < array.length; ++i) {
-					array[i] = this._tweenValue(this._elapsed, this.from[i], this.to[i], this.duration);
+				for (var i = 0; i < array.length; ++i) {
+					var from = this.from || target[this._saveProperty];
+					array[i] = this._tweenValue(this._elapsed, from[i], this.to[i], this.duration);
 				}
-			} else if(_.isNumber(target[this.property])) {
+			} else if (_.isNumber(target[this.property])) {
 				target[this.property] = this._tweenValue(this._elapsed, this.from, this.to, this.duration);
 			}
 		},
@@ -573,10 +788,36 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		_tweenValue: function(elapsed, from, to, duration) {
 			var position = this._easeFunc(elapsed, from, to - from, duration);
 
-			if(this.jitter) {
+			if (this.jitter) {
 				position += L7.rand(-this.jitter, this.jitter);
 			}
 			return position;
+		}
+	};
+})();
+
+(function() {
+	var _idCounter = 0;
+	L7.Wait = function(duration) {
+		this.duration = duration;
+		this.reset();
+	}
+
+	L7.Wait.prototype = {
+		reset: function() {
+			this._elapsed = 0;
+			this.done = this._elapsed >= this.duration;
+		},
+
+		update: function(delta, timestamp, board) {
+			if(this.done) {
+				return;
+			}
+
+			this._elapsed += delta;
+			if(this._elapsed > this.duration) {
+				this.done = true;
+			}
 		}
 	};
 })();
@@ -673,7 +914,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 							color: color,
 							isAnchor: this.shape[y][x] === L7.Actor.ANCHOR,
 							owner: this,
-							scale: this.scale || 1
+							scale: _.isNumber(this.scale) ? this.scale : 1
 						});
 						if (piece.isAnchor) {
 							this.anchorPiece = piece;
@@ -827,9 +1068,17 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	};
 
 	L7.Board.prototype = {
+		tilesTagged: function(tag) {
+			return this.tiles.filter(function(tile) {
+				return tile.tag === tag;
+			});
+		},
 		getAnimationTargets: function(filter) {
-			if(filter === 'tiles') {
+			if (filter === 'tiles') {
 				return this.tiles;
+			}
+			if (_.isArray(filter)) {
+				return filter;
 			}
 			return this.tiles;
 		},
@@ -1072,6 +1321,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		render: function(delta, context, anchorXpx, anchorYpx, timestamp) {
+			anchorXpx += this.offsetX || 0;
+			anchorYpx += this.offsetY || 0;
+
 			var c = context,
 			bw = this.borderWidth,
 			ts = this.tileSize,
@@ -1097,26 +1349,40 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					row = this._rows[y];
 					for (x = seedx; x < xl; ++x) {
 						if (x >= 0) {
+	
+
 							tile = row[x];
 							color = tile.getColor();
-							scale = tile.getScale();
-							if (!_.isNumber(scale)) {
-								scale = 1;
-							}
 
-							if (scale !== 1) {
-								scaledOut.push(tile);
-								color = tile.getColor(true);
-								scale = 1;
+							if (color) {
+								scale = tile.getScale();
+								if (!_.isNumber(scale)) {
+									scale = 1;
+								}
+
+								if (scale !== 1) {
+									scaledOut.push(tile);
+									color = tile.getColor(true);
+									scale = 1;
+								}
+								if(color) {
+									if (this.borderFill) {
+										c.fillStyle = this.borderFill;
+										// top
+										c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, ts + (2 * bw), bw);
+										// bottom
+										c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY + ts + bw, ts + (2 * bw), bw);
+										// left
+										c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
+										// right
+										c.fillRect((x - seedx) * (ts + bw) + offsetX + ts + bw, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
+									}
+									c.fillStyle = color;
+									var size = Math.round(ts * scale);
+									var offset = ts / 2 - size / 2;
+									c.fillRect((x - seedx) * (ts + bw) + bw + offset + offsetX, (y - seedy) * (ts + bw) + bw + offset + offsetY, size, size);
+								}
 							}
-							if (this.borderFill) {
-								c.fillStyle = this.borderFill;
-								c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, ts + (2 * bw), ts + (2 * bw));
-							}
-							c.fillStyle = color;
-							var size = Math.round(ts * scale);
-							var offset = ts / 2 - size / 2;
-							c.fillRect((x - seedx) * (ts + bw) + bw + offset + offsetX, (y - seedy) * (ts + bw) + bw + offset + offsetY, size, size);
 						}
 					}
 				}
@@ -1443,7 +1709,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			if(colorArray.length === 3) {
 				return 'rgb(' + Math.round(colorArray[0]) + ',' + Math.round(colorArray[1]) + ',' + Math.round(colorArray[2]) + ')';
 			} else {
-				return 'rgba(' + Math.round(colorArray[0]) + ',' + Math.round(colorArray[1]) + ',' + Math.round(colorArray[2]) + ',' +  Math.round(colorArray[3]) + ')';
+				return 'rgba(' + Math.round(colorArray[0]) + ',' + Math.round(colorArray[1]) + ',' + Math.round(colorArray[2]) + ',' +  colorArray[3] + ')';
 			}
 		},
 
@@ -1549,7 +1815,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				_composite(output, this.toArray(arguments[i]));
 			}
 
-			output[3] = 1;
+			//output[3] = 1;
 
 			return output;
 		}
@@ -1812,7 +2078,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		};
 
 	function _getConfig(configOrBoard) {
-		if(!(configOrBoard instanceof L7.Board)) {
+		if(typeof configOrBoard.render !== 'function' && typeof configOrBoard.update !== 'function') {
 			return configOrBoard;
 		}
 		var b = configOrBoard;

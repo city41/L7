@@ -79,21 +79,35 @@
 
 		board.addActor(a);
 
+		/*
+		a.ani.repeat(Infinity, function(ani) {
+			ani.tween({
+				property: 'scale',
+				from: 1,
+				to: 1,
+				duration: 1000,
+				jitter: 0.2
+			});
+		});
+		*/
+		
 		a.ani.sequence(function(ani) {
 			ani.tween({
 				property: 'scale',
 				from: 1,
-				to: 15,
+				to: 4,
 				duration: 5000,
-				easing: 'easeInCubic'
+				easing: 'easeInCubic',
+				jitter: 0.1
 			});
 			ani.tween({
 				property: 'scale',
-				from: 15,
+				from: 4,
 				to: 1,
 				duration: 3000
 			});
 		});
+		
 		/*
 		a.ani.repeat(Infinity, function(ani) {
 			ani.sequence(function(ani) {
