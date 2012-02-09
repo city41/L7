@@ -28,14 +28,16 @@ describe("Actor", function() {
 		});
 
 		it("should create pieces based on the provided shape", function() {
-			var color = 'red';
+			var color = [255, 0, 0, 1];
+			var scale = 2.5;
 			var a = new L7.Actor({
 				shape: [
 					[1, 1],
 					[1, 5]
 				],
 				position: L7.p(2, 2),
-				color: color
+				color: color,
+				scale: scale
 			});
 
 			expect(a.pieces.length).toEqual(4);
@@ -55,6 +57,7 @@ describe("Actor", function() {
 
 			a.pieces.forEach(function(piece) {
 				expect(piece.color).toEqual(color);
+				expect(piece.scale).toEqual(scale);
 			});
 		});
 	});

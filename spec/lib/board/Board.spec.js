@@ -551,7 +551,7 @@ describe("Board", function() {
 			});
 		});
 
-		it('should ask each tile for its scale', function() {
+		it('should ask each colored tile for its scale', function() {
 			var board = new L7.Board({
 				width: 2,
 				height: 2,
@@ -559,6 +559,7 @@ describe("Board", function() {
 			});
 
 			board.tiles.forEach(function(tile) {
+				tile.color = [255, 255, 255, 1];
 				spyOn(tile, 'getScale');
 			});
 
