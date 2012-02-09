@@ -61,67 +61,60 @@ SplashBoard.prototype = {
 					rate: 500
 				});
 			});
-			ani.together(function(ani) {
+			ani.together({ filter: 'board' }, function(ani) {
 				ani.repeat(Infinity, function(ani) {
 					ani.tween({
-						targets: [board],
 						property: 'offsetX',
 						from: 0,
 						to: 50,
 						duration: 4000
 					});
 					ani.tween({
-						targets: [board],
 						property: 'offsetX',
 						from: 50,
 						to: 0,
 						duration: 4000
 					});
 					ani.tween({
-						targets: [board],
 						property: 'offsetY',
 						from: 0,
 						to: 50,
 						duration: 4000
 					});
 					ani.tween({
-						targets: [board],
 						property: 'offsetY',
 						from: 50,
 						to: 0,
 						duration: 4000
 					});
 				});
-				ani.repeat(Infinity, function(ani) {
+				ani.repeat(Infinity, { filter: 'board' }, function(ani) {
 					ani.tween({
-						targets: [board],
 						property: 'tileSize',
 						from: 15,
 						to: 20,
 						duration: 3000
 					});
 					ani.tween({
-						targets: [board],
 						property: 'tileSize',
 						from: 20,
 						to: 15,
 						duration: 3000
 					});
-					ani.tween({
-						property: 'color',
-						filter: board.tilesTagged('disco'),
-						from: me._baseDiscoColor,
-						to: [255, 0, 0, 1],
-						duration: 2000
+					ani.sequence({ filter: board.tilesTagged('disco') }, function(ani) {  // 'tiles=disco'
+						ani.tween({
+							property: 'color',
+							from: me._baseDiscoColor,
+							to: [255, 0, 0, 1],
+							duration: 2000
+						});
+						ani.tween({
+							property: 'color',
+							from: [255, 0, 0,1],
+							to: me._baseDiscoColor,
+							duration: 2000
+						});
 					});
-					ani.tween({
-						property: 'color',
-						filter: board.tilesTagged('disco'),
-						from: [255, 0, 0,1],
-						to: me._baseDiscoColor,
-						duration: 2000
-					});
-
 				});
 			});
 		});
@@ -149,9 +142,8 @@ SplashBoard.prototype = {
 
 		board.ani.together(function(ani) {
 			ani.together(function(ani) {
-				ani.repeat(Infinity, function(ani) {
+				ani.repeat(Infinity, { filter: 'board' }, function(ani) {
 					ani.tween({
-						targets: [board],
 						property: 'offsetX',
 						from: 0,
 						to: - 200,
@@ -159,7 +151,6 @@ SplashBoard.prototype = {
 						easing: 'easeInCubic'
 					});
 					ani.tween({
-						targets: [board],
 						property: 'offsetX',
 						from: - 200,
 						to: 0,
@@ -167,7 +158,6 @@ SplashBoard.prototype = {
 						easing: 'easeOutCubic'
 					});
 					ani.tween({
-						targets: [board],
 						property: 'offsetY',
 						from: 0,
 						to: - 200,
@@ -175,7 +165,6 @@ SplashBoard.prototype = {
 						easing: 'easeInOutSine'
 					});
 					ani.tween({
-						targets: [board],
 						property: 'offsetY',
 						from: - 200,
 						to: 0,
@@ -183,16 +172,14 @@ SplashBoard.prototype = {
 						easing: 'easeInOutSine'
 					});
 				});
-				ani.repeat(Infinity, function(ani) {
+				ani.repeat(Infinity, { filter: 'board' }, function(ani) {
 					ani.tween({
-						targets: [board],
 						property: 'tileSize',
 						from: 15,
 						to: 30,
 						duration: 3000
 					});
 					ani.tween({
-						targets: [board],
 						property: 'tileSize',
 						from: 30,
 						to: 15,
