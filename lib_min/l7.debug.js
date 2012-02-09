@@ -18,35 +18,39 @@
 		_getBoard: function() {
 			return this._board || this._owner.board;
 		},
-		disco: function(config) {
-			if (!config.targets) {
+		_addParentAnimation: function(builder, AniConstructor, consArg) {
+			var ani = new AniConstructor(consArg);
+
+			this._buildStack.push(ani);
+			builder(this);
+			this._buildStack.pop();
+
+			if(this._buildStack.length === 0) {
+				this._getBoard().addDaemon(ani);
+			} else {
+				this._buildStack.last.children.add(ani);
+			}
+			return ani;
+		},
+		_addAnimation: function(config, AniConstructor) {
+			if(!config.targets) {
 				config.targets = this._owner.getAnimationTargets(config.filter);
 			}
 
-			var disco = new L7.Disco(config);
+			var ani = new AniConstructor(config);
 
-			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(disco);
+			if(this._buildStack.length === 0) {
+				this._getBoard().addDaemon(ani);
 			} else {
-				this._buildStack.last.children.add(disco);
+				this._buildStack.last.children.add(ani);
 			}
-
-			return disco;
+			return ani;
+		},
+		disco: function(config) {
+			return this._addAnimation(config, L7.Disco);
 		},
 		shimmer: function(config) {
-			if (!config.targets) {
-				config.targets = this._owner.getAnimationTargets(config.filter);
-			}
-
-			var shimmer = new L7.Shimmer(config);
-
-			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(shimmer);
-			} else {
-				this._buildStack.last.children.add(shimmer);
-			}
-
-			return shimmer;
+			return this._addAnimation(config, L7.Shimmer);
 		},
 		setProperty: function(config) {
 			config.duration = 0;
@@ -54,89 +58,25 @@
 			return this.tween(config);
 		},
 		tween: function(config) {
-			if (!config.targets) {
-				config.targets = this._owner.getAnimationTargets(config.filter);
-			}
-
-			var tween = new L7.Tween(config);
-
-			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(tween);
-			} else {
-				this._buildStack.last.children.add(tween);
-			}
-
-			return tween;
+			return this._addAnimation(config, L7.Tween);
 		},
 		sequence: function(builder) {
-			var sequence = new L7.Repeat(1);
-
-			this._buildStack.push(sequence);
-			builder(this);
-			this._buildStack.pop();
-
-			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(sequence);
-			} else {
-				this._buildStack.last.children.add(sequence);
-			}
-
-			return sequence;
+			return this._addParentAnimation(builder, L7.Repeat, 1);
 		},
 		together: function(builder) {
-			var together = new L7.Together();
-
-			this._buildStack.push(together);
-			builder(this);
-			this._buildStack.pop();
-
-			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(together);
-			} else {
-				this._buildStack.last.children.add(together);
-			}
-
-			return together;
+			return this._addParentAnimation(builder, L7.Together);
 		},
 
 		repeat: function(count, builder) {
-			var repeat = new L7.Repeat(count);
-
-			this._buildStack.push(repeat);
-			builder(this);
-			this._buildStack.pop();
-
-			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(repeat);
-			} else {
-				this._buildStack.last.children.add(repeat);
-			}
-
-			return repeat;
+			return this._addParentAnimation(builder, L7.Repeat, count);
 		},
 
 		wait: function(millis) {
-			var wait = new L7.Wait(millis);
-
-			if(this._buildStack.length === 0) {
-				this._getBoard().addDaemon(wait);
-			} else {
-				this._buildStack.last.children.add(wait);
-			}
-
-			return wait;
+			return this._addAnimation({ duration: millis }, L7.Wait);
 		},
 
 		invoke: function(func) {
-			var invoke = new L7.Invoke(func);
-
-			if(this._buildStack.length === 0) {
-				this._getBoard().addDaemon(invoke);
-			} else {
-				this._buildStack.last.children.add(invoke);
-			}
-
-			return invoke;
+			return this._addAnimation({ func: func }, L7.Invoke);
 		}
 	};
 
@@ -489,7 +429,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 (function() {
 	var _idCounter = 0;
 	L7.Invoke = function(func) {
-		this.func = func;
+		_.extend(this, config);
 		this.reset();
 	}
 
@@ -798,8 +738,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 (function() {
 	var _idCounter = 0;
-	L7.Wait = function(duration) {
-		this.duration = duration;
+	L7.Wait = function(config) {
+		_.extend(this, config);
 		this.reset();
 	}
 
@@ -882,18 +822,15 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		_getColor: function(x, y) {
-			// TODO: this was written when colors were strings
-			// now that they are arrays, can only have one color per actor
-			//
-			return this.color.slice(0);
-
-			var color;
-			if (_.isString(this.color)) {
-				color = this.color;
-			} else if (_.isArray(this.color)) {
-				color = this.color[y][x];
+			if(!this.color) {
+				return;
 			}
-			return color;
+
+			if(_.isNumber(this.color[0])) {
+				return this.color.slice(0);
+			} else {
+				return this.color[y][x].slice(0);
+			}
 		},
 
 		_createPieces: function() {
