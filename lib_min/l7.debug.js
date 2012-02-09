@@ -476,7 +476,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 (function() {
 	var _idCounter = 0;
-	L7.Invoke = function(func) {
+	L7.Invoke = function(config) {
 		_.extend(this, config);
 		this.reset();
 	}
