@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Particle demo</title>
+
+	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/color/Color.js"></script>
+	<script type="text/javascript" src="../lib/board/Actor.js"></script>
+	<script type="text/javascript" src="../lib/particle/ParticleSystem.js"></script>
+
+	<script type="text/javascript" src="SplashBoard.js"></script>
+
+</head>
+<body>
+	<script type="text/javascript">
+		L7.Keys.init();
+
+		var particleSystem = new L7.ParticleSystem({
+			totalParticles: 350,
+			duration: Infinity,
+			gravity: L7.p(),
+			angle: 90,
+			angleVar: 360,
+			radialAccel: 0,
+			radialAccelVar: 0,
+			position: L7.p(50, 50),
+			life: 1,
+			lifeVar: 0.5,
+			speed: 20,
+			speedVar: 5,
+			emissionRate: 350,
+			startColor: [200, 50, 20, 1],
+			startColorVar: [0, 0, 0, 0],
+			endColor: [0, 0, 0, 1],
+			endColorVar: [0, 0, 0, 0]
+		});
+
+		var board = new L7.Board({
+			tileSize: 6,
+			borderWidth: 2,
+			width: 100,
+			height: 100,
+			borderFill: 'black'
+		});
+
+		board.addDaemon(particleSystem);
+	
+		new L7.Game(board).go();
+	</script>
+</body>
+</html>
+
+
+
+
