@@ -20,19 +20,19 @@
 		L7.Keys.init();
 
 		var board = new L7.Board({
-			tileSize: 8,
+			tileSize: 10,
 			borderWidth: 2,
-			width: 50,
-			height: 50,
+			width: 30,
+			height: 30,
 			borderFill: 'black'
 		});
 
 		board.tiles.forEach(function(tile) {
-			tile.color = [0, 0, 0, 1];
+			tile.color = [20, 20, 20, 1];
 		});
 
 		var sunSystem = new L7.ParticleSystem({
-			totalParticles: 25,
+			totalParticles: 350,
 			duration: Infinity,
 			gravity: L7.p(),
 			centerOfGravity: L7.p(),
@@ -42,27 +42,31 @@
 			radialAccelVar: 0,
 			position: L7.p(board.width / 2, board.height / 2),
 			posVar: L7.p(),
-			life: 6,
-			lifeVar: 6,
-			speed: 0.2,
-			speedVar: 0,
-			emissionRate: 2,
-			startColor: [200, 50, 20, 1],
-			startColorVar: [0, 0, 0, 0],
+			life: 1,
+			lifeVar: 0.5,
+			speed: 20,
+			speedVar: 5,
+			emissionRate: 350,
+			startColor: L7.Color.fromFloats(0.9, 0.6, 0.12, 1),
+			startColorVar: [10, 10, 3, 0],
 			endColor: [0, 0, 0, 1],
 			endColorVar: [0, 0, 0, 0],
+			//startSize: 1.5,
+			//startSizeVar: (1.5) / 3,
+			//endSize: 0,
+			//endSizeVar: 0,
 			active: true
 		});
 
 		var galaxySystem = new L7.ParticleSystem({
-			totalParticles: 20,
+			totalParticles: 200,
 			duration: Infinity,
 			gravity: L7.p(),
 			centerOfGravity: L7.p(),
 			angle: 90,
 			angleVar: 360,
-			speed: 0.2,
-			speedVar: 0.04,
+			speed: 60,
+			speedVar: 10,
 			radialAccel: -80,
 			radialAccelVar: 0,
 			tangentialAccel: 80,
@@ -71,8 +75,8 @@
 			posVar: L7.p(),
 			life: 4,
 			lifeVar: 1,
-			emissionRate: 20 / 4,
-			startColor: [50, 80, 200, 1],
+			emissionRate: 200 / 4,
+			startColor: L7.Color.fromFloats(0.12, 0.25, 0.76, 1),
 			startColorVar: [0, 0, 0, 0],
 			endColor: [0, 0, 0, 1],
 			endColorVar: [0, 0, 0, 0],
@@ -84,29 +88,207 @@
 			duration: Infinity,
 			gravity: L7.p(0, -90),
 			centerOfGravity: L7.p(),
-			angle: 90,
+			angle: -90,
 			angleVar: 20,
-			speed: 1.3,
-			speedVar: 1,
+			speed: 50,
+			speedVar: 5,
+			radialAccel: 0,
+			radialAccelVar: 0,
+			tangentialAccel: 0,
+			tangentialAccelVar: 0,
+			position: L7.p(board.width / 2, board.height),
+			posVar: L7.p(),
+			life: 3.5,
+			lifeVar: 1,
+			emissionRate: 200 / 3.5,
+			startColor: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+			startColorVar: L7.Color.fromFloats(0.5, 0.5, 0.5, 0.1),
+			endColor: L7.Color.fromFloats(0.1, 0.1, 0.1, 0.2),
+			endColorVar: L7.Color.fromFloats(0.1, 0.1, 0.1, 0.2),
+			active: true
+		});
+
+		var fireSystem = new L7.ParticleSystem({
+			totalParticles: 250,
+			duration: Infinity,
+			gravity: L7.p(),
+			centerOfGravity: L7.p(),
+			angle: -90,
+			angleVar: 10,
+			speed: 30,
+			speedVar: 10,
 			radialAccel: 0,
 			radialAccelVar: 0,
 			tangentialAccel: 0,
 			tangentialAccelVar: 0,
 			position: L7.p(board.width / 2, board.height - 4),
-			posVar: L7.p(),
-			life: 3.5,
-			lifeVar: 1,
-			emissionRate: 200 / 3.5,
-			startColor: [128, 128, 128, 1],
-			startColorVar: [128, 128, 128, 0.1],
-			endColor: [10, 10, 10, 0.2],
-			endColorVar: [10, 10, 10, 0.2],
+			posVar: L7.p(1.5, 1),
+			life: 1,
+			lifeVar: 0.25,
+			emissionRate: 250 / 1,
+			startColor: L7.Color.fromFloats(0.76, 0.25, 0.12, 1),
+			startColorVar: [0, 0, 0, 0],
+			endColor: [0, 0, 0, 1],
+			endColorVar: [0, 0, 0, 0],
+			//startSize: 1,
+			//startSizeVar: 0.5,
+			//endSize: 0,
+			//endSizeVar: 0,
 			active: true
 		});
 
+		var meteorSystem = new L7.ParticleSystem({
+			totalParticles: 150,
+			duration: Infinity,
+			gravity: L7.p(-200, -200),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 360,
+			speed: 15,
+			speedVar: 5,
+			radialAccel: 0,
+			radialAccelVar: 0,
+			tangentialAccel: 0,
+			tangentialAccelVar: 0,
+			position: L7.p(board.width / 2, board.height / 2),
+			posVar: L7.p(),
+			life: 2,
+			lifeVar: 1,
+			emissionRate: 150 / 1,
+			startColor: L7.Color.fromFloats(0.2, 0.4, 0.7, 1),
+			startColorVar: L7.Color.fromFloats(0, 0, 0.2, 0.1),
+			endColor: [0, 0, 0, 1],
+			endColorVar: [0, 0, 0, 0],
+			//startSize: 3,
+			//startSizeVar: 0.5,
+			active: true
+		});
+
+		var snowSystem = new L7.ParticleSystem({
+			totalParticles: 700,
+			duration: Infinity,
+			gravity: L7.p(0, 1),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 10,
+			speed: 5,
+			speedVar: 1,
+			radialAccel: 0,
+			radialAccelVar: 2,
+			tangentialAccel: 0,
+			tangentialAccelVar: 2,
+			position: L7.p(board.width / 2, 0),
+			posVar: L7.p(board.width / 2, 0),
+			life: 45,
+			lifeVar: 15,
+			emissionRate: 10,
+			startColor: L7.Color.fromFloats(1, 1, 1, 1),
+			startColorVar: [0, 0, 0, 0],
+			endColor: L7.Color.fromFloats(1, 1, 1, 0),
+			endColorVar: [0, 0, 0, 0],
+			active: true
+		});
+
+		var rainSystem = new L7.ParticleSystem({
+			totalParticles: 1000,
+			duration: Infinity,
+			gravity: L7.p(100, -10),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 5,
+			speed: 100,
+			speedVar: 30,
+			radialAccel: 0,
+			radialAccelVar: 1,
+			tangentialAccel: 0,
+			tangentialAccelVar: 1,
+			position: L7.p(board.width / 2, 0),
+			posVar: L7.p(board.width / 2, 0),
+			life: 4.5,
+			lifeVar: 0,
+			emissionRate: 40,
+			startColor: L7.Color.fromFloats(0.7, 0.8, 1, 1),
+			startColorVar: [0, 0, 0, 0],
+			endColor: L7.Color.fromFloats(0.7, 0.8, 1, 1),
+			endColorVar: [0, 0, 0, 0],
+			active: true
+		});
+
+		//var spiralSystem = new L7.ParticleSystem({
+			//totalParticles: 500,
+			//duration: Infinity,
+			//gravity: L7.p(),
+			//centerOfGravity: L7.p(),
+			//angle: -90,
+			//angleVar: 0,
+			//speed: 5,
+			//speedVar: 0,
+			//radialAccel: -900,
+			//radialAccelVar: 0,
+			//tangentialAccel: 45,
+			//tangentialAccelVar: 0,
+			//position: L7.p(board.width / 2, board.height / 2),
+			//posVar: L7.p(),
+			//life: 12,
+			//lifeVar: 0,
+			//emissionRate: 500 / 12,
+			//startColor: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+			//startColorVar: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+			//endColor: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+			//endColorVar: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+			//active: true
+		//});
+
+		var daemons = [
+			sunSystem, galaxySystem, fireworksSystem, fireSystem, meteorSystem, snowSystem, rainSystem
+		];
+
+		var daemonIndex = 0;
+
 		//board.addDaemon(sunSystem);
-		board.addDaemon(galaxySystem);
+		//board.addDaemon(galaxySystem);
 		//board.addDaemon(fireworksSystem);
+		//board.addDaemon(fireSystem);
+		//board.addDaemon(meteorSystem);
+		//board.addDaemon(snowSystem);
+		//board.addDaemon(rainSystem);
+
+		function setNextSystem(delta) {
+			var curDaemon = daemons[daemonIndex];
+
+			daemonIndex += delta;
+			if(daemonIndex < 0) {
+				daemonIndex = daemons.length - 1;
+			}
+			if(daemonIndex >= daemons.length) {
+				daemonIndex = 0;
+			}
+
+			board.removeDaemon(curDaemon);
+			board.addDaemon(daemons[daemonIndex]);
+		}
+
+		board.addActor(new L7.Actor({
+			keyInputs: {
+				left: {
+					repeat: false,
+					handler: function() {
+						setNextSystem(-1);
+					}
+				},
+				right: {
+					repeat: false,
+					handler: function() {
+						setNextSystem(1);
+					}
+				}
+			},
+			color: [0, 0, 0, 0],
+			position: L7.p()
+		}));
+
+		setNextSystem(0);
+
 	
 		new L7.Game(board).go();
 	</script>
