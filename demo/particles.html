@@ -122,13 +122,13 @@
 			tangentialAccel: 0,
 			tangentialAccelVar: 0,
 			position: L7.p(board.width / 2, board.height - 4),
-			posVar: L7.p(1.5, 1),
+			posVar: L7.p(2, 1),
 			life: 1,
 			lifeVar: 0.25,
 			emissionRate: 250 / 1,
 			startColor: L7.Color.fromFloats(0.76, 0.25, 0.12, 1),
 			startColorVar: [0, 0, 0, 0],
-			endColor: [0, 0, 0, 1],
+			endColor: [0, 0, 0, 0],
 			endColorVar: [0, 0, 0, 0],
 			//startSize: 1,
 			//startSizeVar: 0.5,
@@ -159,8 +159,10 @@
 			startColorVar: L7.Color.fromFloats(0, 0, 0.2, 0.1),
 			endColor: [0, 0, 0, 1],
 			endColorVar: [0, 0, 0, 0],
-			//startSize: 3,
-			//startSizeVar: 0.5,
+			startSize: 3,
+			startSizeVar: 0.5,
+			endSize: 0.5,
+			endSizeVar: 0,
 			active: true
 		});
 

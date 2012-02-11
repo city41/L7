@@ -1018,6 +1018,27 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	};
 
 	L7.Board.prototype = {
+		dump: function() {
+			console.log('');
+			console.log('');
+			this._rows.forEach(function(row) {
+				var rs = '';
+				row.forEach(function(tile) {
+					var color = tile.getColor();
+					if(!color) {
+						rs += '.';
+					} else {
+						if(tile.inhabitants.length) {
+							rs += 'a';
+						} else {
+							rs += 't'
+						}
+					}
+				});
+				console.log(rs);
+			});
+		},
+
 		actorsOnTeam: function(team) {
 			return this.actors.filter(function(actor) {
 				return actor.team === team;
@@ -1223,6 +1244,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.daemons.push(daemon);
 		},
 		removeDaemon: function(daemon) {
+			if(this.daemons.indexOf(daemon) > -1 && daemon.onRemove) {
+				daemon.onRemove(this);
+			}
 			this.daemons.remove(daemon);
 		},
 
@@ -1634,6 +1658,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			under[i] = Math.round((over[i] * alphaO) 
 				+ ((under[i] * alphaU) * invAlphaO));
 		}
+
+		under[3] = (under[3] + over[3]) / 2;
 	}
 
 	function _hexToArray(hex) {
@@ -1782,8 +1808,16 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			//output[3] = 1;
 
 			return output;
-		}
+		},
 
+		fromFloats: function(r, g, b, a) {
+			return [
+				Math.round(255 * r),
+				Math.round(255 * g),
+				Math.round(255 * b),
+				a
+			];
+		}
 	};
 
 	var _builtInColors = {
@@ -2396,14 +2430,20 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	};
 
 	L7.ParticleSystem.prototype = {
+		onRemove: function(board) {
+			board.actorsOnTeam('particle-' + this.id).forEach(function(actor) {
+				board.removeActor(actor);
+			});
+		},
+
 		_isFull: function() {
 			return this._particleCount === this.totalParticles;
 		},
 
 		_initParticle: function(particle) {
 			// position
-			particle.x = (this.centerOfGravity.x + this.posVar.x * random11()) | 0;
-			particle.y = (this.centerOfGravity.y + this.posVar.y * random11()) | 0;
+			particle.rx = this.position.x + this.posVar.x * random11();
+			particle.ry = this.position.y + this.posVar.y * random11();
 
 			// direction
 			var a = toRadians(this.angle + this.angleVar * random11());
@@ -2415,8 +2455,15 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			// radial accel
 			particle.radialAccel = this.radialAccel + this.radialAccelVar * random11();
 
+			if(!!particle.radialAccel) {
+				particle.radialAccel = 0;
+			}
+
 			// tangential accel
 			particle.tangentialAccel = this.tangentialAccel + this.tangentialAccelVar * random11();
+			if(!particle.tangentialAccel) {
+				particle.tangentialAccel = 0;
+			}
 
 			// life
 			var life = this.life + this.lifeVar * random11();
@@ -2433,7 +2480,20 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			particle.deltaColor = [(endColor[0] - startColor[0]) / particle.life, (endColor[1] - startColor[1]) / particle.life, (endColor[2] - startColor[2]) / particle.life, (endColor[3] - startColor[3]) / particle.life];
 
 			// TODO: skipping size for now (may do scale?)
-			particle.startPos = this.position;
+			if (!_.isUndefined(this.startSize)) {
+				var startSize = this.startSize + this.startSizeVar * random11();
+				startSize = Math.max(0, startSize);
+				particle.size = startSize;
+				if (!_.isUndefined(this.endSize)) {
+					var endSize = this.endSize + this.endSizeVar * random11();
+					particle.deltaSize = (endSize - startSize) / particle.life;
+				} else {
+					particle.deltaSize = 0;
+				}
+			} else {
+				particle.size = 1;
+				particle.deltaSize = 0;
+			}
 		},
 
 		_addParticle: function() {
@@ -2448,7 +2508,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		update: function(delta, timestamp, board) {
-			if (this.active && this.emissionRate) {
+			if (!this.active) {
+				return;
+			}
+
+			delta = delta / 1000;
+
+			if (this.emissionRate) {
 				var rate = 1.0 / this.emissionRate;
 				this._emitCounter += delta;
 
@@ -2457,12 +2523,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					this._emitCounter -= rate;
 				}
 
-				this._elapsed += delta;
-
-				if (this._elapsed >= this.duration) {
-					this._stopSystem();
-				}
 			}
+
+			this._elapsed += delta;
+			this.active = this._elapsed < this.duration;
 
 			this._particleIndex = 0;
 
@@ -2480,8 +2544,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				var radial = L7.p();
 				var tangential = L7.p();
 
-				if (p.x !== 0 && p.y !== 0) {
-					radial = L7.p(p.x, p.y).normalize();
+				if (p.rx !== 0 && p.ry !== 0) {
+					radial = L7.p(p.rx, p.ry).normalize();
 				}
 
 				tangential = radial.clone();
@@ -2501,16 +2565,25 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				tmp.x *= delta;
 				tmp.y *= delta;
 
+				p.dir.x += tmp.x;
+				p.dir.y += tmp.y;
+
 				tmp.x = p.dir.x * delta;
 				tmp.y = p.dir.y * delta;
 
-				p.x += Math.floor(tmp.x);
-				p.y += Math.floor(tmp.y);
+				p.rx += tmp.x;
+				p.ry += tmp.y;
+
+				p.x = Math.round(p.rx);
+				p.y = Math.round(p.ry);
 
 				p.color[0] += p.deltaColor[0] * delta;
 				p.color[1] += p.deltaColor[1] * delta;
 				p.color[2] += p.deltaColor[2] * delta;
 				p.color[3] += p.deltaColor[3] * delta;
+
+				p.size += p.deltaSize * delta;
+				p.size = Math.max(0, p.size);
 
 				p.life -= delta;
 
@@ -2529,6 +2602,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				board.removeActor(actor);
 			});
 
+			var offBoardCount = 0;
+
 			for (var i = 0; i < this._particleCount; ++i) {
 				var p = this._particles[i];
 				var tile = board.tileAt(p.x, p.y);
@@ -2542,10 +2617,18 @@ Math.easeInOutBounce = function (t, b, c, d) {
 						board.addActor(new L7.Actor({
 							position: tile.position,
 							color: p.color.slice(0),
-							team: 'particle-' + this.id
+							team: 'particle-' + this.id,
+							scale: p.size
 						}));
 					}
+				} else {
+					++offBoardCount;
 				}
+
+				if (offBoardCount === this._particleCount) {
+					console.log('all are off the board :-/');
+				}
+				//board.dump();
 			}
 		}
 	}
