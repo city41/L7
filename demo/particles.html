@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="../lib/color/Color.js"></script>
 	<script type="text/javascript" src="../lib/board/Actor.js"></script>
 	<script type="text/javascript" src="../lib/particle/ParticleSystem.js"></script>
+	<script type="text/javascript" src="../lib/geometry/Pair.js"></script>
 
 	<script type="text/javascript" src="SplashBoard.js"></script>
 
@@ -18,35 +19,94 @@
 	<script type="text/javascript">
 		L7.Keys.init();
 
-		var particleSystem = new L7.ParticleSystem({
-			totalParticles: 350,
+		var board = new L7.Board({
+			tileSize: 8,
+			borderWidth: 2,
+			width: 50,
+			height: 50,
+			borderFill: 'black'
+		});
+
+		board.tiles.forEach(function(tile) {
+			tile.color = [0, 0, 0, 1];
+		});
+
+		var sunSystem = new L7.ParticleSystem({
+			totalParticles: 25,
 			duration: Infinity,
 			gravity: L7.p(),
+			centerOfGravity: L7.p(),
 			angle: 90,
 			angleVar: 360,
 			radialAccel: 0,
 			radialAccelVar: 0,
-			position: L7.p(50, 50),
-			life: 1,
-			lifeVar: 0.5,
-			speed: 20,
-			speedVar: 5,
-			emissionRate: 350,
+			position: L7.p(board.width / 2, board.height / 2),
+			posVar: L7.p(),
+			life: 6,
+			lifeVar: 6,
+			speed: 0.2,
+			speedVar: 0,
+			emissionRate: 2,
 			startColor: [200, 50, 20, 1],
 			startColorVar: [0, 0, 0, 0],
 			endColor: [0, 0, 0, 1],
-			endColorVar: [0, 0, 0, 0]
+			endColorVar: [0, 0, 0, 0],
+			active: true
 		});
 
-		var board = new L7.Board({
-			tileSize: 6,
-			borderWidth: 2,
-			width: 100,
-			height: 100,
-			borderFill: 'black'
+		var galaxySystem = new L7.ParticleSystem({
+			totalParticles: 20,
+			duration: Infinity,
+			gravity: L7.p(),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 360,
+			speed: 0.2,
+			speedVar: 0.04,
+			radialAccel: -80,
+			radialAccelVar: 0,
+			tangentialAccel: 80,
+			tangentialAccelVar: 0,
+			position: L7.p(board.width / 2, board.height / 2),
+			posVar: L7.p(),
+			life: 4,
+			lifeVar: 1,
+			emissionRate: 20 / 4,
+			startColor: [50, 80, 200, 1],
+			startColorVar: [0, 0, 0, 0],
+			endColor: [0, 0, 0, 1],
+			endColorVar: [0, 0, 0, 0],
+			active: true
 		});
 
-		board.addDaemon(particleSystem);
+		var fireworksSystem = new L7.ParticleSystem({
+			totalParticles: 200,
+			duration: Infinity,
+			gravity: L7.p(0, -90),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 20,
+			speed: 1.3,
+			speedVar: 1,
+			radialAccel: 0,
+			radialAccelVar: 0,
+			tangentialAccel: 0,
+			tangentialAccelVar: 0,
+			position: L7.p(board.width / 2, board.height - 4),
+			posVar: L7.p(),
+			life: 3.5,
+			lifeVar: 1,
+			emissionRate: 200 / 3.5,
+			startColor: [128, 128, 128, 1],
+			startColorVar: [128, 128, 128, 0.1],
+			endColor: [10, 10, 10, 0.2],
+			endColorVar: [10, 10, 10, 0.2],
+			active: true
+		});
+
+		//board.addDaemon(sunSystem);
+		board.addDaemon(galaxySystem);
+		//board.addDaemon(fireworksSystem);
 	
 		new L7.Game(board).go();
 	</script>
