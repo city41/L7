@@ -34,10 +34,12 @@ task :minify do
 
   concatted = ""
   script_names.each do |script_name|
-		puts "checking: #{script_name}"
-		raw = IO.read(script_name)
-    compiler.compile(raw)
-		concatted += raw
+		if script_name !~ /.*underscore.*/
+			puts "checking: #{script_name}"
+			raw = IO.read(script_name)
+    	compiler.compile(raw)
+			concatted += raw
+		end
   end
 
 	minified = compiler.compile(concatted)
