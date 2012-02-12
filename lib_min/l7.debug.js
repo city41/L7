@@ -2066,17 +2066,12 @@ Math.easeInOutBounce = function (t, b, c, d) {
 (function() {
 	var _maxDelta = (1 / 60) * 1000;
 
-	window.requestAnimationFrame = window.requestAnimationFrame ||
-		window.mozRequestAnimationFrame ||  
-   	window.webkitRequestAnimationFrame || 
-		window.msRequestAnimationFrame ||
-		window.oRequestAnimationFrame ||
-		function(callback) {
-			window.setTimeout(callback, 1000 / 60);
-		};
+	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function(callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
 
 	function _getConfig(configOrBoard) {
-		if(typeof configOrBoard.render !== 'function' && typeof configOrBoard.update !== 'function') {
+		if (typeof configOrBoard.render !== 'function' && typeof configOrBoard.update !== 'function') {
 			return configOrBoard;
 		}
 		var b = configOrBoard;
@@ -2094,13 +2089,19 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		_.bindAll(this, '_doFrame');
 		this.viewport = new L7.Viewport(this);
 
-		if(this.board) {
+		if (this.board) {
 			this.board.viewport = this.viewport;
 		}
 		this.container = this.container || document.body;
 		this.canvas = this._createCanvas();
 
 		this.delays = [];
+
+		var me = this;
+		L7.global.addEventListener('blur', function() {
+			console.log('blurred');
+			delete me._lastTimestamp;
+		});
 	};
 
 	L7.Game.prototype = {
@@ -2109,14 +2110,14 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			canvas.width = this.viewport.width;
 			canvas.height = this.viewport.height;
 			canvas.style.imageRendering = '-webkit-optimize-contrast';
-			
+
 			this.container.appendChild(canvas);
 			return canvas;
 		},
 
 		go: function() {
-			this._lastTimestamp = Date.now();
-			this._doFrame(this._lastTimestamp);
+			delete this._lastTimestamp;
+			this._doFrame(Date.now());
 		},
 
 		after: function(millis, callback) {
@@ -2127,7 +2128,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		replaceBoard: function(newBoard) {
-			if(this.board && this.board.destroy) {
+			if (this.board && this.board.destroy) {
 				this.board.destroy();
 			}
 			this.board = newBoard;
@@ -2139,23 +2140,33 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var toDelete = [];
 			this.delays.forEach(function(delay) {
 				delay.remaining -= delta;
-				if(delay.remaining <= 0) {
+				if (delay.remaining <= 0) {
 					delay.handler.call(delay.scope, this);
 					toDelete.push(delay);
 				}
-			}, this);
+			},
+			this);
 
 			toDelete.forEach(function(deleteMe) {
 				this.delays.remove(deleteMe);
-			}, this);
+			},
+			this);
+		},
+
+		_pause: function() {
+			var context = this.canvas.getContext('2d');
+			context.save();
+			context.fillStyle = 'rgba(255,255,255,0.5)';
+			context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+			context.restore();
 		},
 
 		_doFrame: function(timestamp) {
-			var fullDelta = timestamp - this._lastTimestamp;
+			var fullDelta = timestamp - (this._lastTimestamp || timestamp);
 			this._lastTimestamp = timestamp;
-			
+
 			var delta = fullDelta;
-			while(delta > 0) {
+			while (delta > 0) {
 				var step = Math.min(_maxDelta, delta);
 				this._updateDelays(step);
 				this.board.update(step, timestamp);
@@ -2166,10 +2177,30 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 			this.board.render(fullDelta, context, this.viewport.anchorX, this.viewport.anchorY, timestamp);
-			requestAnimationFrame(this._doFrame);
+
+			if(!this.paused) {
+				requestAnimationFrame(this._doFrame);
+			}
 		}
 	};
 
+	Object.defineProperty(L7.Game.prototype, 'paused', {
+		get: function() {
+			return this._paused;
+		},
+		set: function(paused) {
+			var curPaused = this._paused;
+			this._paused = paused;
+
+			if (curPaused !== paused) {
+				if (paused) {
+					this._pause();
+				} else {
+					this.go();
+				}
+			}
+		}
+	});
 })();
 
 (function() {
@@ -2417,9 +2448,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		_.extend(this, config);
 		this._particles = [];
 		this.id = _idCounter++;
+		this._particleTeam = 'particle-' + this.id;
 
 		for (var i = 0; i < this.totalParticles; ++i) {
-			this._particles.push({});
+			this._particles.push(new L7.Actor({
+				position: this.position.clone(),
+				team: this._particleTeam
+			}));
 		}
 
 		this._elapsed = 0;
@@ -2431,9 +2466,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.ParticleSystem.prototype = {
 		onRemove: function(board) {
-			board.actorsOnTeam('particle-' + this.id).forEach(function(actor) {
+			board.actorsOnTeam(this._particleTeam).forEach(function(actor) {
 				board.removeActor(actor);
-			});
+			}, this);
+			this._addedActors = false;
 		},
 
 		_isFull: function() {
@@ -2477,9 +2513,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.endColor[0] * this.endColorVar[0] * random11(), this.endColor[1] * this.endColorVar[1] * random11(), this.endColor[2] * this.endColorVar[2] * random11(), this.endColor[3] * this.endColorVar[3] * random11()];
 
 			particle.color = startColor;
+			particle.pieces[0].color = startColor;
 			particle.deltaColor = [(endColor[0] - startColor[0]) / particle.life, (endColor[1] - startColor[1]) / particle.life, (endColor[2] - startColor[2]) / particle.life, (endColor[3] - startColor[3]) / particle.life];
 
-			// TODO: skipping size for now (may do scale?)
 			if (!_.isUndefined(this.startSize)) {
 				var startSize = this.startSize + this.startSizeVar * random11();
 				startSize = Math.max(0, startSize);
@@ -2544,7 +2580,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				var radial = L7.p();
 				var tangential = L7.p();
 
-				if (p.rx !== 0 && p.ry !== 0) {
+				//if (p.rx !== 0 && p.ry !== 0) {
+				if(p.position.x !== this.position.x || p.position.y !== this.position.y) {
 					radial = L7.p(p.rx, p.ry).normalize();
 				}
 
@@ -2574,8 +2611,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				p.rx += tmp.x;
 				p.ry += tmp.y;
 
-				p.x = Math.round(p.rx);
-				p.y = Math.round(p.ry);
+				p.goTo(L7.pr(p.rx, p.ry));
 
 				p.color[0] += p.deltaColor[0] * delta;
 				p.color[1] += p.deltaColor[1] * delta;
@@ -2584,6 +2620,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 				p.size += p.deltaSize * delta;
 				p.size = Math.max(0, p.size);
+				p.pieces[0].scale = p.size;
 
 				p.life -= delta;
 
@@ -2598,37 +2635,18 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		_updateBoard: function(board) {
-			board.actorsOnTeam('particle-' + this.id).forEach(function(actor) {
-				board.removeActor(actor);
-			});
+			window.ps = this;
+			if(!this._addedActors) {
+				this._particles.forEach(function(p) {
+					board.addActor(p);
+				});
+				this._addedActors = true;
+			}
 
-			var offBoardCount = 0;
+			var offScreen = L7.p(-1, -1);
 
-			for (var i = 0; i < this._particleCount; ++i) {
-				var p = this._particles[i];
-				var tile = board.tileAt(p.x, p.y);
-
-				if (tile) {
-					var actor = getLastActor(tile);
-
-					if (actor) {
-						actor.color = L7.Color.composite(actor.color, p.color);
-					} else {
-						board.addActor(new L7.Actor({
-							position: tile.position,
-							color: p.color.slice(0),
-							team: 'particle-' + this.id,
-							scale: p.size
-						}));
-					}
-				} else {
-					++offBoardCount;
-				}
-
-				if (offBoardCount === this._particleCount) {
-					console.log('all are off the board :-/');
-				}
-				//board.dump();
+			for(var i = this._particleCount; i < this._particles.length; ++i) {
+				this._particles[i].goTo(offScreen);
 			}
 		}
 	}

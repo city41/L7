@@ -57,3 +57,27 @@ task :minify do
 	end
 end
 
+desc "minify particle example"
+task :particle do
+	l7_file = File.expand_path("../lib_min/l7.debug.js")
+	particle_file = File.expand_path("../demo/particles.js")
+	files = [l7_file, particle_file]
+
+	compiler = Closure::Compiler.new#(:compilation_level => 'ADVANCED_OPTIMIZATIONS')
+
+	concatted = ""
+  files.each do |script_name|
+		puts "checking: #{script_name}"
+		raw = IO.read(script_name)
+    compiler.compile(raw)
+		concatted += raw
+  end
+
+	result = compiler.compile(concatted)
+
+	dest = "../demo/particle_demo.js"
+
+	File.open(dest, "w") { |file| file.write(result) }
+	puts "created #{dest}"
+end
+
