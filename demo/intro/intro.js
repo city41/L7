@@ -3,16 +3,16 @@ L7.Keys.init();
 function onImagesLoaded(images) {
 	var boards = [];
 
-	var tileSize = 12;
+	var tileSize = 8;
 	var borderWidth = 1;
 
 	images.forEach(function(image, i) {
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidth);
-		
-		tileSize = Math.floor(tileSize * 0.75);
 
-		var board = levelLoader.load().board;
-		board.parallaxRatio = 1 - (i * 0.25);
+		tileSize += 3;
+
+		var board = levelLoader.load();
+		board.parallaxRatio = i * 0.25;
 		boards.push(board);
 	});
 
@@ -20,26 +20,90 @@ function onImagesLoaded(images) {
 		boards: boards
 	});
 
-	var b1 = boards[0];
+	var b3 = boards[3];
+
+	var fireworksSystem = new L7.ParticleSystem({
+		totalParticles: 30,
+		duration: Infinity,
+		gravity: L7.p(-20, - 20),
+		centerOfGravity: L7.p(),
+		angle: 110,
+		angleVar: 10,
+		speed: 8,
+		speedVar: 3,
+		radialAccel: 0,
+		radialAccelVar: 0,
+		tangentialAccel: 0,
+		tangentialAccelVar: 0,
+		position: L7.p(30, 10),
+		posVar: L7.p(),
+		life: 0.8,
+		lifeVar: 0.2,
+		emissionRate: 30 / 0.8,
+		startColor: L7.Color.fromFloats(0.8, 0.7, 0.1, 0.9),
+		startColorVar: L7.Color.fromFloats(0, 0, 0, 0),
+		endColor: L7.Color.fromFloats(0.8, 0.7, 0.1, 0.9),
+		endColorVar: L7.Color.fromFloats(0, 0, 0, 0),
+		active: true
+	});
+
+	boards[2].addDaemon(fireworksSystem);
+
+	var fireworksSystem2 = new L7.ParticleSystem({
+		totalParticles: 30,
+		duration: Infinity,
+		gravity: L7.p(20, 20),
+		centerOfGravity: L7.p(),
+		angle: 110,
+		angleVar: 20,
+		speed: 8,
+		speedVar: 3,
+		radialAccel: 0,
+		radialAccelVar: 0,
+		tangentialAccel: 0,
+		tangentialAccelVar: 0,
+		position: L7.p(45, - 1),
+		posVar: L7.p(),
+		life: 0.8,
+		lifeVar: 0.2,
+		emissionRate: 30 / 0.8,
+		startColor: L7.Color.fromFloats(1, 0, 0, 1),
+		startColorVar: L7.Color.fromFloats(0, 0, 0, 0),
+		endColor: L7.Color.fromFloats(1, 1, 0, 0),
+		endColorVar: L7.Color.fromFloats(0, 0, 0, 0),
+		active: true
+	});
+
+	boards[2].addDaemon(fireworksSystem2);
+
+	boards[0].ani.repeat(Infinity, function(ani) {
+		ani.shimmer({
+			minAlpha: 0.1,
+			maxAlpha: 0.8,
+			baseRate: 500,
+			rateVariance: 0.4
+		});
+	});
+
 	var game = new L7.Game({
 		board: parallax,
-		width: b1.height * (b1.tileSize + b1.borderWidth) + b1.borderWidth,
-		height: b1.height * (b1.tileSize + b1.borderWidth) + b1.borderWidth,
+		width: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container')
+	});
+
+	b3.ani.repeat(Infinity, function(ani) {
+		ani.invoke(function() {
+			game.viewport.scrollX(1);
+		});
 	});
 
 	game.go();
 }
 
-
 var imageLoader = new L7.ImageLoader({
-	srcs: [
-		"bg1.png",
-		"bg2.png",
-		"bg3.png",
-		"bg4.png"
-	],
+	srcs: ["bg4.png", "bg3.png", "bg2.png", "bg1.png"],
 	handler: onImagesLoaded,
 	loadNow: true
 });
