@@ -48,6 +48,12 @@ function onImagesLoaded(images) {
 	});
 
 	boards[2].addDaemon(fireworksSystem);
+	boards[2].ani.repeat(Infinity, function(ani) {
+		ani.invoke(function() {
+			fireworksSystem.reset(boards[2]);
+		});
+		ani.waitBetween(500, 4000);
+	});
 
 	var fireworksSystem2 = new L7.ParticleSystem({
 		totalParticles: 30,

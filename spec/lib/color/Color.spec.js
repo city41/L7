@@ -115,7 +115,9 @@ describe("Color", function() {
 		it('should composite two colors', function() {
 			var c1 = 'rgba(255, 0, 0, 1)';
 			var c2 = 'rgba(0, 0, 255, .5)';
-			var expected = [128, 0, 128, 1];
+
+			// for alpha, the average alpha is taken
+			var expected = [128, 0, 128, 0.75];
 
 			var composited = L7.Color.composite(c1, c2);
 

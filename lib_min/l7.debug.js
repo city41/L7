@@ -114,8 +114,13 @@
 		},
 
 		wait: function(millis) {
+			return this.waitBetween(millis, millis);
+		},
+
+		waitBetween: function(min, max) {
 			return this._addAnimation({
-				duration: millis
+				min: min,
+				max: max
 			},
 			L7.Wait);
 		},
@@ -753,11 +758,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	var _idCounter = 0;
 	L7.Wait = function(config) {
 		_.extend(this, config);
+		this._specifiedDuration = this.duration;
 		this.reset();
 	}
 
 	L7.Wait.prototype = {
 		reset: function() {
+			this.duration = this._specifiedDuration || L7.rand(this.min, this.max);
 			this._elapsed = 0;
 			this.done = this._elapsed >= this.duration;
 		},
@@ -768,9 +775,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 
 			this._elapsed += delta;
-			if(this._elapsed > this.duration) {
-				this.done = true;
-			}
+			this.done = this._elapsed >= this.duration;
 		}
 	};
 })();
@@ -2193,7 +2198,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 		var me = this;
 		L7.global.addEventListener('blur', function() {
-			console.log('blurred');
 			delete me._lastTimestamp;
 		});
 	};
@@ -2560,11 +2564,18 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.ParticleSystem.prototype = {
 		onRemove: function(board) {
+			this.reset(board);
 			board.actorsOnTeam(this._particleTeam).forEach(function(actor) {
-				actor.position = this.position.clone();
 				board.removeActor(actor);
 			}, this);
 			this._addedActors = false;
+		},
+
+		reset: function(board) {
+			board.actorsOnTeam(this._particleTeam).forEach(function(actor) {
+				this._initParticle(actor);
+				actor.goTo(L7.p(actor.rx, actor.ry));
+			}, this);
 		},
 
 		_isFull: function() {

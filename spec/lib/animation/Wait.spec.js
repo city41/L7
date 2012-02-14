@@ -36,6 +36,20 @@ describe('Wait', function() {
 		wait.update(2000);
 		expect(wait.done).toBe(true);
 	});
+
+	it('should support a min and max instead of duration', function() {
+		var min = 1000;
+		var max = 2000;
+
+		spyOn(L7, 'rand');
+
+		var wait = new L7.Wait({
+			min: min,
+			max: max
+		});
+
+		expect(L7.rand).toHaveBeenCalled();
+	});
 });
 
 
