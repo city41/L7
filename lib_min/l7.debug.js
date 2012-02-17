@@ -1660,8 +1660,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				colors.push(this.color);
 			}
 
-			if(!skipInhabitants && this.inhabitants.length > 0 && this.inhabitants.last.color) {
-				colors.push(this.inhabitants.last.color);
+			if(!skipInhabitants) {
+				for(var i = 0; i < this.inhabitants.length; ++i) {
+					var inhabColor = this.inhabitants[i].color;
+					if(inhabColor) {
+						colors.push(inhabColor);
+					}
+				}
 			}
 
 			if(this.overlayColor) {
@@ -2647,18 +2652,17 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.ParticleSystem.prototype = {
 		onRemove: function(board) {
-			this.reset(board);
+			this.reset();
 			this._particles.forEach(function(actor) {
+				this._initParticle(actor);
 				board.removeActor(actor);
 			}, this);
 			this._addedActors = false;
 		},
 
-		reset: function(board) {
-			this._particles.forEach(function(actor) {
-				this._initParticle(actor);
-				actor.goTo(L7.p(actor.rx, actor.ry));
-			}, this);
+		reset: function() {
+			this._particleCount = 0;
+			this._particleIndex = 0;
 		},
 
 		_isFull: function() {
@@ -2727,7 +2731,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 
 			var p = this._particles[this._particleCount];
-			this._initParticle(p); ++this._particleCount;
+			this._initParticle(p); 
+			++this._particleCount;
 
 			return true;
 		},
@@ -2824,7 +2829,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		_updateBoard: function(board) {
-			window.ps = this;
 			if(!this._addedActors) {
 				this._particles.forEach(function(p) {
 					board.addActor(p);
