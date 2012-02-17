@@ -37,9 +37,9 @@ SplashBoard.prototype = {
 
 	_createDiscoBoard: function(config) {
 		var me = this;
-		
+
 		var legend = {
-			'#000000' : {
+			'#000000': {
 				tag: 'disco',
 				color: this._baseDiscoColor
 			}
@@ -55,13 +55,15 @@ SplashBoard.prototype = {
 
 		board.ani.together(function(ani) {
 			ani.repeat(Infinity, function(ani) {
-				ani.disco({
-					filter: board.tilesTagged('disco'),
-					width: 30,
-					rate: 500
+					ani.plasma({
+					filter: board.rect(7,4,8,7),
+					rate: 200
 				});
 			});
-			ani.together({ filter: 'board' }, function(ani) {
+			ani.together({
+				filter: 'board'
+			},
+			function(ani) {
 				ani.repeat(Infinity, function(ani) {
 					ani.tween({
 						property: 'offsetX',
@@ -88,7 +90,10 @@ SplashBoard.prototype = {
 						duration: 4000
 					});
 				});
-				ani.repeat(Infinity, { filter: 'board' }, function(ani) {
+				ani.repeat(Infinity, {
+					filter: 'board'
+				},
+				function(ani) {
 					ani.tween({
 						property: 'tileSize',
 						from: 15,
@@ -101,7 +106,10 @@ SplashBoard.prototype = {
 						to: 15,
 						duration: 3000
 					});
-					ani.sequence({ filter: board.tilesTagged('disco') }, function(ani) {  // 'tiles=disco'
+					ani.sequence({
+						filter: board.tilesTagged('disco')
+					},
+					function(ani) { // 'tiles=disco'
 						ani.tween({
 							property: 'color',
 							from: me._baseDiscoColor,
@@ -110,7 +118,7 @@ SplashBoard.prototype = {
 						});
 						ani.tween({
 							property: 'color',
-							from: [255, 0, 0,1],
+							from: [255, 0, 0, 1],
 							to: me._baseDiscoColor,
 							duration: 2000
 						});
@@ -126,7 +134,7 @@ SplashBoard.prototype = {
 		var me = this;
 
 		var legend = {
-			'#000000' : {
+			'#000000': {
 				tag: 'water',
 				color: this._baseWaterColor
 			}
@@ -142,7 +150,10 @@ SplashBoard.prototype = {
 
 		board.ani.together(function(ani) {
 			ani.together(function(ani) {
-				ani.repeat(Infinity, { filter: 'board' }, function(ani) {
+				ani.repeat(Infinity, {
+					filter: 'board'
+				},
+				function(ani) {
 					ani.tween({
 						property: 'offsetX',
 						from: 0,
@@ -172,7 +183,10 @@ SplashBoard.prototype = {
 						easing: 'easeInOutSine'
 					});
 				});
-				ani.repeat(Infinity, { filter: 'board' }, function(ani) {
+				ani.repeat(Infinity, {
+					filter: 'board'
+				},
+				function(ani) {
 					ani.tween({
 						property: 'tileSize',
 						from: 15,
@@ -202,7 +216,9 @@ SplashBoard.prototype = {
 				ani.sequence(function(ani) {
 					for (var i = 0; i < board.width; ++i) {
 						ani.setProperty({
-							filter: board.column(i).filter(function(t) { return t.tag === 'water' }),
+							filter: board.column(i).filter(function(t) {
+								return t.tag === 'water'
+							}),
 							property: 'color',
 							value: me._darkWaterColor
 						});

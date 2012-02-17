@@ -527,20 +527,24 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.Plasma = function(config) {
 		_.extend(this, config);
-		this._paletteOffset = 0;
-		this._elapsed = this.rate;
 
 		this._width = this._determineDim(this.targets, 'x');
 		this._height = this._determineDim(this.targets, 'y');
+		this._paletteOffset = 0;
+		this.reset();
 	};
 
 	L7.Plasma.prototype = {
+		reset: function() {
+			this.done = false;
+			this._elapsed = 0;
+			this._doPlasma(this._width, this._height, this.targets, this._paletteOffset);
+		},
 		update: function(delta, timestamp, board) {
 			this._elapsed += delta;
 			if (this._elapsed >= this.rate) {
-				this._doPlasma(this._width, this._height, this.targets, this._paletteOffset);
-				this._elapsed -= this.rate;
 				this._paletteOffset += 1;
+				this.done = true;
 			}
 		},
 
@@ -554,7 +558,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		_doPlasma: function(width, height, targets, time) {
 			for (var y = 0, x; y < height; ++y) {
 				for (x = 0; x < width; ++x) {
-					targets[width * y + x].overlayColor = _palettes[~~ (color(x, y, time, width, height) + time) % 256];
+					var t = targets[width* y + x];
+					if(t) {
+						t.overlayColor = _palettes[~~ (color(x, y, time, width, height) + time) % 256];
+					}
 				}
 			}
 		}
