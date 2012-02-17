@@ -2629,7 +2629,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		_.extend(this, config);
 		this._particles = [];
 		this.id = _idCounter++;
-		this._particleTeam = 'particle-' + this.id;
+		this._particleTeam = this.team || 'particle-' + this.id;
 
 		for (var i = 0; i < this.totalParticles; ++i) {
 			this._particles.push(new L7.Actor({
@@ -2648,14 +2648,14 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	L7.ParticleSystem.prototype = {
 		onRemove: function(board) {
 			this.reset(board);
-			board.actorsOnTeam(this._particleTeam).forEach(function(actor) {
+			this._particles.forEach(function(actor) {
 				board.removeActor(actor);
 			}, this);
 			this._addedActors = false;
 		},
 
 		reset: function(board) {
-			board.actorsOnTeam(this._particleTeam).forEach(function(actor) {
+			this._particles.forEach(function(actor) {
 				this._initParticle(actor);
 				actor.goTo(L7.p(actor.rx, actor.ry));
 			}, this);
