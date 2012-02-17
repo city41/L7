@@ -2,10 +2,6 @@
 
 -- text/number tiles
 
--- multiple boards
-	-- transitions
-
-
 Color.toCSSString
 	-- tiles are getting rgba(...) back, would rgb(...) or hex be faster?
 
