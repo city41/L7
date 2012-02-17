@@ -6,17 +6,17 @@ def get_files(root, pattern)
 	
 	d = Dir.open(root)
 
-	d.each_entry do |entry|
-		next if entry[0] == '.' || entry == 'bootstrap.js'
+	d.each do |entry|
+		if entry !~ /^\..*/ && entry != 'bootstrap.js'
+			entry = root + '/' + entry
 
-		entry = root + '/' + entry
-
-		if File.directory?(entry)
-			files += get_files(entry, pattern)
-		elsif File.file?(entry) && entry =~ pattern
-			files << entry
-		else
-			puts "entry skipped #{entry}"
+			if File.directory?(entry)
+				files += get_files(entry, pattern)
+			elsif File.file?(entry) && entry =~ pattern
+				files << entry
+			else
+				puts "entry skipped #{entry}"
+			end
 		end
 	end
 
