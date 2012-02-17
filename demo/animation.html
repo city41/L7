@@ -14,10 +14,10 @@
 		L7.Keys.init();
 
 		var board = new L7.Board({
-			width: 50,
-			height: 30,
-			borderWidth: 2,
-			tileSize: 10,
+			width: 78,
+			height: 45,
+			borderWidth: 0,
+			tileSize: 9,
 			borderFill: 'black'
 		});
 
@@ -150,9 +150,24 @@
 			//duration: 5000
 		//});
 
-		board.ani.plasma({
-			targets: board.rect(5, 5, 30, 20),
-			rate: 100
+		board.ani.together(function(ani) {
+			ani.tween({
+				filter: 'board',
+				property: 'tileSize',
+				from: 1,
+				to: 100,
+				duration: 100000,
+				easing: 'easeInCubic',
+				disabled: true
+			});
+
+			ani.repeat(Infinity, function(ani) {
+				ani.plasma({
+					//targets: board.rect(5, 5, 30, 20),
+					rate: 70,
+					noise: 6
+				});
+			});
 		});
 
 		new L7.Game(board).go();

@@ -82,8 +82,24 @@ function onImagesLoaded(images) {
 
 	boards[2].addDaemon(fireworksSystem2);
 
-	boards[0].ani.repeat(Infinity, function(ani) {
+	boards[1].ani.repeat(Infinity, function(ani) {
+		ani.wait(1);
+		return;
 		ani.shimmer({
+			rate: 70,
+			targets: boards[1].query(function(t) { return !!t.color; }),
+			weights: [1, 0.1, 0.2],
+			minAlpha: 0.4,
+			maxAlpha: 0.7,
+			baseRate: 1000,
+			rateVariance: 0.4
+		});
+	});
+
+	boards[0].ani.repeat(Infinity, function(ani) {
+		ani.plasma({
+			rate: 70,
+			weights: [1, 0.1, 0.2],
 			minAlpha: 0.1,
 			maxAlpha: 0.8,
 			baseRate: 500,
