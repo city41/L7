@@ -8,11 +8,36 @@ var board = new L7.Board({
 	borderFill: 'black'
 });
 
-board.ani.repeat(Infinity, function(ani) {
-	ani.plasma({
-		rate: 120
+board.ani.together(function(ani) {
+	ani.repeat(Infinity, function(ani) {
+		ani.plasma({
+			rate: 120,
+			filter: board.rect(0, 0, 10, 10),
+			weights: [0.8, 0.2, 0.1]
+		});
+	});
+	ani.repeat(Infinity, function(ani) {
+		ani.plasma({
+			rate: 120,
+			filter: board.rect(0, 10, 10, 10),
+			weights: [0.2, 0.6, 0.2]
+		});
+	});
+	ani.repeat(Infinity, function(ani) {
+		ani.plasma({
+			rate: 120,
+			filter: board.rect(10, 0, 10, 10),
+			weights: [0.3, 0.3, 0.8]
+		});
+	});
+	ani.repeat(Infinity, function(ani) {
+		ani.plasma({
+			rate: 120,
+			filter: board.rect(10, 10, 10, 10)
+		});
 	});
 });
+
 
 var game = new L7.Game({
 	board: board,
