@@ -1,0 +1,22 @@
+a square board, about 40x40
+
+main character
+	one pixel
+	has life of 4
+	move left/right/up/down with WASD
+	flamethrow (particle system)
+		fire in 8 directions (with arrows)
+		each particle does life's worth of damage (0-2)
+
+"zombies" spawn from edges
+	move towards player, slowly
+	have a life of 1-5
+	color based on life
+	if hit player
+		do 1 damage
+		die
+
+get points for how long you survive
+
+
+
