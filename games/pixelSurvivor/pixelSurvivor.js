@@ -13,8 +13,15 @@ p.go = function() {
 		t.color = [30,30,30,1];
 	});
 
-	board.addActor(new p.Player({
+	var player = new p.Player({
 		position: L7.pr(board.width/2, board.height/2)
+	});
+
+	board.addActor(player);
+
+	board.addDaemon(new p.ZombieDaemon({
+		rate: 1000,
+		player: player
 	}));
 
 	new L7.Game(board).go();

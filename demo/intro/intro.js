@@ -115,7 +115,7 @@ function onImagesLoaded(images) {
 		container: document.getElementById('container')
 	});
 
-	b3.ani.repeat(30, function(ani) {
+	b3.ani.repeat(Infinity, function(ani) {
 		ani.invoke(function() {
 			game.viewport.scrollX(1);
 		});

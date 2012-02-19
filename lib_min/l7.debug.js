@@ -2549,6 +2549,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		multiply: function(scalar) {
 			return L7.p(this.x * scalar, this.y * scalar);
 		},
+		round: function() {
+			return L7.pr(this.x, this.y);
+		},
 		dot: function(other) {
 			return this.x * other.x + this.y * other.y;
 		},
@@ -3035,6 +3038,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		} else {
 			return result;
 		}
+	};
+
+	L7.coin = function() {
+		return L7.rand(0, 2) === 0;
 	};
 })();
 
