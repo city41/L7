@@ -29,6 +29,12 @@ describe("Pair", function() {
 
 			expect(pair.width).toEqual(w);
 			expect(pair.height).toEqual(h);
+
+			pair.x = 5555;
+			pair.y = 13112;
+
+			expect(pair.x).toEqual(w);
+			expect(pair.y).toEqual(h);
 		});
 	});
 
@@ -222,6 +228,18 @@ describe("Pair", function() {
 			var p4 = L7.p(4, 5);
 
 			expect(p3.distanceFrom(p4)).toBe(5);
+		});
+
+		it('should return the degreeAngleFrom', function() {
+			var other = L7.p(100, 100);
+			var p = L7.p(10, 10);
+
+			var angle = p.degreeAngleFrom(other);
+
+			expect(angle).toBe(225);
+
+			angle = other.degreeAngleFrom(p);
+			expect(angle).toBe(45);
 		});
 	});
 

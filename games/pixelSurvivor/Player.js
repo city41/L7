@@ -31,30 +31,6 @@
 					this.right(1);
 					this.positionFlame();
 				}
-			},
-			left: {
-				repeat: false,
-				handler: function() {
-					this.flameThrower.angle = 180;
-				}
-			},
-			right: {
-				repeat: false,
-				handler: function() {
-					this.flameThrower.angle = 0;
-				}
-			},
-			up: {
-				repeat: false,
-				handler: function() {
-					this.flameThrower.angle = 270;
-				}
-			},
-			down: {
-				repeat: false,
-				handler: function() {
-					this.flameThrower.angle = 90;
-				}
 			}
 		},
 		color: [0, 0, 255, 1],
@@ -62,6 +38,9 @@
 			L7.Actor.prototype.update.apply(this, arguments);
 
 			if (this.board) {
+				var posInPixels = this.board.pixelsForTile(this.position);
+				this.flameThrower.angle = L7.Mouse.position.degreeAngleFrom(posInPixels);
+
 				this.flameThrower.update(delta, timestamp, this.board);
 			}
 		},
