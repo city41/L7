@@ -2282,6 +2282,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		this.container = this.container || document.body;
 		this.canvas = this._createCanvas();
 
+		L7.Keys.init(this.canvas);
+		L7.Mouse.init(this.canvas);
+
 		this.delays = [];
 
 		var me = this;
@@ -2441,6 +2444,28 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 
 (function() {
+	L7.Mouse = {
+		init: function(hook) {
+			this._hook = hook;
+			this._mouseMoveListener = _.bind(this._onMouseMove, this);
+			this._hook.addEventListener('mousemove', this._mouseMoveListener, false);
+			this._pos = L7.p();
+		},
+
+		_onMouseMove: function(e) {
+			this._pos = L7.p(e.offsetX, e.offsetY);
+		}
+	};
+
+	Object.defineProperty(L7.Mouse, 'position', {
+		get: function() {
+			return this._pos;
+		},
+		enumerable: true
+	});
+})();
+
+(function() {
 	L7.Viewport = function(config) {
 		config = config || {};
 		_.extend(this, config);
@@ -2480,6 +2505,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
+	var _pi = Math.PI;
+	var _twoPi = _pi * 2;
+	var _piOver2 = _pi / 2;
+
+
 	L7.Pair = function Pair(a, b) {
 		this._a = a || 0;
 		this._b = b || 0;
@@ -2491,12 +2521,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		equals: function(other) {
-			if(other) {
-				return (other === this) || 
-					(other._a === this._a && other._b == this._b) ||
-					(other.x === this._a && other.y == this._b) ||
-					(other.width == this._a && other.height == this._b);
-			} 
+			if (other) {
+				return (other === this) || (other._a === this._a && other._b == this._b) || (other.x === this._a && other.y == this._b) || (other.width == this._a && other.height == this._b);
+			}
 			return false;
 		},
 		up: function() {
@@ -2514,13 +2541,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		add: function(otherPairOrNumber, numberOrUndefined) {
 			var x, y;
 
-			if(typeof otherPairOrNumber.x === 'number') {
+			if (typeof otherPairOrNumber.x === 'number') {
 				x = otherPairOrNumber.x;
 			} else {
 				x = otherPairOrNumber || 0;
 			}
 
-			if(typeof otherPairOrNumber.y === 'number') {
+			if (typeof otherPairOrNumber.y === 'number') {
 				y = otherPairOrNumber.y;
 			} else {
 				y = numberOrUndefined || 0;
@@ -2529,13 +2556,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			return L7.p(this.x + x, this.y + y);
 		},
 		subtract: function(otherPairOrNumber, numberOrUndefined) {
-			if(typeof otherPairOrNumber.x === 'number') {
+			if (typeof otherPairOrNumber.x === 'number') {
 				x = otherPairOrNumber.x;
 			} else {
 				x = otherPairOrNumber || 0;
 			}
 
-			if(typeof otherPairOrNumber.y === 'number') {
+			if (typeof otherPairOrNumber.y === 'number') {
 				y = otherPairOrNumber.y;
 			} else {
 				y = numberOrUndefined || 0;
@@ -2544,7 +2571,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			return L7.p(this.x - x, this.y - y);
 		},
 		negate: function() {
-			return L7.p(-this.x, -this.y);
+			return L7.p(-this.x, - this.y);
 		},
 		multiply: function(scalar) {
 			return L7.p(this.x * scalar, this.y * scalar);
@@ -2566,7 +2593,52 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			return Math.sqrt(delta.dot(delta));
 		},
-		toString: function p_toString() {
+		degreeAngleFrom: function(other) {
+			return L7.radiansToDegrees(this.radianAngleFrom(other));
+		},
+		radianAngleFrom: function(other) {
+			var x = this.x - other.x;
+			var y = this.y - other.y;
+
+			// special case for x equals zero, division by zero
+			if (x === 0) {
+				if (y < 0) {
+					return _piOver2 * 3;
+				} else {
+					return _piOver2;
+				}
+			}
+
+			// special case for y equals zero, the negative gets lost
+			if (y === 0) {
+				if (x < 0) {
+					return _pi;
+				} else {
+					return 0;
+				}
+			}
+
+			var tan = y / x;
+			var radians = Math.atan(tan);
+
+			// quad 1
+			if (x > 0 && y > 0) {
+				return radians;
+
+				// quad 2, add 180
+			} else if (x < 0 && y > 0) {
+				return radians + _pi;
+
+				// quad 3, add 180
+			} else if (x < 0 && y < 0) {
+				return radians + _pi;
+
+				// if(x > 0 && y < 0) {
+			} else {
+				return radians + _twoPi;
+			}
+		},
+		toString: function() {
 			return "[" + this._a + "," + this._b + "]";
 		}
 	};
@@ -2588,18 +2660,12 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	Object.defineProperty(L7.Pair.prototype, "x", {
 		get: function() {
 			return this._a;
-		},
-		set: function(nx) {
-			this._a = nx;
 		}
 	});
 
 	Object.defineProperty(L7.Pair.prototype, "y", {
 		get: function() {
 			return this._b;
-		},
-		set: function(ny) {
-			this._b = ny;
 		}
 	});
 
@@ -2613,7 +2679,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	L7.sr = function(w, h) {
 		return new L7.Pair(Math.round(w), Math.round(h));
 	};
-	
+
 	L7.pr = L7.sr;
 })();
 
@@ -2626,11 +2692,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	function random11() {
 		return L7.rand(-1, 1, true);
-	}
-
-	function toRadians(degs) {
-		degs = degs || 0;
-		return (degs * Math.PI) / 180;
 	}
 
 	L7.ParticleSystem = function(config) {
@@ -2678,11 +2739,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			particle.ry = this.position.y + this.posVar.y * random11();
 
 			// direction
-			var a = toRadians(this.angle + this.angleVar * random11());
+			var a = L7.degreesToRadians(this.angle + this.angleVar * random11());
 			var v = L7.p(Math.cos(a), Math.sin(a));
 			var s = this.speed + this.speedVar * random11();
 			v = v.multiply(s);
-			particle.dir = v;
+			particle.dir = { x: v.x, y: v.y };
 
 			// radial accel
 			particle.radialAccel = this.radialAccel + this.radialAccelVar * random11();
@@ -2773,16 +2834,16 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 		_updateParticle: function(p, delta, i) {
 			if (p.life > 0) {
-				var tmp = L7.p();
-				var radial = L7.p();
-				var tangential = L7.p();
+				var tmp = { x: 0, y: 0 };
+				var radial = { x: 0, y: 0 };
 
 				//if (p.rx !== 0 && p.ry !== 0) {
 				if(p.position.x !== this.position.x || p.position.y !== this.position.y) {
-					radial = L7.p(p.rx, p.ry).normalize();
+					var radialP = L7.p(p.rx, p.ry).normalize();
+					radial = { x: radialP.x, y: radialP.y };
 				}
 
-				tangential = radial.clone();
+				var tangential = _.clone(radial);
 
 				radial.x *= p.radialAccel;
 				radial.y *= p.radialAccel;
@@ -3042,6 +3103,16 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.coin = function() {
 		return L7.rand(0, 2) === 0;
+	};
+
+	L7.degreesToRadians = function(degrees) {
+		degrees = degrees || 0;
+		return degrees * Math.PI / 180;
+	};
+
+	L7.radiansToDegrees = function(radians) {
+		radians = radians || 0;
+		return radians * 180 / Math.PI;
 	};
 })();
 
