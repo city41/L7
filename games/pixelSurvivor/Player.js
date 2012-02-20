@@ -1,32 +1,37 @@
 (function() {
+	var keyRate = 100;
 	var _playerConfig = {
 		onOutOfBounds: function() {
 			this.goBack();
 		},
 		keyInputs: {
 			w: {
-				repeat: false,
+				repeat: true,
+				rate: keyRate,
 				handler: function() {
 					this.up(1);
 					this.positionFlame();
 				}
 			},
 			a: {
-				repeat: false,
+				repeat: true,
+				rate: keyRate,
 				handler: function() {
 					this.left(1);
 					this.positionFlame();
 				}
 			},
 			s: {
-				repeat: false,
+				repeat: true,
+				rate: keyRate,
 				handler: function() {
 					this.down(1);
 					this.positionFlame();
 				}
 			},
 			d: {
-				repeat: false,
+				repeat: true,
+				rate: keyRate,
 				handler: function() {
 					this.right(1);
 					this.positionFlame();

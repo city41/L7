@@ -1016,13 +1016,27 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 		},
 		update: function(delta, timestamp) {
+			this._updateKeyInputs(delta, timestamp);
+			this._updateTimers(delta);
+			this._lastTimestamp = timestamp;
+		},
+
+		_updateKeyInputs: function(delta, timestamp) {
 			var keyWasDown = false;
 			_(this.keyInputs).each(function(value, key) {
 				if (value.repeat && L7.Keys.down(key) || L7.Keys.downSince(key, this._lastTimestamp || 0)) {
 					keyWasDown = true;
+					value._elapsed = value._elapsed || 0;
+					value._elapsed += delta;
+
 					if (typeof value.enabled === 'undefined' || value.enabled.call(this)) {
-						value.handler.call(this, delta);
+						if(!value.rate || value._elapsed > value.rate) {
+							value.handler.call(this, delta);
+							value._elapsed -= (value.rate || 0);
+						}
 					}
+				} else {
+					value._elapsed = 0;
 				}
 			},
 			this);
@@ -1030,10 +1044,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			if(!keyWasDown && this.onNoKeyDown) {
 				this.onNoKeyDown(delta);
 			}
-
-			this._updateTimers(delta);
-
-			this._lastTimestamp = timestamp;
 		},
 
 		_updateTimers: function(delta) {
