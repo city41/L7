@@ -87,7 +87,9 @@ function onImagesLoaded(images) {
 		return;
 		ani.shimmer({
 			rate: 70,
-			targets: boards[1].query(function(t) { return !!t.color; }),
+			targets: boards[1].query(function(t) {
+				return !! t.color;
+			}),
 			weights: [1, 0.1, 0.2],
 			minAlpha: 0.4,
 			maxAlpha: 0.7,
@@ -115,9 +117,37 @@ function onImagesLoaded(images) {
 		container: document.getElementById('container')
 	});
 
-	b3.ani.repeat(Infinity, function(ani) {
-		ani.invoke(function() {
-			game.viewport.scrollX(1);
+	b3.ani.together(function(ani) {
+		ani.repeat(Infinity, function(ani) {
+			ani.shimmer({
+				targets: b3.rect(47, 2, 11, 7),
+				minAlpha: 0.4,
+				maxAlpha: 0.7,
+				baseRate: 1000,
+				rateVariance: 0.4
+			});
+		});
+		ani.sequence(function(ani) {
+			ani.wait(3000);
+			ani.tween({
+				targets: [b3],
+				property: 'offsetY',
+				from: 0,
+				to: 0,
+				jitter: 4,
+				jitterType: 'random',
+				duration: 800
+			});
+			ani.setProperty({
+				targets: [b3],
+				property: 'angle',
+				value: L7.degreesToRadians(2)
+			});
+		});
+		ani.repeat(Infinity, function(ani) {
+			ani.invoke(function() {
+				game.viewport.scrollX(1);
+			});
 		});
 	});
 
