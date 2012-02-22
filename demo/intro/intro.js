@@ -3,16 +3,17 @@ L7.Keys.init();
 function onImagesLoaded(images) {
 	var boards = [];
 
-	var tileSize = 8;
+	var tileSize = 7;
 	var borderWidth = 1;
+	var borderWidths = [0, 1, 1, 2];
 
 	images.forEach(function(image, i) {
-		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidth);
+		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
 
-		tileSize += 3;
+		tileSize += 4;
 
 		var board = levelLoader.load();
-		board.parallaxRatio = i * 0.25;
+		board.parallaxRatio = i * 0.3;
 		boards.push(board);
 	});
 
@@ -47,14 +48,13 @@ function onImagesLoaded(images) {
 		active: true
 	});
 
-	boards[2].addDaemon(fireworksSystem);
-	boards[2].ani.repeat(Infinity, function(ani) {
-		ani.invoke(function() {
-			fireworksSystem.reset(boards[2]);
-		});
-		ani.waitBetween(500, 4000);
-	});
-
+	//boards[2].addDaemon(fireworksSystem);
+	//boards[2].ani.repeat(Infinity, function(ani) {
+	//ani.invoke(function() {
+	//fireworksSystem.reset(boards[2]);
+	//});
+	//ani.waitBetween(500, 4000);
+	//});
 	var fireworksSystem2 = new L7.ParticleSystem({
 		totalParticles: 30,
 		duration: Infinity,
@@ -80,38 +80,35 @@ function onImagesLoaded(images) {
 		active: true
 	});
 
-	boards[2].addDaemon(fireworksSystem2);
-
-	boards[1].ani.repeat(Infinity, function(ani) {
-		ani.wait(1);
-		return;
-		ani.shimmer({
-			rate: 70,
-			targets: boards[1].query(function(t) {
-				return !! t.color;
-			}),
-			weights: [1, 0.1, 0.2],
-			minAlpha: 0.4,
-			maxAlpha: 0.7,
-			baseRate: 1000,
-			rateVariance: 0.4
-		});
-	});
-
-	boards[0].ani.repeat(Infinity, function(ani) {
-		ani.plasma({
-			rate: 70,
-			weights: [1, 0.1, 0.2],
-			minAlpha: 0.1,
-			maxAlpha: 0.8,
-			baseRate: 500,
-			rateVariance: 0.4
-		});
-	});
-
+	//boards[2].addDaemon(fireworksSystem2);
+	//boards[1].ani.repeat(Infinity, function(ani) {
+	//ani.wait(1);
+	//return;
+	//ani.shimmer({
+	//rate: 70,
+	//targets: boards[1].query(function(t) {
+	//return !! t.color;
+	//}),
+	//weights: [1, 0.1, 0.2],
+	//minAlpha: 0.4,
+	//maxAlpha: 0.7,
+	//baseRate: 1000,
+	//rateVariance: 0.4
+	//});
+	//});
+	//boards[0].ani.repeat(Infinity, function(ani) {
+	//ani.plasma({
+	//rate: 70,
+	//weights: [1, 0.1, 0.2],
+	//minAlpha: 0.1,
+	//maxAlpha: 0.8,
+	//baseRate: 500,
+	//rateVariance: 0.4
+	//});
+	//});
 	var game = new L7.Game({
 		board: parallax,
-		width: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		width: (b3.height * 1.25) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container')
@@ -120,15 +117,15 @@ function onImagesLoaded(images) {
 	b3.ani.together(function(ani) {
 		ani.repeat(Infinity, function(ani) {
 			ani.shimmer({
-				targets: b3.rect(47, 2, 11, 7),
+				targets: b3.rect(30, 3, 7, 5),
 				minAlpha: 0.4,
 				maxAlpha: 0.7,
-				baseRate: 1000,
-				rateVariance: 0.4
+				baseRate: 500,
+				rateVariance: 0.2
 			});
 		});
 		ani.sequence(function(ani) {
-			ani.wait(3000);
+			ani.wait(6000);
 			ani.tween({
 				targets: [b3],
 				property: 'offsetY',
@@ -136,17 +133,22 @@ function onImagesLoaded(images) {
 				to: 0,
 				jitter: 4,
 				jitterType: 'random',
-				duration: 800
+				duration: 800,
+				restoreAfter: true
 			});
-			ani.setProperty({
-				targets: [b3],
-				property: 'angle',
-				value: L7.degreesToRadians(2)
-			});
+			//ani.setProperty({
+			//targets: [b3],
+			//property: 'angle',
+			//value: L7.degreesToRadians(2)
+			//});
 		});
-		ani.repeat(Infinity, function(ani) {
-			ani.invoke(function() {
-				game.viewport.scrollX(1);
+		ani.sequence(function(ani) {
+			ani.wait(2000);
+			ani.repeat(Infinity, function(ani) {
+				ani.invoke(function() {
+					game.viewport.scrollX(1);
+				});
+				ani.wait(20);
 			});
 		});
 	});
