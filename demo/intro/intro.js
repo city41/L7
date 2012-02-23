@@ -13,7 +13,7 @@ function onImagesLoaded(images) {
 		tileSize += 4;
 
 		var board = levelLoader.load();
-		board.parallaxRatio = i * 0.3;
+		board.parallaxRatio = i * 0.6;
 		boards.push(board);
 	});
 
@@ -45,16 +45,34 @@ function onImagesLoaded(images) {
 		startColorVar: L7.Color.fromFloats(0, 0, 0, 0),
 		endColor: L7.Color.fromFloats(0.8, 0.7, 0.1, 0.9),
 		endColorVar: L7.Color.fromFloats(0, 0, 0, 0),
-		active: true
+		active: true,
+		startSize: 0.99,
+		startSizeVar: 0,
+		endSize: 0.5,
+		endSizeVar: 0
 	});
 
 	//boards[2].addDaemon(fireworksSystem);
-	//boards[2].ani.repeat(Infinity, function(ani) {
-	//ani.invoke(function() {
-	//fireworksSystem.reset(boards[2]);
-	//});
-	//ani.waitBetween(500, 4000);
-	//});
+	boards[2].ani.repeat(Infinity, function(ani) {
+		ani.invoke(function() {
+			fireworksSystem.reset(boards[2]);
+		});
+		ani.waitBetween(500, 4000);
+	});
+
+	boards[0].ani.repeat(Infinity, function(ani) {
+		ani.shimmer({
+			targets: boards[0].query(function(t) {
+				return t.color[0] === 193;
+			}),
+			minAlpha: 0.2,
+			maxAlpha: 0.9,
+			baseRate: 1000,
+			rateVariance: 0.4,
+			color: [150, 150, 20, 0.5]
+		});
+	});
+
 	var fireworksSystem2 = new L7.ParticleSystem({
 		totalParticles: 30,
 		duration: Infinity,
@@ -77,7 +95,11 @@ function onImagesLoaded(images) {
 		startColorVar: L7.Color.fromFloats(0, 0, 0, 0),
 		endColor: L7.Color.fromFloats(1, 1, 0, 0),
 		endColorVar: L7.Color.fromFloats(0, 0, 0, 0),
-		active: true
+		active: true,
+		//startSize: 0.99,
+		//startSizeVar: 0,
+		//endSize: 0.5,
+		//endSizeVar: 0
 	});
 
 	//boards[2].addDaemon(fireworksSystem2);
@@ -117,7 +139,7 @@ function onImagesLoaded(images) {
 	b3.ani.together(function(ani) {
 		ani.repeat(Infinity, function(ani) {
 			ani.shimmer({
-				targets: b3.rect(30, 3, 7, 5),
+				targets: b3.rect(19, 8, 4, 5),
 				minAlpha: 0.4,
 				maxAlpha: 0.7,
 				baseRate: 500,
@@ -142,16 +164,36 @@ function onImagesLoaded(images) {
 			//value: L7.degreesToRadians(2)
 			//});
 		});
-		ani.sequence(function(ani) {
-			ani.wait(2000);
-			ani.repeat(Infinity, function(ani) {
-				ani.invoke(function() {
-					game.viewport.scrollX(1);
-				});
-				ani.wait(20);
-			});
-		});
+		//ani.sequence(function(ani) {
+		//ani.wait(2000);
+		//ani.repeat(Infinity, function(ani) {
+		//ani.invoke(function() {
+		//game.viewport.scrollX(1);
+		//});
+		//ani.wait(20);
+		//});
+		//});
 	});
+	var a = new L7.Actor({
+		color: [200, 150, 10, 1],
+		position: L7.p(5, 5),
+		keyInputs: {
+			left: {
+				repeat: true,
+				handler: function() {
+					game.viewport.scrollX(-3);
+				}
+			},
+			right: {
+				repeat: true,
+				handler: function() {
+					game.viewport.scrollX(3);
+				}
+			}
+		}
+	});
+
+	boards[0].addActor(a);
 
 	game.go();
 }
