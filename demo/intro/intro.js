@@ -69,7 +69,7 @@ function onImagesLoaded(images) {
 			maxAlpha: 0.9,
 			baseRate: 1000,
 			rateVariance: 0.4,
-			color: [150, 150, 20, 0.5]
+			color: [250, 250, 120, 1]
 		});
 	});
 
@@ -164,15 +164,15 @@ function onImagesLoaded(images) {
 			//value: L7.degreesToRadians(2)
 			//});
 		});
-		//ani.sequence(function(ani) {
-		//ani.wait(2000);
-		//ani.repeat(Infinity, function(ani) {
-		//ani.invoke(function() {
-		//game.viewport.scrollX(1);
-		//});
-		//ani.wait(20);
-		//});
-		//});
+		ani.sequence(function(ani) {
+			ani.wait(2000);
+			ani.repeat(Infinity, function(ani) {
+				ani.invoke(function() {
+					game.viewport.scrollX(1);
+				});
+				ani.wait(20);
+			});
+		});
 	});
 	var a = new L7.Actor({
 		color: [200, 150, 10, 1],
