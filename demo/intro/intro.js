@@ -5,7 +5,7 @@ function onImagesLoaded(images) {
 
 	var tileSize = 7;
 	var borderWidth = 1;
-	var borderWidths = [0, 1, 1, 2];
+	var borderWidths = [3, 1, 1, 2];
 
 	images.forEach(function(image, i) {
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
