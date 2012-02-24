@@ -659,6 +659,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var color = this.color || [255, 255, 255, 1];
 
 			this.targets.forEach(function(target) {
+				target.opaque = true;
 				target.overlayColor = color.slice(0);
 				target.overlayColor[3] = L7.rand(this.minAlpha, this.maxAlpha);
 				target.shimmerRate = Math.floor(L7.rand(this.baseRate - this.baseRate * this.rateVariance, this.baseRate + this.baseRate * this.rateVariance));
@@ -1407,6 +1408,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		render: function(delta, context, anchorXpx, anchorYpx, timestamp) {
+			if(this.angle) {
+				context.save();
+				context.rotate(this.angle);
+			}
+
 			anchorXpx += this.offsetX || 0;
 			anchorYpx += this.offsetY || 0;
 
@@ -1499,6 +1505,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					c.fillStyle = color;
 					c.fillRect(freeActor.position.x - anchorXpx, freeActor.position.y - anchorYpx, ts, ts);
 				}
+			}
+
+			if(this.angle) {
+				context.restore();
 			}
 		}
 	};
@@ -1685,6 +1695,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			if(colors.length > 0) {
 				var composited = L7.Color.composite.apply(L7.Color, colors);
+
+				if(this.opaque) {
+					composited[3] = 1;
+				}
+
 				return L7.Color.toCssString(composited);
 			}
 		},
@@ -2264,7 +2279,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	var _maxDelta = (1 / 60) * 1000;
 
 	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function(callback) {
-		window.setTimeout(callback, 1000 / 60);
+		window.setTimeout(function() {
+			callback(Date.now())
+		}, 1000 / 60);
 	};
 
 	function _getConfig(configOrBoard) {

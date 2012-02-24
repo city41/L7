@@ -168,9 +168,9 @@ function onImagesLoaded(images) {
 			ani.wait(2000);
 			ani.repeat(Infinity, function(ani) {
 				ani.invoke(function() {
-					game.viewport.scrollX(1);
+					//game.viewport.scrollX(1);
 				});
-				ani.wait(20);
+				ani.wait(10);
 			});
 		});
 	});
