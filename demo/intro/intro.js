@@ -42,7 +42,7 @@ function onImagesLoaded(images) {
 		ani.wait(2000);
 		ani.repeat(Infinity, function(ani) {
 			ani.invoke(function() {
-				//game.viewport.scrollX(1);
+				game.viewport.scrollX(1);
 			});
 			ani.wait(10);
 		});
@@ -50,8 +50,8 @@ function onImagesLoaded(images) {
 
 	// for debug purposes
 	var a = new L7.Actor({
-		color: [200, 150, 10, 1],
-		position: L7.p(5, 5),
+		color: [0, 0, 0, 0],
+		position: L7.p(500, 5),
 		keyInputs: {
 			left: {
 				repeat: true,
