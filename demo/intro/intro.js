@@ -6,6 +6,7 @@ function onImagesLoaded(images) {
 	var tileSize = 7;
 	var borderWidth = 1;
 	var borderWidths = [3, 1, 1, 2];
+	var boardFillers = [null, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller];
 
 	images.forEach(function(image, i) {
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
@@ -14,6 +15,11 @@ function onImagesLoaded(images) {
 
 		var board = levelLoader.load();
 		board.parallaxRatio = i * 0.6;
+
+		if (boardFillers[i]) {
+			boardFillers[i].fill(board);
+		}
+
 		boards.push(board);
 	});
 
@@ -168,7 +174,7 @@ function onImagesLoaded(images) {
 			ani.wait(2000);
 			ani.repeat(Infinity, function(ani) {
 				ani.invoke(function() {
-					//game.viewport.scrollX(1);
+					game.viewport.scrollX(1);
 				});
 				ani.wait(10);
 			});
@@ -210,7 +216,7 @@ function onImagesLoaded(images) {
 }
 
 var imageLoader = new L7.ImageLoader({
-	srcs: ["bg4.png", "bg3.png", "bg2.png", "bg1.png"],
+	srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png"],
 	handler: onImagesLoaded,
 	loadNow: true
 });
