@@ -139,7 +139,7 @@ function onImagesLoaded(images) {
 	b3.ani.together(function(ani) {
 		ani.repeat(Infinity, function(ani) {
 			ani.shimmer({
-				targets: b3.rect(19, 8, 4, 5),
+				targets: b3.rect(19, 7, 4, 5),
 				minAlpha: 0.4,
 				maxAlpha: 0.7,
 				baseRate: 500,
@@ -174,6 +174,17 @@ function onImagesLoaded(images) {
 			});
 		});
 	});
+
+	boards[2].ani.repeat(Infinity, function(ani) {
+		ani.shimmer({
+			targets: boards[2].rect(137, 11, 5, 3),
+			minAlpha: 0.4,
+			maxAlpha: 0.7,
+			baseRate: 500,
+			rateVariance: 0.2
+		});
+	});
+
 	var a = new L7.Actor({
 		color: [200, 150, 10, 1],
 		position: L7.p(5, 5),
