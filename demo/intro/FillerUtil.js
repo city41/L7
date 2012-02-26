@@ -182,7 +182,59 @@
 				ani.invoke(doHeartWave);
 				ani.wait(400);
 			});
+		},
+
+		addSinWave: function(board, position, width, height, barColor) {
+			barColor = barColor || [255, 255, 0, 1];
+
+			var pieces = [];
+			for (var i = 0; i < height; ++i) {
+				var row = [];
+				for (var k = 0; k < width; ++k) {
+					row.push(1);
+				}
+				pieces.push(row);
+			}
+
+			pieces[0][0] = 5;
+
+			var sinWave = new L7.Actor({
+				shape: pieces,
+				position: position
+			});
+
+			board.addActor(sinWave);
+
+			var blipPosition = position.add(0, 1);
+			var nonBlipHeight = position.y + 2;
+			var sinCounter = 0;
+
+			function doSinWave() {
+				sinWave.pieces.forEach(function(p) {
+					p.color = noColor;
+				});
+
+				for (var i = 0; i < width; ++i) {
+					var x = position.x + i;
+					var yOffset = (Math.sin(sinCounter + i) * (height/2)) | 0;
+					var y = (position.y + (height / 2) + yOffset) | 0;
+					var piece = sinWave.pieces.filter(function(p) {
+						return p.position.x === x && p.position.y === y;
+					})[0];
+					if(!piece) {
+						debugger;
+					}
+					piece.color = barColor;
+				}
+				++sinCounter;
+			}
+
+			sinWave.ani.repeat(Infinity, function(ani) {
+				ani.invoke(doSinWave);
+				ani.wait(600);
+			});
 		}
+
 	};
 })();
 
