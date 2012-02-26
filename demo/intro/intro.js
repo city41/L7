@@ -40,7 +40,16 @@ function onImagesLoaded(images) {
 	// TODO: scrolling the viewport, not sure where to put this
 	b3.ani.sequence(function(ani) {
 		ani.wait(2000);
-		ani.repeat(Infinity, function(ani) {
+		
+		//var duration = (b3.tileSize + b3.borderWidth) * images[3].width;
+		//duration -= game.width;
+		//duration /= 2;
+		//duration = duration | 0;
+		//var a = duration;
+		var duration = 2530;
+
+		console.log('duration: ' + duration);
+		ani.repeat(duration, function(ani) {
 			ani.invoke(function() {
 				game.viewport.scrollX(1);
 			});

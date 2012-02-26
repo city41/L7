@@ -43,6 +43,35 @@
 			board.addDaemon(bubbles);
 		},
 
+		addHighWater: function(board, corner, width, height) {
+			var bubbles = new L7.ParticleSystem({
+				totalParticles: 30,
+				duration: Infinity,
+				gravity: L7.p(),
+				centerOfGravity: L7.p(),
+				angle: - 90,
+				angleVar: 0,
+				speed: 3,
+				speedVar: 0.6,
+				radialAccel: 0,
+				radialAccelVar: 0,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: L7.p(corner.x + width / 2, corner.y + height),
+				posVar: L7.p(width / 2, 0),
+				life: 5,
+				lifeVar: 0.15,
+				emissionRate: 7,
+				startColor: [255, 255, 255, 1],
+				startColorVar: [0, 0, 0, 0],
+				endColor: [145, 220, 255, 1],
+				endColorVar: [0, 0, 0, 0],
+				active: true
+			});
+
+			board.addDaemon(bubbles);
+		},
+
 		addBlueScreen: function(board, position, width, height) {
 			var whiteColor = [255, 255, 255, 1];
 			var blueColor = [0, 0, 255, 1];
