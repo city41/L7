@@ -4,6 +4,11 @@ i.MidForegroundFiller = {
 		i.FillerUtil.addWater(board, L7.p(6, 5), 2, 6);
 		i.FillerUtil.addWater(board, L7.p(75, 1), 2, 5);
 		i.FillerUtil.addBlueScreen(board, L7.p(129, 11), 5, 3);
+
+		i.FillerUtil.addBlueScreen(board, L7.p(66, 11), 8, 3);
+		i.FillerUtil.pulsate(board, L7.p(64, 11));
+		i.FillerUtil.pulsate(board, L7.p(63, 13));
+
 		i.FillerUtil.addHeartWave(board, L7.p(30, 9), 5, 4);
 		i.FillerUtil.pulsate(board, L7.p(30, 14));
 		i.FillerUtil.pulsate(board, L7.p(32, 14));
