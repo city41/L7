@@ -37,16 +37,37 @@ function onImagesLoaded(images) {
 		container: document.getElementById('container')
 	});
 
+	var snake = new i.ClassicSnake({
+		position: L7.p(5, 15),
+		direction: i.Direction.East,
+		size: 4,
+		active: false,
+		rate: 330
+	});
+
+	boards[2].addActor(snake);
+
+	var appleXs = [40, 100, 125];
+
+	appleXs.forEach(function(x) {
+		boards[2].addActor(new i.ClassicApple({
+			position: L7.p(x, 15)
+		}));
+	});
+
 	// TODO: scrolling the viewport, not sure where to put this
 	b3.ani.sequence(function(ani) {
 		ani.wait(2000);
 		
-		//var duration = (b3.tileSize + b3.borderWidth) * images[3].width;
-		//duration -= game.width;
-		//duration /= 2;
-		//duration = duration | 0;
-		//var a = duration;
-		var duration = 2530;
+		var duration = (b3.tileSize + b3.borderWidth) * images[3].width;
+		duration -= game.width;
+		duration /= b3.parallaxRatio;
+		duration = duration | 0;
+		//var duration = 2530;
+
+		ani.invoke(function() {
+			snake.active = true;
+		});
 
 		console.log('duration: ' + duration);
 		ani.repeat(duration, function(ani) {
@@ -78,7 +99,6 @@ function onImagesLoaded(images) {
 	});
 
 	b3.addActor(a);
-
 	game.go();
 }
 
