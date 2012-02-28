@@ -8,3 +8,33 @@ Color.toCSSString
 -- deal with board.promote properly
 
 
+
+
+snake smooth movement
+-----
+
+Board
+-----
+if(tile.offsetX || tile.offsetY) {
+	// delay rendering, just like when there is scale
+}
+
+render the tile as normal, but adjust x and y by
+	tileSize * tile.offsetX
+	0 = no offset
+	1 = fully displaced
+
+
+Snake
+-----
+each piece has
+	current position
+	next position
+	update in moveSnake
+
+in update
+	update offset percentage
+		elapsed / rate
+	set on each piece
+
+
