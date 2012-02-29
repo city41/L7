@@ -42,7 +42,7 @@
 					return this.active;
 				},
 				handler: function() {
-					this.moveSnake();
+					//this.moveSnake();
 				}
 			}
 		},
@@ -98,6 +98,8 @@
 					to: nextPosition
 				});
 				piece.lastPosition = lastPiecePosition;
+				var delta = piece.position.delta(piece.lastPosition);
+				piece.nextPosition = piece.position.add(delta);
 			}
 
 			this._directionPending = false;
@@ -151,6 +153,28 @@
 				});
 				ani.die();
 			});
+		},
+		update: function(delta, timestamp) {
+			L7.Actor.prototype.update.call(this, delta, timestamp);
+
+			this._offsetElapsed += delta;
+
+			if(this._offsetElapsed >= this.rate) {
+				this._offsetElapsed -= this.rate;
+				this.moveSnake();
+			}
+
+			var offset = this._offsetElapsed / this.rate;
+
+			this.pieces.forEach(function(piece) {
+				if(piece.nextPosition) {
+					var towards = piece.nextPosition.delta(piece.position);
+					piece.offset = {
+						x: offset * towards.x,
+						y: offset * towards.y
+					};
+				}
+			});
 		}
 	};
 
@@ -163,6 +187,7 @@
 		config);
 
 		var actor = new L7.Actor(_.extend(config, _snakeConfig));
+		actor._offsetElapsed = 0;
 
 		actor.timers.move.interval = config.rate;
 

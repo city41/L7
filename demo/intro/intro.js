@@ -38,7 +38,7 @@ function onImagesLoaded(images) {
 	});
 
 	var snake = new i.ClassicSnake({
-		position: L7.p(5, 15),
+		position: L7.p(9, 15),
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
@@ -72,7 +72,7 @@ function onImagesLoaded(images) {
 		console.log('duration: ' + duration);
 		ani.repeat(duration, function(ani) {
 			ani.invoke(function() {
-				game.viewport.scrollX(1);
+				//game.viewport.scrollX(1);
 			});
 			ani.wait(1);
 		});
