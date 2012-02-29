@@ -1135,10 +1135,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				var rs = '';
 				row.forEach(function(tile) {
 					var color = tile.getColor();
-					if(!color) {
+					if (!color) {
 						rs += '.';
 					} else {
-						if(tile.inhabitants.length) {
+						if (tile.inhabitants.length) {
 							rs += 'a';
 						} else {
 							rs += 't'
@@ -1354,7 +1354,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.daemons.push(daemon);
 		},
 		removeDaemon: function(daemon) {
-			if(this.daemons.indexOf(daemon) > -1 && daemon.onRemove) {
+			if (this.daemons.indexOf(daemon) > - 1 && daemon.onRemove) {
 				daemon.onRemove(this);
 			}
 			this.daemons.remove(daemon);
@@ -1419,7 +1419,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		render: function(delta, context, anchorXpx, anchorYpx, timestamp) {
-			if(this.angle) {
+			if (this.angle) {
 				context.save();
 				context.rotate(this.angle);
 			}
@@ -1445,30 +1445,31 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			lastColor,
 			row;
 
-			var scaledOut = [];
+			var deferRender = [];
 
 			for (y = seedy; y < yl; ++y) {
 				if (y >= 0) {
 					row = this._rows[y];
 					for (x = seedx; x < xl; ++x) {
 						if (x >= 0) {
-	
 
 							tile = row[x];
 							color = tile.getColor();
 
 							if (color) {
-								scale = tile.getScale();
+								var scale = tile.getScale();
 								if (!_.isNumber(scale)) {
 									scale = 1;
 								}
 
-								if (scale !== 1) {
-									scaledOut.push(tile);
+								var offset = tile.getOffset();
+
+								if (scale !== 1 || (offset && (offset.x || offset.y))) {
+									deferRender.push(tile);
 									color = tile.getColor(true);
 									scale = 1;
 								}
-								if(color) {
+								if (color) {
 									if (this.borderFill) {
 										c.fillStyle = this.borderFill;
 										// top
@@ -1491,20 +1492,24 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				}
 			}
 
-			scaledOut.sort(function(a, b) {
+			deferRender.sort(function(a, b) {
 				return a.scale - b.scale;
 			});
 
-			for (var i = 0; i < scaledOut.length; ++i) {
-				var tile = scaledOut[i];
+			for (var i = 0; i < deferRender.length; ++i) {
+				var tile = deferRender[i];
 				var scale = tile.getScale();
 				var color = tile.getColor();
 
 				if (color) {
 					c.fillStyle = color;
-					var size = Math.round(ts * scale);
+					var size = (ts * scale) | 0;
+					var tileOffset = tile.getOffset();
+					var tileOffx = ts * tileOffset.x;
+					var tileOffy = ts * tileOffset.y;
+
 					var offset = ts / 2 - size / 2;
-					c.fillRect((tile.x - seedx) * (ts + bw) + bw + offset + offsetX, (tile.y - seedy) * (ts + bw) + bw + offset + offsetY, size, size);
+					c.fillRect((tile.x - seedx) * (ts + bw) + bw + offset + offsetX + tileOffx, (tile.y - seedy) * (ts + bw) + bw + offset + offsetY + tileOffy, size, size);
 				}
 			}
 
@@ -1518,7 +1523,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				}
 			}
 
-			if(this.angle) {
+			if (this.angle) {
 				context.restore();
 			}
 		}
@@ -1751,6 +1756,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			} else {
 				return this.inhabitants.last.scale;
 			}
+		},
+
+		getOffset: function() {
+			return this.inhabitants.length !== 0 && this.inhabitants.last.offset;
 		},
 
 		up: function() {

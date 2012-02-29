@@ -4,6 +4,7 @@
 	<meta charset="utf-8" />
 	<title>Invader demo</title>
 
+	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
 
 </head>
@@ -76,6 +77,14 @@
 				[0,0,0,1,1,0,1,1,0,0,0]
 			],
 			color: [255, 0, 0, 1]
+		});
+
+		a.pieces.forEach(function(p) {
+			p.offset = {
+				x: 0.5,
+				y: 0.75
+			};
+			p.scale = 1.5;
 		});
 
 
