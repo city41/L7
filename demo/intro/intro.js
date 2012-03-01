@@ -42,7 +42,7 @@ function onImagesLoaded(images) {
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
-		rate: 330
+		rate: 230
 	});
 
 	boards[2].addActor(snake);
