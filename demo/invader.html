@@ -4,17 +4,48 @@
 	<meta charset="utf-8" />
 	<title>Invader demo</title>
 
+	<script type="text/javascript" src="gl-matrix-min.js"></script>
+	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
 
 </head>
 <body>
+<script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_FragColor = vColor;
+    }
+</script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    //attribute vec4 aVertexColor;
+		uniform vec4 uColor;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = uColor;
+    }
+</script>
+
 	<script type="text/javascript">
 		L7.Keys.init();
 
 		var board = new L7.Board({
 			width: 30,
-			height: 50,
-			borderWidth: 3,
+			height: 30,
+			borderWidth: 2,
+			borderFill: 'black',
 			tileSize: 10
 		});
 
@@ -81,7 +112,10 @@
 
 		board.addActor(a);
 
-		new L7.Game(board).go();
+		var game = new L7.Game(board);
+		game.webgl = true;
+		game.go();
+
 	</script>
 </body>
 </html>
