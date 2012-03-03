@@ -1123,10 +1123,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				var rs = '';
 				row.forEach(function(tile) {
 					var color = tile.getColor();
-					if(!color) {
+					if (!color) {
 						rs += '.';
 					} else {
-						if(tile.inhabitants.length) {
+						if (tile.inhabitants.length) {
 							rs += 'a';
 						} else {
 							rs += 't'
@@ -1342,7 +1342,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.daemons.push(daemon);
 		},
 		removeDaemon: function(daemon) {
-			if(this.daemons.indexOf(daemon) > -1 && daemon.onRemove) {
+			if (this.daemons.indexOf(daemon) > - 1 && daemon.onRemove) {
 				daemon.onRemove(this);
 			}
 			this.daemons.remove(daemon);
@@ -1406,23 +1406,136 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this._hitManager.detectHits(this.tiles);
 		},
 
-		render: function(delta, context, anchorXpx, anchorYpx, timestamp) {
+		squareVertexPositionBuffer: undefined,
+
+		initBuffer: function(gl) {
+			this.squareVertexPositionBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
+			var vertices = [
+				0, 1, 0,
+				0, 0, 0,
+				1, 1, 0,
+				1, 0, 0
+			];
+
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+			this.squareVertexPositionBuffer.itemSize = 3;
+			this.squareVertexPositionBuffer.numItems = 4;
+		},
+
+		_initGl: function(gl) {
+			gl.clearColor(0.0, 0.0, 0.0, 1.0);
+			this.pMatrix = mat4.create();
+			this.mvMatrix = mat4.create();
+
+			this.initBuffer(gl);
+			this.initShaders(gl);
+		},
+
+		getShader: function(gl, id) {
+			var shaderScript = document.getElementById(id);
+			if (!shaderScript) {
+				return null;
+			}
+
+			var str = "";
+			var k = shaderScript.firstChild;
+			while (k) {
+				if (k.nodeType == 3) {
+					str += k.textContent;
+				}
+				k = k.nextSibling;
+			}
+
+			var shader;
+			if (shaderScript.type == "x-shader/x-fragment") {
+				shader = gl.createShader(gl.FRAGMENT_SHADER);
+			} else if (shaderScript.type == "x-shader/x-vertex") {
+				shader = gl.createShader(gl.VERTEX_SHADER);
+			} else {
+				return null;
+			}
+
+			gl.shaderSource(shader, str);
+			gl.compileShader(shader);
+
+			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+				alert(gl.getShaderInfoLog(shader));
+				return null;
+			}
+
+			return shader;
+		},
+
+		initShaders: function(gl) {
+			var fragmentShader = this.getShader(gl, "shader-fs");
+			var vertexShader = this.getShader(gl, "shader-vs");
+
+			this.shaderProgram = gl.createProgram();
+			gl.attachShader(this.shaderProgram, vertexShader);
+			gl.attachShader(this.shaderProgram, fragmentShader);
+			gl.linkProgram(this.shaderProgram);
+
+			if (!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)) {
+				alert("Could not initialise shaders");
+			}
+
+			gl.useProgram(this.shaderProgram);
+
+			this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation(this.shaderProgram, "aVertexPosition");
+			gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
+
+			//this.shaderProgram.vertexColorAttribute = gl.getAttribLocation(this.shaderProgram, "aVertexColor");
+			//gl.enableVertexAttribArray(this.shaderProgram.vertexColorAttribute);
+			this.shaderProgram.colorUniform = gl.getUniformLocation(this.shaderProgram, "uColor");
+
+			this.shaderProgram.pMatrixUniform = gl.getUniformLocation(this.shaderProgram, "uPMatrix");
+			this.shaderProgram.mvMatrixUniform = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");
+		},
+
+		renderTile: function(gl, x, y, size, color) {
+			mat4.identity(this.mvMatrix);
+			mat4.translate(this.mvMatrix, [x, y, 0]);
+			mat4.scale(this.mvMatrix, [size, size, 0]);
+
+			gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, this.pMatrix);
+			gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+			gl.uniform4fv(this.shaderProgram.colorUniform, color);
+
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.squareVertexPositionBuffer.numItems);
+		},
+
+		rendergl: function(delta, gl, anchorXpx, anchorYpx, timestamp) {
+			if (!this.squareVertexPositionBuffer) {
+				this._initGl(gl);
+			}
+
+			gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+			gl.clear(gl.COLOR_BUFFER_BIT);
+			//mat4.ortho(anchorXpx, anchorXpx + width, anchorYpx + height, anchorYpx, 0.1, 100, this.pMatrix);
+			mat4.ortho(0, gl.viewportWidth, gl.viewportHeight, 0, - 100, 100, this.pMatrix);
+			//mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100, this.pMatrix);
+
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
+			gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+			this.drawTiles(gl, anchorXpx, anchorYpx, gl.viewportWidth, gl.viewportHeight);
+		},
+
+		drawTiles: function(gl, anchorXpx, anchorYpx, width, height) {
 			anchorXpx += this.offsetX || 0;
 			anchorYpx += this.offsetY || 0;
 
-			var c = context,
-			bw = this.borderWidth,
+			var bw = this.borderWidth,
 			ts = this.tileSize,
-			seedYFunc = anchorYpx < 0 ? Math.ceil: Math.floor,
-			seedy = seedYFunc(anchorYpx / (ts + bw)),
+			seedy = (anchorYpx / (ts + bw)) | 0,
 			offsetY = - anchorYpx % (ts + bw),
 			y,
-			yl = Math.min(this._rows.length, Math.ceil((anchorYpx + c.canvas.height) / (ts + bw))),
-			seedXFunc = anchorXpx < 0 ? Math.ceil: Math.floor,
-			seedx = seedXFunc(anchorXpx / (ts + bw)),
+			yl = Math.min(this._rows.length, Math.ceil((anchorYpx + height) / (ts + bw))),
+			seedx = (anchorXpx / (ts + bw)) | 0,
 			offsetX = - anchorXpx % (ts + bw),
 			x,
-			xl = Math.min(this._rows[0].length, Math.ceil((anchorXpx + c.canvas.width) / (ts + bw))),
+			xl = Math.min(this._rows[0].length, Math.ceil((anchorXpx + width) / (ts + bw))),
 			tile,
 			color,
 			lastColor,
@@ -1435,7 +1548,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					row = this._rows[y];
 					for (x = seedx; x < xl; ++x) {
 						if (x >= 0) {
-	
 
 							tile = row[x];
 							color = tile.getColor();
@@ -1451,7 +1563,76 @@ Math.easeInOutBounce = function (t, b, c, d) {
 									color = tile.getColor(true);
 									scale = 1;
 								}
-								if(color) {
+								if (color) {
+									//if (this.borderFill) {
+										//c.fillStyle = this.borderFill;
+										//// top
+										//c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, ts + (2 * bw), bw);
+										//// bottom
+										//c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY + ts + bw, ts + (2 * bw), bw);
+										//// left
+										//c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
+										//// right
+										//c.fillRect((x - seedx) * (ts + bw) + offsetX + ts + bw, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
+									//}
+									//c.fillStyle = color;
+									var size = Math.round(ts * scale);
+									var offset = ts / 2 - size / 2;
+									var fx = (x - seedx) * (ts + bw) + bw + offset + offsetX;
+									var fy = (y - seedy) * (ts + bw) + offset + offsetY;
+									//c.fillRect((x - seedx) * (ts + bw) + bw + offset + offsetX, (y - seedy) * (ts + bw) + bw + offset + offsetY, size, size);
+									this.renderTile(gl, fx, fy, size, color)
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
+		render: function(delta, context, anchorXpx, anchorYpx, timestamp) {
+			anchorXpx += this.offsetX || 0;
+			anchorYpx += this.offsetY || 0;
+
+			var c = context,
+			bw = this.borderWidth,
+			ts = this.tileSize,
+			seedy = (anchorYpx / (ts + bw)) | 0,
+			offsetY = - anchorYpx % (ts + bw),
+			y,
+			yl = Math.min(this._rows.length, Math.ceil((anchorYpx + c.canvas.height) / (ts + bw))),
+			seedx = (anchorXpx / (ts + bw)) | 0,
+			offsetX = - anchorXpx % (ts + bw),
+			x,
+			xl = Math.min(this._rows[0].length, Math.ceil((anchorXpx + c.canvas.width) / (ts + bw))),
+			tile,
+			color,
+			lastColor,
+			row;
+
+			var scaledOut = [];
+
+			for (y = seedy; y < yl; ++y) {
+				if (y >= 0) {
+					row = this._rows[y];
+					for (x = seedx; x < xl; ++x) {
+						if (x >= 0) {
+
+							tile = row[x];
+							color = tile.getColor();
+
+							if (color) {
+								scale = tile.getScale();
+								if (!_.isNumber(scale)) {
+									scale = 1;
+								}
+
+								if (scale !== 1) {
+									scaledOut.push(tile);
+									color = tile.getColor(true);
+									scale = 1;
+								}
+								if (color) {
 									if (this.borderFill) {
 										c.fillStyle = this.borderFill;
 										// top
@@ -1685,7 +1866,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			if(colors.length > 0) {
 				var composited = L7.Color.composite.apply(L7.Color, colors);
-				return L7.Color.toCssString(composited);
+				//return L7.Color.toCssString(composited);
+				return composited;
 			}
 		},
 
@@ -2264,7 +2446,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	var _maxDelta = (1 / 60) * 1000;
 
 	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function(callback) {
-		window.setTimeout(callback, 1000 / 60);
+		window.setTimeout(callback, _maxDelta);
 	};
 
 	function _getConfig(configOrBoard) {
@@ -2352,14 +2534,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this);
 		},
 
-		_pause: function() {
-			var context = this.canvas.getContext('2d');
-			context.save();
-			context.fillStyle = 'rgba(255,255,255,0.5)';
-			context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-			context.restore();
-		},
-
 		_doFrame: function(timestamp) {
 			var fullDelta = timestamp - (this._lastTimestamp || timestamp);
 			this._lastTimestamp = timestamp;
@@ -2372,12 +2546,22 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				delta -= step;
 			}
 
-			var context = this.canvas.getContext('2d');
-			context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			var context;
 
-			this.board.render(fullDelta, context, this.viewport.anchorX, this.viewport.anchorY, timestamp);
+			if(this.webgl) {
+				context = this.canvas.getContext('experimental-webgl');
+				context.viewportWidth = this.canvas.width;
+				context.viewportHeight = this.canvas.height;
+			} else {
+				context = this.canvas.getContext('2d');
+				context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			}
 
-			if(!this.paused) {
+			var renderMethod = this.webgl ? 'rendergl' : 'render';
+
+			this.board[renderMethod](fullDelta, context, this.viewport.anchorX, this.viewport.anchorY, timestamp);
+
+			if (!this.paused) {
 				requestAnimationFrame(this._doFrame);
 			}
 		}
@@ -2391,12 +2575,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var curPaused = this._paused;
 			this._paused = paused;
 
-			if (curPaused !== paused) {
-				if (paused) {
-					this._pause();
-				} else {
-					this.go();
-				}
+			if (!paused) {
+				this.go();
 			}
 		}
 	});
