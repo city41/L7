@@ -28,8 +28,7 @@
 
 <script id="shader-vs" type="x-shader/x-vertex">
     attribute vec3 aVertexPosition;
-    //attribute vec4 aVertexColor;
-		uniform vec4 uColor;
+    attribute vec4 aVertexColor;
 
     uniform mat4 uMVMatrix;
     uniform mat4 uPMatrix;
@@ -38,16 +37,16 @@
 
     void main(void) {
         gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vColor = uColor;
+        vColor = aVertexColor;
     }
 </script>
 
 	<script type="text/javascript">
-		L7.Keys.init();
+		var webgl = true;
 
 		var board = new L7.Board({
-			width: 70,
-			height: 70,
+			width: 80,
+			height: 80,
 			borderWidth: 2,
 			borderFill: 'black',
 			tileSize: 10
@@ -117,7 +116,7 @@
 		board.addActor(a);
 
 		var game = new L7.Game(board);
-		game.webgl = true;
+		game.webgl = webgl;
 		game.fpsContainer = document.getElementById('fpsContainer');
 		game.fpsContainer.innerHTML = "webgl? " + game.webgl;
 		game.go();
