@@ -374,7 +374,7 @@ describe("Tile", function() {
 				});
 
 				var color = tile.getColor();
-				expect(color).toBe('rgba(255,0,0,1)');
+				expect(color).toEqual([255, 0, 0, 1]);
 			});
 
 			it('should return its inhabitants opaque color', function() {
@@ -390,7 +390,7 @@ describe("Tile", function() {
 
 				var color = tile.getColor();
 
-				expect(color).toBe('rgba(255,255,0,1)');
+				expect(color).toEqual([255, 255, 0, 1]);
 			});
 
 			it('should return a composite if inhabitants color is not opaque', function() {
@@ -410,7 +410,7 @@ describe("Tile", function() {
 
 				var color = tile.getColor();
 
-				expect(color).toEqual(L7.Color.toCssString(expected));
+				expect(color).toEqual(expected);
 			});
 
 			it('should return its own color if inhabitant has no color', function() {
@@ -424,7 +424,7 @@ describe("Tile", function() {
 
 				var color = tile.getColor();
 
-				expect(color).toEqual('rgba(255,0,0,1)');
+				expect(color).toEqual([255, 0, 0, 1]);
 			});
 
 			it('should return a composite of its color and its overlay color', function() {
@@ -442,7 +442,7 @@ describe("Tile", function() {
 
 				var color = tile.getColor();
 
-				expect(color).toEqual(L7.Color.toCssString(expected));
+				expect(color).toEqual(expected);
 			});
 
 			it('should return its overlay color if the overlay color is opaque', function() {
@@ -459,7 +459,7 @@ describe("Tile", function() {
 
 				var color = tile.getColor();
 
-				expect(color).toEqual(L7.Color.toCssString(overlayColor));
+				expect(color).toEqual(overlayColor);
 			});
 
 			it('should return a composite of its color, its overlay color and its inhabitant color', function() {
@@ -481,7 +481,7 @@ describe("Tile", function() {
 
 				var color = tile.getColor();
 
-				expect(color).toEqual(L7.Color.toCssString(expected));
+				expect(color).toEqual(expected);
 			});
 		});
 	});

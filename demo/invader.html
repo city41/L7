@@ -8,6 +8,8 @@
 	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
 	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/game/WebGLGameRenderer.js"></script>
+	<script type="text/javascript" src="../lib/game/CanvasGameRenderer.js"></script>
 	<script type="text/javascript" src="../lib/board/Board.js"></script>
 	<script type="text/javascript" src="../lib/board/Tile.js"></script>
 
@@ -15,38 +17,12 @@
 <body>
 
 <div id="fpsContainer">--</div>
-
-<script id="shader-fs" type="x-shader/x-fragment">
-    precision mediump float;
-
-    varying vec4 vColor;
-
-    void main(void) {
-        gl_FragColor = vColor;
-    }
-</script>
-
-<script id="shader-vs" type="x-shader/x-vertex">
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-
-    varying vec4 vColor;
-
-    void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-        vColor = aVertexColor;
-    }
-</script>
-
 	<script type="text/javascript">
-		var webgl = true;
+		L7.useWebGL = true;
 
 		var board = new L7.Board({
 			width: 80,
-			height: 80,
+			height: 60,
 			borderWidth: 2,
 			borderFill: 'black',
 			tileSize: 10
@@ -116,9 +92,8 @@
 		board.addActor(a);
 
 		var game = new L7.Game(board);
-		game.webgl = webgl;
 		game.fpsContainer = document.getElementById('fpsContainer');
-		game.fpsContainer.innerHTML = "webgl? " + game.webgl;
+		game.fpsContainer.innerHTML = "webgl? " + L7.useWebGL;
 		game.go();
 
 	</script>

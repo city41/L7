@@ -1080,6 +1080,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 (function() {
 	L7.Board = function(config) {
 		_.extend(this, config || {});
+
 		this.ani = new L7.AnimationFactory(this, this);
 		this.size = new L7.Pair(this.width || 0, this.height || 0);
 		this.borderWidth = this.borderWidth || 0;
@@ -1406,103 +1407,84 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this._hitManager.detectHits(this.tiles);
 		},
 
-		squareVertexPositionBuffer: undefined,
-
-		initBuffer: function(gl) {
+		_initBuffer: function(gl) {
 			this.squareVertexPositionBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
-			var vertices = [
-				0, 1, 0,
-				0, 0, 0,
-				1, 1, 0,
-				1, 0, 0
-			];
 
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+			var vertices = new Float32Array(this.width * this.height * 6 * 3);
+			var i = 0;
+
+			function pushVertices(x, y, size) {
+				vertices[i++] = x;
+				vertices[i++] = y;
+				vertices[i++] = 0;
+
+				vertices[i++] = x + size;
+				vertices[i++] = y;
+				vertices[i++] = 0;
+
+				vertices[i++] = x + size;
+				vertices[i++] = y + size;
+				vertices[i++] = 0;
+
+				vertices[i++] = x;
+				vertices[i++] = y;
+				vertices[i++] = 0;
+
+				vertices[i++] = x + size;
+				vertices[i++] = y + size;
+				vertices[i++] = 0;
+
+				vertices[i++] = x;
+				vertices[i++] = y + size;
+				vertices[i++] = 0;
+			}
+
+			var ts = this.tileSize;
+			var bw = this.borderWidth;
+			for (var y = 0; y < this.height; ++y) {
+				for (var x = 0; x < this.width; ++x) {
+					var tx = x * (ts + bw) + bw;
+					var ty = y * (ts + bw) + bw;
+					pushVertices(tx, ty, ts);
+				}
+			}
+
+			var verticesPerTile = 6;
+
+			gl.bufferData(gl.ARRAY_BUFFER, (vertices), gl.STATIC_DRAW);
 			this.squareVertexPositionBuffer.itemSize = 3;
-			this.squareVertexPositionBuffer.numItems = 4;
+			this.squareVertexPositionBuffer.numItems = vertices.length / 3;
+
+			this.colorBuffer = gl.createBuffer();
+			this.getTileColors(gl);
+		},
+
+		getTileColors: function(gl) {
+			this.colors = this.colors || new Float32Array(this.squareVertexPositionBuffer.numItems * 4);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+
+			var c = 0;
+			for(var y = 0; y < this.height; ++y) {
+				for(var x = 0; x < this.width; ++x) {
+					var tile = this.tileAt(x, y);
+					var color = tile.getColor();
+					for(var t = 0; t < 6; ++t) {
+						this.colors[c++] = color[0] / 255;
+						this.colors[c++] = color[1] / 255;
+						this.colors[c++] = color[2] / 255;
+						this.colors[c++] = color[3];
+					}
+				}
+			}
+			gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+			this.colorBuffer.itemSize = 4;
+			this.colorBuffer.numItems = this.colors.length / 4;
 		},
 
 		_initGl: function(gl) {
-			gl.clearColor(0.0, 0.0, 0.0, 1.0);
-			this.pMatrix = mat4.create();
 			this.mvMatrix = mat4.create();
-
-			this.initBuffer(gl);
-			this.initShaders(gl);
-		},
-
-		getShader: function(gl, id) {
-			var shaderScript = document.getElementById(id);
-			if (!shaderScript) {
-				return null;
-			}
-
-			var str = "";
-			var k = shaderScript.firstChild;
-			while (k) {
-				if (k.nodeType == 3) {
-					str += k.textContent;
-				}
-				k = k.nextSibling;
-			}
-
-			var shader;
-			if (shaderScript.type == "x-shader/x-fragment") {
-				shader = gl.createShader(gl.FRAGMENT_SHADER);
-			} else if (shaderScript.type == "x-shader/x-vertex") {
-				shader = gl.createShader(gl.VERTEX_SHADER);
-			} else {
-				return null;
-			}
-
-			gl.shaderSource(shader, str);
-			gl.compileShader(shader);
-
-			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-				alert(gl.getShaderInfoLog(shader));
-				return null;
-			}
-
-			return shader;
-		},
-
-		initShaders: function(gl) {
-			var fragmentShader = this.getShader(gl, "shader-fs");
-			var vertexShader = this.getShader(gl, "shader-vs");
-
-			this.shaderProgram = gl.createProgram();
-			gl.attachShader(this.shaderProgram, vertexShader);
-			gl.attachShader(this.shaderProgram, fragmentShader);
-			gl.linkProgram(this.shaderProgram);
-
-			if (!gl.getProgramParameter(this.shaderProgram, gl.LINK_STATUS)) {
-				alert("Could not initialise shaders");
-			}
-
-			gl.useProgram(this.shaderProgram);
-
-			this.shaderProgram.vertexPositionAttribute = gl.getAttribLocation(this.shaderProgram, "aVertexPosition");
-			gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
-
-			//this.shaderProgram.vertexColorAttribute = gl.getAttribLocation(this.shaderProgram, "aVertexColor");
-			//gl.enableVertexAttribArray(this.shaderProgram.vertexColorAttribute);
-			this.shaderProgram.colorUniform = gl.getUniformLocation(this.shaderProgram, "uColor");
-
-			this.shaderProgram.pMatrixUniform = gl.getUniformLocation(this.shaderProgram, "uPMatrix");
-			this.shaderProgram.mvMatrixUniform = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");
-		},
-
-		renderTile: function(gl, x, y, size, color) {
-			mat4.identity(this.mvMatrix);
-			mat4.translate(this.mvMatrix, [x, y, 0]);
-			mat4.scale(this.mvMatrix, [size, size, 0]);
-
-			gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, this.pMatrix);
-			gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
-			gl.uniform4fv(this.shaderProgram.colorUniform, color);
-
-			gl.drawArrays(gl.TRIANGLE_STRIP, 0, this.squareVertexPositionBuffer.numItems);
+			this._initBuffer(gl);
 		},
 
 		rendergl: function(delta, gl, anchorXpx, anchorYpx, timestamp) {
@@ -1510,84 +1492,18 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				this._initGl(gl);
 			}
 
-			gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-			gl.clear(gl.COLOR_BUFFER_BIT);
-			//mat4.ortho(anchorXpx, anchorXpx + width, anchorYpx + height, anchorYpx, 0.1, 100, this.pMatrix);
-			mat4.ortho(0, gl.viewportWidth, gl.viewportHeight, 0, - 100, 100, this.pMatrix);
-			//mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100, this.pMatrix);
+			mat4.identity(this.mvMatrix);
+			gl.uniformMatrix4fv(gl.mvMatrixUniform, false, this.mvMatrix);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
-			gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+			gl.vertexAttribPointer(gl.vertexPositionAttribute, this.squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-			this.drawTiles(gl, anchorXpx, anchorYpx, gl.viewportWidth, gl.viewportHeight);
-		},
+			this.getTileColors(gl);
 
-		drawTiles: function(gl, anchorXpx, anchorYpx, width, height) {
-			anchorXpx += this.offsetX || 0;
-			anchorYpx += this.offsetY || 0;
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+			gl.vertexAttribPointer(gl.vertexColorAttribute, this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-			var bw = this.borderWidth,
-			ts = this.tileSize,
-			seedy = (anchorYpx / (ts + bw)) | 0,
-			offsetY = - anchorYpx % (ts + bw),
-			y,
-			yl = Math.min(this._rows.length, Math.ceil((anchorYpx + height) / (ts + bw))),
-			seedx = (anchorXpx / (ts + bw)) | 0,
-			offsetX = - anchorXpx % (ts + bw),
-			x,
-			xl = Math.min(this._rows[0].length, Math.ceil((anchorXpx + width) / (ts + bw))),
-			tile,
-			color,
-			lastColor,
-			row;
-
-			var scaledOut = [];
-
-			for (y = seedy; y < yl; ++y) {
-				if (y >= 0) {
-					row = this._rows[y];
-					for (x = seedx; x < xl; ++x) {
-						if (x >= 0) {
-
-							tile = row[x];
-							color = tile.getColor();
-
-							if (color) {
-								scale = tile.getScale();
-								if (!_.isNumber(scale)) {
-									scale = 1;
-								}
-
-								if (scale !== 1) {
-									scaledOut.push(tile);
-									color = tile.getColor(true);
-									scale = 1;
-								}
-								if (color) {
-									//if (this.borderFill) {
-										//c.fillStyle = this.borderFill;
-										//// top
-										//c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, ts + (2 * bw), bw);
-										//// bottom
-										//c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY + ts + bw, ts + (2 * bw), bw);
-										//// left
-										//c.fillRect((x - seedx) * (ts + bw) + offsetX, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
-										//// right
-										//c.fillRect((x - seedx) * (ts + bw) + offsetX + ts + bw, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
-									//}
-									//c.fillStyle = color;
-									var size = Math.round(ts * scale);
-									var offset = ts / 2 - size / 2;
-									var fx = (x - seedx) * (ts + bw) + bw + offset + offsetX;
-									var fy = (y - seedy) * (ts + bw) + offset + offsetY;
-									//c.fillRect((x - seedx) * (ts + bw) + bw + offset + offsetX, (y - seedy) * (ts + bw) + bw + offset + offsetY, size, size);
-									this.renderTile(gl, fx, fy, size, color)
-								}
-							}
-						}
-					}
-				}
-			}
+			gl.drawArrays(gl.TRIANGLES, 0, this.squareVertexPositionBuffer.numItems);
 		},
 
 		render: function(delta, context, anchorXpx, anchorYpx, timestamp) {
@@ -1644,7 +1560,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 										// right
 										c.fillRect((x - seedx) * (ts + bw) + offsetX + ts + bw, (y - seedy) * (ts + bw) + offsetY, bw, ts + (2 * bw));
 									}
-									c.fillStyle = color;
+									c.fillStyle = L7.Color.toCssString(color);
 									var size = Math.round(ts * scale);
 									var offset = ts / 2 - size / 2;
 									c.fillRect((x - seedx) * (ts + bw) + bw + offset + offsetX, (y - seedy) * (ts + bw) + bw + offset + offsetY, size, size);
@@ -1750,7 +1666,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.boards.forEach(function(board) {
 				board.render(delta, context, anchorX * board.parallaxRatio, anchorY * board.parallaxRatio, timestamp);
 			});
+		},
+		rendergl: function(delta, context, anchorX, anchorY, timestamp) {
+			this.boards.forEach(function(board) {
+				board.rendergl(delta, context, anchorX * board.parallaxRatio, anchorY * board.parallaxRatio, timestamp);
+			});
 		}
+
 	};
 
 	Object.defineProperty(L7.ParallaxBoard.prototype, 'viewport', {
@@ -1865,39 +1787,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 
 			if(colors.length > 0) {
-				var composited = L7.Color.composite.apply(L7.Color, colors);
-				//return L7.Color.toCssString(composited);
-				return composited;
-			}
-		},
-
-		getColorOld: function() {
-			// this is the original version. Keeping it around because it's possible faster?
-			var color;
-			if (this.inhabitants.length === 0 || !this.inhabitants[this.inhabitants.length -1].color) {
-				color = this.color;
-			} else {
-				var topInhab = this.inhabitants[this.inhabitants.length - 1];
-
-				if (L7.Color.isOpaque(topInhab.color) || ! this.color) {
-					color = topInhab.color;
-				} else {
-					var base = this.color.slice(0);
-					color = L7.Color.composite(base, topInhab.color);
-				}
-			}
-
-			if (this.overlayColor) {
-				if (!color || L7.Color.isOpaque(this.overlayColor)) {
-					color = this.overlayColor;
-				} else {
-					color = L7.Color.composite(color.slice(0), this.overlayColor);
-				}
-			}
-
-			if (color) {
-				var css = L7.Color.toCssString(color);
-				return css;
+				return L7.Color.composite.apply(L7.Color, colors);
 			}
 		},
 
@@ -2089,9 +1979,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			for(var i = 1; i < arguments.length; ++i) {
 				_composite(output, this.toArray(arguments[i]));
 			}
-
-			//output[3] = 1;
-
 			return output;
 		},
 
@@ -2443,6 +2330,25 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
+	L7.CanvasGameRenderer = function(viewport) {
+		this.viewport = viewport;
+	};
+
+	L7.CanvasGameRenderer.prototype = {
+		init: function(canvas) {
+			canvas.style.imageRendering = '-webkit-optimize-contrast';
+		},
+
+		renderFrame: function(canvas, board, delta, anchorXpx, anchorYpx, timestamp) {
+			var context = canvas.getContext('2d');
+			context.clearRect(0, 0, canvas.width, canvas.height);
+			board.render(delta, context, anchorXpx, anchorYpx, timestamp);
+		}
+	};
+
+})();
+
+(function() {
 	var _maxDelta = (1 / 60) * 1000;
 
 	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function(callback) {
@@ -2472,7 +2378,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.board.viewport = this.viewport;
 		}
 		this.container = this.container || document.body;
-		this.canvas = this._createCanvas();
+		this.renderer = L7.useWebGL ? new L7.WebGLGameRenderer(this.viewport) : new L7.CanvasGameRenderer(this.viewport);
+		this._createCanvas();
+		this.renderer.init(this.canvas);
 
 		L7.Keys.init(this.canvas);
 		L7.Mouse.init(this.canvas);
@@ -2487,13 +2395,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.Game.prototype = {
 		_createCanvas: function() {
-			var canvas = document.createElement('canvas');
-			canvas.width = this.viewport.width;
-			canvas.height = this.viewport.height;
-			canvas.style.imageRendering = '-webkit-optimize-contrast';
+			this.canvas = document.createElement('canvas');
+			this.canvas.width = this.viewport.width;
+			this.canvas.height = this.viewport.height;
 
-			this.container.appendChild(canvas);
-			return canvas;
+			this.container.appendChild(this.canvas);
 		},
 
 		go: function() {
@@ -2534,7 +2440,34 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this);
 		},
 
+		_displayFps: function(end) {
+			var seconds = (end - this._frameCountStart) / 1000;
+			var fps = this._frameCount / seconds;
+
+			if(this.fpsContainer) {
+				this.fpsContainer.innerHTML = fps;
+			} else {
+				console.log('fps: ' + fps);
+			}
+		},
+
+		_updateFps: function(timestamp) {
+			if(!this._frameCountStart) {
+				this._frameCountStart = timestamp;
+				this._frameCount = 1;
+			} else {
+				++this._frameCount;
+				var delta = timestamp - this._frameCountStart;
+				if(delta > 2000) {
+					this._displayFps(timestamp);
+					delete this._frameCountStart;
+				}
+			}
+		},
+
 		_doFrame: function(timestamp) {
+			this._updateFps(timestamp);
+
 			var fullDelta = timestamp - (this._lastTimestamp || timestamp);
 			this._lastTimestamp = timestamp;
 
@@ -2546,20 +2479,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				delta -= step;
 			}
 
-			var context;
-
-			if(this.webgl) {
-				context = this.canvas.getContext('experimental-webgl');
-				context.viewportWidth = this.canvas.width;
-				context.viewportHeight = this.canvas.height;
-			} else {
-				context = this.canvas.getContext('2d');
-				context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			}
-
-			var renderMethod = this.webgl ? 'rendergl' : 'render';
-
-			this.board[renderMethod](fullDelta, context, this.viewport.anchorX, this.viewport.anchorY, timestamp);
+			this.renderer.renderFrame(this.canvas, this.board, fullDelta, this.viewport.anchorX, this.viewport.anchorY, timestamp);
 
 			if (!this.paused) {
 				requestAnimationFrame(this._doFrame);
@@ -2692,6 +2612,87 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		}
 	};
 
+})();
+
+(function() {
+	var _fragmentShaderCode = "precision mediump float;" +
+		"varying vec4 vColor;" + 
+		"void main(void) {" +
+		"gl_FragColor = vColor;" +
+		"}";
+
+	var _vertexShaderCode = "attribute vec3 aVertexPosition;" +
+		"attribute vec4 aVertexColor;" +
+		"uniform mat4 uMVMatrix;" +
+		"uniform mat4 uPMatrix;" +
+		"varying vec4 vColor;" +
+		"void main(void) {" +
+		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);" +
+		"vColor = aVertexColor;" + 
+		"}";
+
+	L7.WebGLGameRenderer = function(viewport) {
+		this.viewport = viewport;
+	};
+
+	L7.WebGLGameRenderer.prototype = {
+		_getShader: function(src, type) {
+			var shader = this.gl.createShader(type);
+
+			this.gl.shaderSource(shader, src);
+			this.gl.compileShader(shader);
+
+			if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+				throw new Error(this.gl.getShaderInfoLog(shader));
+			}
+
+			return shader;
+		},
+
+		_initShaders: function() {
+			var fragmentShader = this._getShader(_fragmentShaderCode, this.gl.FRAGMENT_SHADER);
+			var vertexShader = this._getShader(_vertexShaderCode, this.gl.VERTEX_SHADER);
+
+			var shaderProgram = this.gl.createProgram();
+			this.gl.attachShader(shaderProgram, vertexShader);
+			this.gl.attachShader(shaderProgram, fragmentShader);
+			this.gl.linkProgram(shaderProgram);
+
+			if (!this.gl.getProgramParameter(shaderProgram, this.gl.LINK_STATUS)) {
+				throw new Error("Could not initialise shaders");
+			}
+
+			this.gl.useProgram(shaderProgram);
+
+			this.gl.vertexPositionAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexPosition");
+			this.gl.enableVertexAttribArray(this.gl.vertexPositionAttribute);
+
+			this.gl.vertexColorAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexColor");
+			this.gl.enableVertexAttribArray(this.gl.vertexColorAttribute);
+
+			this.pMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uPMatrix");
+			this.gl.mvMatrixUniform = this.gl.getUniformLocation(shaderProgram, "uMVMatrix");
+		},
+
+		init: function(canvas) {
+			this.gl = canvas.getContext('experimental-webgl');
+
+			this.gl.clearColor(0, 0, 0, 1);
+			this.pMatrix = mat4.create();
+
+			this._initShaders();
+		},
+
+		renderFrame: function(canvas, board, delta, anchorXpx, anchorYpx, timestamp) {
+			this.gl.viewport(0, 0, this.viewport.width, this.viewport.height);
+			this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
+			mat4.ortho(0, this.viewport.width, this.viewport.height, 0, -100, 100, this.pMatrix);
+			this.gl.uniformMatrix4fv(this.pMatrixUniform, false, this.pMatrix);
+
+			board.rendergl(delta, this.gl, anchorXpx, anchorYpx, timestamp);
+		}
+	};
 })();
 
 (function() {
