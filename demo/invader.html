@@ -13,6 +13,9 @@
 
 </head>
 <body>
+
+<div id="fpsContainer">--</div>
+
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
 
@@ -115,6 +118,8 @@
 
 		var game = new L7.Game(board);
 		game.webgl = true;
+		game.fpsContainer = document.getElementById('fpsContainer');
+		game.fpsContainer.innerHTML = "webgl? " + game.webgl;
 		game.go();
 
 	</script>
