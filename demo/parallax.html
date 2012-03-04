@@ -6,15 +6,19 @@
 
 	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/game/WebGLGameRenderer.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
 
 </head>
 <body>
+	<div id="fpsContainer">--</div>
 	<script type="text/javascript">
-		L7.Keys.init();
+	L7.useWebGL = true;
 
 		var farBackground = new L7.Board({
-			width: 201,
-			height: 200,
+			width: 51,
+			height: 50,
 			tileSize: 20,
 			borderWidth: 1,
 			borderFill: 'black',
@@ -30,8 +34,8 @@
 
 
 		var background = new L7.Board({
-			width: 90,
-			height: 120,
+			width: 40,
+			height: 60,
 			borderWidth: 2,
 			tileSize: 30,
 			borderFill: 'black',
@@ -64,9 +68,10 @@
 		});
 
 		var game = new L7.Game({
-			width: 500,
-			height: 500,
-			board: parallax
+			width: 700,
+			height: 700,
+			board: parallax,
+			fpsContainer: document.getElementById('fpsContainer')
 		});
 
 		var a = new L7.Actor({

@@ -1,4 +1,4 @@
-L7.Keys.init();
+L7.useWebGL = true;
 
 function onImagesLoaded(images) {
 	var boards = [];
@@ -112,7 +112,8 @@ function onImagesLoaded(images) {
 		width: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
-		container: document.getElementById('container')
+		container: document.getElementById('container'),
+		fpsContainer: document.getElementById('fpsContainer')
 	});
 
 	b3.ani.repeat(Infinity, function(ani) {
