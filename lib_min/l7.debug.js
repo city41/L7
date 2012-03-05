@@ -1090,6 +1090,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
+	var _blankColor = [0,0,0,0];
 	L7.Board = function(config) {
 		_.extend(this, config || {});
 
@@ -1423,10 +1424,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.squareVertexPositionBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
 
-			var vertices = new Float32Array(this.width * this.height * 6 * 3);
+			var vertices = new Float32Array(this.width * this.height * 30 * 3);
 			var i = 0;
 
-			function pushVertices(x, y, size) {
+			function pushTileVertices(x, y, size) {
 				vertices[i++] = x;
 				vertices[i++] = y;
 				vertices[i++] = 0;
@@ -1452,13 +1453,108 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				vertices[i++] = 0;
 			}
 
+			function pushBorderVertices(x, y, ts, bw) {
+				var fullSide = ts + 2 * bw;
+				// top border
+				vertices[i++] = x;
+				vertices[i++] = y;
+				vertices[i++] = 0;
+				vertices[i++] = x + fullSide;
+				vertices[i++] = y;
+				vertices[i++] = 0;
+				vertices[i++] = x + fullSide;
+				vertices[i++] = y + bw;
+				vertices[i++] = 0;
+
+				vertices[i++] = x;
+				vertices[i++] = y;
+				vertices[i++] = 0;
+				vertices[i++] = x + fullSide;
+				vertices[i++] = y + bw;
+				vertices[i++] = 0;
+				vertices[i++] = x;
+				vertices[i++] = y + bw;
+				vertices[i++] = 0;
+
+				// right border
+				var rx = x + bw + ts;
+				var ry = y + bw;
+				vertices[i++] = rx;
+				vertices[i++] = ry;
+				vertices[i++] = 0;
+				vertices[i++] = rx + bw;
+				vertices[i++] = ry;
+				vertices[i++] = 0;
+				vertices[i++] = rx + bw;
+				vertices[i++] = ry + ts;
+				vertices[i++] = 0;
+
+				vertices[i++] = rx;
+				vertices[i++] = ry;
+				vertices[i++] = 0;
+				vertices[i++] = rx + bw;
+				vertices[i++] = ry + ts;
+				vertices[i++] = 0;
+				vertices[i++] = rx;
+				vertices[i++] = ry + ts;
+				vertices[i++] = 0;
+
+				// bottom border
+				var bx = x;
+				var by = y + bw + ts;
+				vertices[i++] = bx;
+				vertices[i++] = by;
+				vertices[i++] = 0;
+				vertices[i++] = bx + fullSide;
+				vertices[i++] = by;
+				vertices[i++] = 0;
+				vertices[i++] = bx + fullSide;
+				vertices[i++] = by + bw;
+				vertices[i++] = 0;
+
+				vertices[i++] = bx;
+				vertices[i++] = by;
+				vertices[i++] = 0;
+				vertices[i++] = bx + fullSide;
+				vertices[i++] = by + bw;
+				vertices[i++] = 0;
+				vertices[i++] = bx;
+				vertices[i++] = by + bw;
+				vertices[i++] = 0;
+
+				// left border
+				var lx = x;
+				var ly = y + bw;
+				vertices[i++] = lx;
+				vertices[i++] = ly;
+				vertices[i++] = 0;
+				vertices[i++] = lx + bw;
+				vertices[i++] = ly;
+				vertices[i++] = 0;
+				vertices[i++] = lx + bw;
+				vertices[i++] = ly + ts;
+				vertices[i++] = 0;
+
+				vertices[i++] = lx;
+				vertices[i++] = ly;
+				vertices[i++] = 0;
+				vertices[i++] = lx + bw;
+				vertices[i++] = ly + ts;
+				vertices[i++] = 0;
+				vertices[i++] = lx;
+				vertices[i++] = ly + ts;
+				vertices[i++] = 0;
+			}
+
+
 			var ts = this.tileSize;
 			var bw = this.borderWidth;
 			for (var y = 0; y < this.height; ++y) {
 				for (var x = 0; x < this.width; ++x) {
 					var tx = x * (ts + bw) + bw;
 					var ty = y * (ts + bw) + bw;
-					pushVertices(tx, ty, ts);
+					pushTileVertices(tx, ty, ts);
+					pushBorderVertices(tx - bw, ty - bw, ts, bw);
 				}
 			}
 
@@ -1485,35 +1581,47 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			tile,
 			color,
 			row,
-			colorData,
-			blankColor = [0, 0, 0, 0];
+			standardBorderColor = this.borderFill ? L7.Color.toArray(this.borderFill) : _blankColor,
+			cdi;
+
+			var span = xl - Math.max(seedx, 0);
+			this.colorData = this.colorData || new Float32Array(span * 30 * 4);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
 
 			for (y = seedy; y < yl; ++y) {
 				if (y >= 0) {
 					row = this._rows[y];
-					colorData = [];
+					cdi = 0;
 					for (x = seedx; x < xl; ++x) {
 						if (x >= 0) {
 							tile = row[x];
-							color = tile.getColor() || blankColor;
+							color = tile.getColor() || _blankColor;
 
 							// each tile is made up of six vertices
 							for(var t = 0; t < 6; ++t) {
-								colorData.push(color[0] / 255);
-								colorData.push(color[1] / 255);
-								colorData.push(color[2] / 255);
-								colorData.push(color[3]);
+								this.colorData[cdi++] = color[0] / 255;
+								this.colorData[cdi++] = color[1] / 255;
+								this.colorData[cdi++] = color[2] / 255;
+								this.colorData[cdi++] = color[3];
+							}
+
+							// now the border colors, there are 24 border vertices following a tile
+							var borderColor = color[3] ? standardBorderColor : _blankColor;
+							for(var b = 0; b < 24; ++b) {
+								this.colorData[cdi++] = borderColor[0] / 255;
+								this.colorData[cdi++] = borderColor[1] / 255;
+								this.colorData[cdi++] = borderColor[2] / 255;
+								this.colorData[cdi++] = borderColor[3];
 							}
 						}
 					}
 					// bufferSubData here
 					var tileOffset = (y * this.width) + Math.max(0, seedx);
-					var vertexOffset = tileOffset * 6;
+					var vertexOffset = tileOffset * 30;
 					var colorOffset = vertexOffset * 4;
 					var byteOffset = colorOffset * 4;
-					gl.bufferSubData(gl.ARRAY_BUFFER, byteOffset, new Float32Array(colorData));
+					gl.bufferSubData(gl.ARRAY_BUFFER, byteOffset, this.colorData);
 				}
 			}
 			gl.vertexAttribPointer(gl.vertexColorAttribute, this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
