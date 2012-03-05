@@ -1434,35 +1434,31 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 		_initBuffer: function(gl) {
 			this.squareVertexPositionBuffer = gl.createBuffer();
+			this.squareVertexPositionBuffer.itemSize = 2;
+
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
 
-			var vertices = new Float32Array(this.width * this.height * 30 * 3);
+			var vertices = new Float32Array(this.width * this.height * 30 * this.squareVertexPositionBuffer.itemSize);
 			var i = 0;
 
 			function pushTileVertices(x, y, size) {
 				vertices[i++] = x;
 				vertices[i++] = y;
-				vertices[i++] = 0;
 
 				vertices[i++] = x + size;
 				vertices[i++] = y;
-				vertices[i++] = 0;
 
 				vertices[i++] = x + size;
 				vertices[i++] = y + size;
-				vertices[i++] = 0;
 
 				vertices[i++] = x;
 				vertices[i++] = y;
-				vertices[i++] = 0;
 
 				vertices[i++] = x + size;
 				vertices[i++] = y + size;
-				vertices[i++] = 0;
 
 				vertices[i++] = x;
 				vertices[i++] = y + size;
-				vertices[i++] = 0;
 			}
 
 			function pushBorderVertices(x, y, ts, bw) {
@@ -1470,92 +1466,68 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				// top border
 				vertices[i++] = x;
 				vertices[i++] = y;
-				vertices[i++] = 0;
 				vertices[i++] = x + fullSide;
 				vertices[i++] = y;
-				vertices[i++] = 0;
 				vertices[i++] = x + fullSide;
 				vertices[i++] = y + bw;
-				vertices[i++] = 0;
 
 				vertices[i++] = x;
 				vertices[i++] = y;
-				vertices[i++] = 0;
 				vertices[i++] = x + fullSide;
 				vertices[i++] = y + bw;
-				vertices[i++] = 0;
 				vertices[i++] = x;
 				vertices[i++] = y + bw;
-				vertices[i++] = 0;
 
 				// right border
 				var rx = x + bw + ts;
 				var ry = y + bw;
 				vertices[i++] = rx;
 				vertices[i++] = ry;
-				vertices[i++] = 0;
 				vertices[i++] = rx + bw;
 				vertices[i++] = ry;
-				vertices[i++] = 0;
 				vertices[i++] = rx + bw;
 				vertices[i++] = ry + ts;
-				vertices[i++] = 0;
 
 				vertices[i++] = rx;
 				vertices[i++] = ry;
-				vertices[i++] = 0;
 				vertices[i++] = rx + bw;
 				vertices[i++] = ry + ts;
-				vertices[i++] = 0;
 				vertices[i++] = rx;
 				vertices[i++] = ry + ts;
-				vertices[i++] = 0;
 
 				// bottom border
 				var bx = x;
 				var by = y + bw + ts;
 				vertices[i++] = bx;
 				vertices[i++] = by;
-				vertices[i++] = 0;
 				vertices[i++] = bx + fullSide;
 				vertices[i++] = by;
-				vertices[i++] = 0;
 				vertices[i++] = bx + fullSide;
 				vertices[i++] = by + bw;
-				vertices[i++] = 0;
 
 				vertices[i++] = bx;
 				vertices[i++] = by;
-				vertices[i++] = 0;
 				vertices[i++] = bx + fullSide;
 				vertices[i++] = by + bw;
-				vertices[i++] = 0;
 				vertices[i++] = bx;
 				vertices[i++] = by + bw;
-				vertices[i++] = 0;
 
 				// left border
 				var lx = x;
 				var ly = y + bw;
 				vertices[i++] = lx;
 				vertices[i++] = ly;
-				vertices[i++] = 0;
 				vertices[i++] = lx + bw;
 				vertices[i++] = ly;
-				vertices[i++] = 0;
 				vertices[i++] = lx + bw;
 				vertices[i++] = ly + ts;
-				vertices[i++] = 0;
 
 				vertices[i++] = lx;
 				vertices[i++] = ly;
-				vertices[i++] = 0;
 				vertices[i++] = lx + bw;
 				vertices[i++] = ly + ts;
-				vertices[i++] = 0;
 				vertices[i++] = lx;
 				vertices[i++] = ly + ts;
-				vertices[i++] = 0;
 			}
 
 
@@ -1571,8 +1543,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 
 			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-			this.squareVertexPositionBuffer.itemSize = 3;
-			this.squareVertexPositionBuffer.numItems = vertices.length / 3;
+			this.squareVertexPositionBuffer.numItems = vertices.length / this.squareVertexPositionBuffer.itemSize;
 
 			this.colorBuffer = gl.createBuffer();
 			this.colorBuffer.itemSize = 4;
@@ -2811,13 +2782,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		"gl_FragColor = vColor;" +
 		"}";
 
-	var _vertexShaderCode = "attribute vec3 aVertexPosition;" +
+	var _vertexShaderCode = "attribute vec2 aVertexPosition;" +
 		"attribute vec4 aVertexColor;" +
 		"uniform mat4 uMVMatrix;" +
 		"uniform mat4 uPMatrix;" +
 		"varying vec4 vColor;" +
 		"void main(void) {" +
-		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);" +
+		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 0.0, 1.0);" +
 		"vColor = aVertexColor;" + 
 		"}";
 
