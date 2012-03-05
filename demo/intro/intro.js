@@ -1,4 +1,4 @@
-L7.Keys.init();
+L7.useWebGL = true;
 
 function onImagesLoaded(images) {
 	var boards = [];
@@ -31,11 +31,13 @@ function onImagesLoaded(images) {
 
 	var game = new L7.Game({
 		board: parallax,
-		width: (b3.height * 1.35) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		width: (b3.height * 4) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
-		container: document.getElementById('container')
+		container: document.getElementById('container'),
+		fpsContainer: document.getElementById('fpsContainer')
 	});
+	game.fpsContainer.innerHTML = 'webgl? ' + L7.useWebGL;
 
 	var snake = new i.ClassicSnake({
 		position: L7.p(-9, 15),
