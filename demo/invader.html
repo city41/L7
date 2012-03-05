@@ -4,18 +4,27 @@
 	<meta charset="utf-8" />
 	<title>Invader demo</title>
 
+	<script type="text/javascript" src="../lib/third/gl-matrix-min.js"></script>
 	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
+	<script type="text/javascript" src="../lib/game/Game.js"></script>
+	<script type="text/javascript" src="../lib/game/WebGLGameRenderer.js"></script>
+	<script type="text/javascript" src="../lib/game/CanvasGameRenderer.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
+	<script type="text/javascript" src="../lib/board/Tile.js"></script>
 
 </head>
 <body>
+
+<div id="fpsContainer">--</div>
 	<script type="text/javascript">
-		L7.Keys.init();
+		L7.useWebGL = true;
 
 		var board = new L7.Board({
 			width: 70,
 			height: 70,
 			borderWidth: 2,
+			borderFill: 'black',
 			tileSize: 10
 		});
 
@@ -79,18 +88,14 @@
 			color: [255, 0, 0, 1]
 		});
 
-		a.pieces.forEach(function(p) {
-			p.offset = {
-				x: 0.5,
-				y: 0.75
-			};
-			p.scale = 1.5;
-		});
-
 
 		board.addActor(a);
 
-		new L7.Game(board).go();
+		var game = new L7.Game(board);
+		game.fpsContainer = document.getElementById('fpsContainer');
+		game.fpsContainer.innerHTML = "webgl? " + L7.useWebGL;
+		game.go();
+
 	</script>
 </body>
 </html>

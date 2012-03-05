@@ -43,6 +43,7 @@ describe('Game', function() {
 
 			expect(game.viewport.width).toEqual(board.width * (board.tileSize + board.borderWidth) + board.borderWidth);
 			expect(game.viewport.height).toEqual(board.height * (board.tileSize + board.borderWidth) + board.borderWidth);
+			expect(game.renderer).toBeTruthy();
 			expect(game.canvas).toBeTruthy();
 			expect(game.board).toEqual(board);
 			expect(board.viewport).toEqual(game.viewport);

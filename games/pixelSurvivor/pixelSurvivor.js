@@ -1,3 +1,4 @@
+L7.useWebGL = true;
 window.p = {};
 
 p.go = function() {
@@ -24,6 +25,8 @@ p.go = function() {
 		player: player
 	}));
 
-	new L7.Game(board).go();
+	var game = new L7.Game(board);
+	game.fpsContainer = document.getElementById('fpsContainer');
+	game.go();
 };
 
