@@ -9,7 +9,7 @@ function onImagesLoaded(images) {
 	images.forEach(function(image, i) {
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidth);
 
-		tileSize += 3;
+		tileSize += 4;
 
 		var board = levelLoader.load();
 		board.parallaxRatio = i * 0.25;
@@ -109,7 +109,7 @@ function onImagesLoaded(images) {
 
 	var game = new L7.Game({
 		board: parallax,
-		width: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		width: (b3.height * 4.3) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container'),
