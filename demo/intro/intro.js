@@ -5,7 +5,7 @@ function onImagesLoaded(images) {
 
 	var tileSize = 7;
 	var borderWidth = 1;
-	var borderWidths = [3, 1, 1, 2];
+	var borderWidths = [4, 0, 1, 2];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller];
 
 	images.forEach(function(image, i) {
@@ -31,7 +31,7 @@ function onImagesLoaded(images) {
 
 	var game = new L7.Game({
 		board: parallax,
-		width: (b3.height * 4) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		width: (b3.height * 2) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container'),
