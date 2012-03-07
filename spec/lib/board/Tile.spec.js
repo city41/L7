@@ -396,7 +396,8 @@ describe("Tile", function() {
 			it('should return a composite if inhabitants color is not opaque', function() {
 				var tileColor = [255, 0, 0, 1];
 				var inhabColor = [255, 255, 0, .6];
-				var expected = L7.Color.composite(tileColor.slice(0), inhabColor);
+				var expected = [1,1,1,1];
+				L7.Color.composite([tileColor, inhabColor], 2, expected);
 
 				var tile = new L7.Tile({
 					x: 1,
@@ -430,7 +431,8 @@ describe("Tile", function() {
 			it('should return a composite of its color and its overlay color', function() {
 				var tileColor = [255, 255, 0, 1];
 				var overlayColor = [0, 123, 33, .3];
-				var expected = L7.Color.composite(tileColor.slice(0), overlayColor);
+				var expected = [];
+				L7.Color.composite([tileColor, overlayColor], 2, expected);
 
 				var tile = new L7.Tile({
 					x: 1,
@@ -466,7 +468,8 @@ describe("Tile", function() {
 				var tileColor = [255, 255, 0, 1];
 				var overlayColor = [0, 123, 33, .3];
 				var inhabitantColor = [122, 44, 55, .7];
-				var expected = L7.Color.composite(tileColor.slice(0), inhabitantColor, overlayColor);
+				var expected = [];
+				L7.Color.composite([tileColor, inhabitantColor, overlayColor], 3, expected);
 
 				var tile = new L7.Tile({
 					x: 1,

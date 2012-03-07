@@ -1920,31 +1920,33 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		getColor: function(skipInhabitants) {
-			var colors = [];
+			var c = 0;
+			this.colors = this.colors || [];
+			this.composite = this.composite || [];
 
 			if(this.color) {
-				colors.push(this.color);
+				this.colors[c++] = this.color;
 			}
 
 			if(!skipInhabitants) {
 				for(var i = 0; i < this.inhabitants.length; ++i) {
 					var inhabColor = this.inhabitants[i].color;
 					if(inhabColor) {
-						colors.push(inhabColor);
+						this.colors[c++] = inhabColor;
 					}
 				}
 			}
 
 			if(this.overlayColor) {
-				colors.push(this.overlayColor);
+				this.colors[c++] = this.overlayColor;
 			}
 
-			if(colors.length > 0) {
-				var composited = L7.Color.composite.apply(L7.Color, colors);
+			if(c > 0) {
+				L7.Color.composite(this.colors, c, this.composite);
 				if(this.opaque) {
-					composited[3] = 1;
+					this.composite[3] = 1;
 				}
-				return composited;
+				return this.composite;
 			}
 		},
 
@@ -2135,12 +2137,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			return hexString.toUpperCase();
 		},
 
-		composite: function(colorVarArgs) {
-			var output = this.toArray(arguments[0]).slice(0);
-			for(var i = 1; i < arguments.length; ++i) {
-				_composite(output, this.toArray(arguments[i]));
+		composite: function(colorArray, count, dest) {
+			dest[0] = dest[1] = dest[2] = dest[3] = 1;
+			for(var i = 0; i < count; ++i) {
+				_composite(dest, colorArray[i]);
 			}
-			return output;
 		},
 
 		fromFloats: function(r, g, b, a) {
@@ -2776,7 +2777,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
-	var _fragmentShaderCode = "precision mediump float;" +
+	var _fragmentShaderCode = "precision lowp float;" +
 		"varying vec4 vColor;" + 
 		"void main(void) {" +
 		"gl_FragColor = vColor;" +

@@ -113,18 +113,20 @@ describe("Color", function() {
 
 	describe('compositing', function() {
 		it('should composite two colors', function() {
-			var c1 = 'rgba(255, 0, 0, 1)';
-			var c2 = 'rgba(0, 0, 255, .5)';
+			var c1 = [255, 0, 0, 0.75];
+			var c2 = [0, 0, 255, 0.5];
 
 			// for alpha, the average alpha is taken
-			var expected = [128, 0, 128, 0.75];
+			var expected = [84, 0, 128, 0.6875];
+			// dest can have any garbage in it
+			var dest = [33,44,55,99];
 
-			var composited = L7.Color.composite(c1, c2);
+			L7.Color.composite([c1, c2], 2, dest);
 
-			expect(expected[0]).toEqual(composited[0]);
-			expect(expected[1]).toEqual(composited[1]);
-			expect(expected[2]).toEqual(composited[2]);
-			expect(expected[3]).toEqual(composited[3]);
+			expect(expected[0]).toEqual(dest[0]);
+			expect(expected[1]).toEqual(dest[1]);
+			expect(expected[2]).toEqual(dest[2]);
+			expect(expected[3]).toEqual(dest[3]);
 		});
 	});
 
