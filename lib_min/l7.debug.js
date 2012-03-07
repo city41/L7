@@ -1102,7 +1102,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
-	var _blankColor = [0,0,0,0];
+	var _blankColor = [0, 0, 0, 0];
 	L7.Board = function(config) {
 		_.extend(this, config || {});
 
@@ -1438,7 +1438,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
 
-			var vertices = new Float32Array(this.width * this.height * 30 * this.squareVertexPositionBuffer.itemSize);
+			this.verticesPerTile = this.borderWidth > 0 ? 30 : 6;
+			var vertices = new Float32Array(this.width * this.height * this.verticesPerTile * this.squareVertexPositionBuffer.itemSize);
 			var i = 0;
 
 			function pushTileVertices(x, y, size) {
@@ -1530,7 +1531,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				vertices[i++] = ly + ts;
 			}
 
-
 			var ts = this.tileSize;
 			var bw = this.borderWidth;
 			for (var y = 0; y < this.height; ++y) {
@@ -1538,7 +1538,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					var tx = x * (ts + bw) + bw;
 					var ty = y * (ts + bw) + bw;
 					pushTileVertices(tx, ty, ts);
-					pushBorderVertices(tx - bw, ty - bw, ts, bw);
+
+					if (this.borderWidth > 0) {
+						pushBorderVertices(tx - bw, ty - bw, ts, bw);
+					}
 				}
 			}
 
@@ -1568,7 +1571,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			cdi;
 
 			var span = xl - Math.max(seedx, 0);
-			this.colorData = this.colorData || new Float32Array(span * 30 * 4);
+			this.colorData = this.colorData || new Float32Array(span * this.verticesPerTile * 4);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
 
@@ -1582,26 +1585,28 @@ Math.easeInOutBounce = function (t, b, c, d) {
 							color = tile.getColor() || _blankColor;
 
 							// each tile is made up of six vertices
-							for(var t = 0; t < 6; ++t) {
+							for (var t = 0; t < 6; ++t) {
 								this.colorData[cdi++] = color[0] / 255;
 								this.colorData[cdi++] = color[1] / 255;
 								this.colorData[cdi++] = color[2] / 255;
 								this.colorData[cdi++] = color[3];
 							}
 
-							// now the border colors, there are 24 border vertices following a tile
-							var borderColor = color[3] ? standardBorderColor : _blankColor;
-							for(var b = 0; b < 24; ++b) {
-								this.colorData[cdi++] = borderColor[0] / 255;
-								this.colorData[cdi++] = borderColor[1] / 255;
-								this.colorData[cdi++] = borderColor[2] / 255;
-								this.colorData[cdi++] = borderColor[3];
+							if (this.borderWidth > 0) {
+								// now the border colors, there are 24 border vertices following a tile
+								var borderColor = color[3] ? standardBorderColor: _blankColor;
+								for (var b = 0; b < 24; ++b) {
+									this.colorData[cdi++] = borderColor[0] / 255;
+									this.colorData[cdi++] = borderColor[1] / 255;
+									this.colorData[cdi++] = borderColor[2] / 255;
+									this.colorData[cdi++] = borderColor[3];
+								}
 							}
 						}
 					}
 					// bufferSubData here
 					var tileOffset = (y * this.width) + Math.max(0, seedx);
-					var vertexOffset = tileOffset * 30;
+					var vertexOffset = tileOffset * this.verticesPerTile;
 					var colorOffset = vertexOffset * 4;
 					var byteOffset = colorOffset * 4;
 					gl.bufferSubData(gl.ARRAY_BUFFER, byteOffset, this.colorData);
@@ -1624,7 +1629,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			anchorYpx += this.offsetY || 0;
 
 			mat4.identity(this.mvMatrix);
-			mat4.translate(this.mvMatrix, [-anchorXpx, -anchorYpx, 0]);
+			mat4.translate(this.mvMatrix, [-anchorXpx, - anchorYpx, 0]);
 			gl.uniformMatrix4fv(gl.mvMatrixUniform, false, this.mvMatrix);
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
@@ -1714,7 +1719,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				var tile = deferRender[i];
 				var scale = tile.getScale();
 
-				if(!_.isNumber(scale)) {
+				if (!_.isNumber(scale)) {
 					scale = 1;
 				}
 
@@ -1725,8 +1730,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					var size = (ts * scale) | 0;
 					var tileOffset = tile.getOffset();
 
-					var tileOffx = 0, tileOffy = 0;
-					if(tileOffset) {
+					var tileOffx = 0,
+					tileOffy = 0;
+					if (tileOffset) {
 						tileOffx = (ts * tileOffset.x) | 0;
 						tileOffy = (ts * tileOffset.y) | 0;
 					}
