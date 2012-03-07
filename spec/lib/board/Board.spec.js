@@ -497,38 +497,8 @@ describe("Board", function() {
 	});
 
 	describe('rendering', function() {
-		//it('should render the border fill', function() {
-		//var borderFill = '#ff0000';
-		//var board = new L7.Board({
-		//width: 1,
-		//height: 1,
-		//tileSize: 1,
-		//borderWidth: 1,
-		//borderFill: borderFill
-		//});
-		//var canvas = document.createElement('canvas');
-		//var context = canvas.getContext('2d');
-		//spyOn(context, 'fillRect');
-		//board.render(0, context, 0, 0, 0);
-		//expect(context.fillRect).toHaveBeenCalled();
-		//expect(context.fillStyle).toEqual(borderFill);
-		//});
-		//it('should clear rect if the border has no color', function() {
-		//var board = new L7.Board({
-		//width: 1,
-		//height: 1,
-		//tileSize: 1,
-		//borderWidth: 1
-		//});
-		//var canvas = document.createElement('canvas');
-		//var context = canvas.getContext('2d');
-		//spyOn(context, 'fillRect');
-		//spyOn(context, 'clearRect');
-		//board.render(0, context, 0, 0, 0);
-		//expect(context.fillRect).not.toHaveBeenCalled();
-		//expect(context.clearRect).toHaveBeenCalled();
-		//});
 		it('should ask each tile for its color', function() {
+			debugger;
 			var board = new L7.Board({
 				width: 2,
 				height: 2,
