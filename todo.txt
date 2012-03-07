@@ -1,40 +1,34 @@
--- z-indexing actors
-
 -- text/number tiles
-
-Color.toCSSString
-	-- tiles are getting rgba(...) back, would rgb(...) or hex be faster?
 
 -- deal with board.promote properly
 
 
+WebGL offset/scale
+=================
+add attribute for tileCenter
+add attribute for offset (vec2, (x/y))
 
 
-snake smooth movement
------
+vec2 diff = aVertexPosition - aTileCenter;
 
-Board
------
-if(tile.offsetX || tile.offsetY) {
-	// delay rendering, just like when there is scale
-}
+float offsetX = diff[0] - diff[0] * aOffset[0]
+float offsetY = diff[1] - diff[1] * aOffset[1]
 
-render the tile as normal, but adjust x and y by
-	tileSize * tile.offsetX
-	0 = no offset
-	1 = fully displaced
+aVertexPosition[0] += offsetX
+aVertexPosition[1] += offsetY
+gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 0.0, 1.0);
 
 
-Snake
------
-each piece has
-	current position
-	next position
-	update in moveSnake
+in setTileColors (rename setTiles?)
 
-in update
-	update offset percentage
-		elapsed / rate
-	set on each piece
+offset = tile.getOffset();
+scale = tile.getScale();
+determineFinalOffset(offset, scale, offsets)
+
+if(vertex is top/left)
+ offset = offsets.topLeft
+} 
+...
+
 
 
