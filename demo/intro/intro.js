@@ -58,6 +58,7 @@ function onImagesLoaded(images) {
 	});
 
 	function doSnakeAnimation() {
+		return;
 		snake.ani.sequence({
 			targets: [snake]
 		},

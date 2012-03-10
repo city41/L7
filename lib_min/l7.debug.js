@@ -1785,6 +1785,8 @@ L7.CanvasBoardRenderMixin = {
 
 (function() {
 	var _blankColor = [0, 0, 0, 0];
+	var _defaultOffsets = { x: 0, y: 0 };
+
 	L7.WebGLBoardRenderMixin = {
 		render: function(delta, gl, anchorXpx, anchorYpx, timestamp) {
 			if (!this.squareVertexPositionBuffer) {
@@ -1920,13 +1922,14 @@ L7.CanvasBoardRenderMixin = {
 				for (var x = 0; x < this.width; ++x) {
 					var tx = x * (ts + bw) + bw;
 					var ty = y * (ts + bw) + bw;
-					pushTileVertices(tx, ty, ts);
 
 					if (this.borderWidth > 0) {
 						pushBorderVertices(tx - bw, ty - bw, ts, bw);
 					}
 
-					for(var c = 0; c < this.verticesPerTile; ++c) {
+					pushTileVertices(tx, ty, ts);
+
+					for (var c = 0; c < this.verticesPerTile; ++c) {
 						centerVertices[ci++] = tx + ts / 2;
 						centerVertices[ci++] = ty + ts / 2;
 					}
@@ -1948,6 +1951,24 @@ L7.CanvasBoardRenderMixin = {
 			gl.bufferData(gl.ARRAY_BUFFER, colorOffsetsData, gl.DYNAMIC_DRAW);
 		},
 
+		_getShaderOffsetX: function(index, offsets) {
+			var negator = 1;
+			if(index === 0 || index === 3 || index === 5) {
+				negator = -1;
+			}
+
+			return negator * 2 * offsets.x + 1;
+		},
+
+		_getShaderOffsetY: function(index, offsets) {
+			var negator = 1;
+			if(index === 0 || index === 3 || index === 1) {
+				negator = -1;
+			}
+
+			return negator * 2 * offsets.y + 1;
+		},
+
 		_glSetTiles: function(gl, anchorXpx, anchorYpx) {
 			var bw = this.borderWidth,
 			ts = this.tileSize,
@@ -1959,6 +1980,8 @@ L7.CanvasBoardRenderMixin = {
 			xl = Math.min(this.width, Math.ceil((anchorXpx + this.viewport.width) / (ts + bw))),
 			tile,
 			color,
+			scale,
+			offsets,
 			row,
 			standardBorderColor = this.borderFill ? L7.Color.toArray(this.borderFill) : _blankColor,
 			cdi;
@@ -1976,17 +1999,7 @@ L7.CanvasBoardRenderMixin = {
 						if (x >= 0) {
 							tile = row[x];
 							color = tile.getColor() || _blankColor;
-
-							// each tile is made up of six vertices
-							for (var t = 0; t < 6; ++t) {
-								this.colorOffsetsData[cdi++] = color[0] / 255;
-								this.colorOffsetsData[cdi++] = color[1] / 255;
-								this.colorOffsetsData[cdi++] = color[2] / 255;
-								this.colorOffsetsData[cdi++] = color[3];
-								// offsets
-								this.colorOffsetsData[cdi++] = 1;
-								this.colorOffsetsData[cdi++] = 1;
-							}
+							offsets = tile.getOffset() || _defaultOffsets;
 
 							if (this.borderWidth > 0) {
 								// now the border colors, there are 24 border vertices following a tile
@@ -2000,6 +2013,17 @@ L7.CanvasBoardRenderMixin = {
 									this.colorOffsetsData[cdi++] = 1;
 									this.colorOffsetsData[cdi++] = 1;
 								}
+							}
+
+							// each tile is made up of six vertices
+							for (var t = 0; t < 6; ++t) {
+								this.colorOffsetsData[cdi++] = color[0] / 255;
+								this.colorOffsetsData[cdi++] = color[1] / 255;
+								this.colorOffsetsData[cdi++] = color[2] / 255;
+								this.colorOffsetsData[cdi++] = color[3];
+								// offsets
+								this.colorOffsetsData[cdi++] = this._getShaderOffsetX(t, offsets);
+								this.colorOffsetsData[cdi++] = this._getShaderOffsetY(t, offsets);
 							}
 						}
 					}
@@ -2829,7 +2853,9 @@ L7.CanvasBoardRenderMixin = {
 		"void main(void) {" +
 		"float diffX = aVertexPosition.x - aVertexCenter.x;" +
 		"float offsetX = (aOffsets.x * diffX) - diffX;" +
-		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec2(offsetX, 0), 0.0, 1.0);" +
+		"float diffY = aVertexPosition.y - aVertexCenter.y;" +
+		"float offsetY = (aOffsets.y * diffY) - diffY;" +
+		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec2(offsetX, offsetY), 0.0, 1.0);" +
 		"vColor = aVertexColor;" + 
 		"}";
 
@@ -2889,6 +2915,7 @@ L7.CanvasBoardRenderMixin = {
 			this.gl.clearColor(0, 0, 0, 1);
 			this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     	this.gl.enable(this.gl.BLEND);
+      //this.gl.enable(this.gl.DEPTH_TEST);
 			
 			this.pMatrix = mat4.create();
 
@@ -2897,6 +2924,7 @@ L7.CanvasBoardRenderMixin = {
 
 		renderFrame: function(canvas, board, delta, anchorXpx, anchorYpx, timestamp) {
 			this.gl.viewport(0, 0, this.viewport.width, this.viewport.height);
+			//this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 			this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 
 			mat4.ortho(0, this.viewport.width, this.viewport.height, 0, -100, 100, this.pMatrix);
