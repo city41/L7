@@ -1817,7 +1817,7 @@ L7.CanvasBoardRenderMixin = {
 
 		_glInitBuffer: function(gl) {
 			this.squareVertexPositionBuffer = gl.createBuffer();
-			this.squareVertexPositionBuffer.itemSize = 2;
+			this.squareVertexPositionBuffer.itemSize = 3;
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
 
@@ -1826,25 +1826,32 @@ L7.CanvasBoardRenderMixin = {
 			var i = 0;
 			var centerVertices = new Float32Array(this.width * this.height * 2 * this.verticesPerTile);
 			var ci = 0;
+			var z = this.depth || 0;
 
 			function pushTileVertices(x, y, size) {
 				vertices[i++] = x;
 				vertices[i++] = y;
+				vertices[i++] = z;
 
 				vertices[i++] = x + size;
 				vertices[i++] = y;
+				vertices[i++] = z;
 
 				vertices[i++] = x + size;
 				vertices[i++] = y + size;
+				vertices[i++] = z;
 
 				vertices[i++] = x;
 				vertices[i++] = y;
+				vertices[i++] = z;
 
 				vertices[i++] = x + size;
 				vertices[i++] = y + size;
+				vertices[i++] = z;
 
 				vertices[i++] = x;
 				vertices[i++] = y + size;
+				vertices[i++] = z;
 			}
 
 			function pushBorderVertices(x, y, ts, bw) {
@@ -1852,68 +1859,92 @@ L7.CanvasBoardRenderMixin = {
 				// top border
 				vertices[i++] = x;
 				vertices[i++] = y;
+				vertices[i++] = z;
 				vertices[i++] = x + fullSide;
 				vertices[i++] = y;
+				vertices[i++] = z;
 				vertices[i++] = x + fullSide;
 				vertices[i++] = y + bw;
+				vertices[i++] = z;
 
 				vertices[i++] = x;
 				vertices[i++] = y;
+				vertices[i++] = z;
 				vertices[i++] = x + fullSide;
 				vertices[i++] = y + bw;
+				vertices[i++] = z;
 				vertices[i++] = x;
 				vertices[i++] = y + bw;
+				vertices[i++] = z;
 
 				// right border
 				var rx = x + bw + ts;
 				var ry = y;
 				vertices[i++] = rx;
 				vertices[i++] = ry;
+				vertices[i++] = z;
 				vertices[i++] = rx + bw;
 				vertices[i++] = ry;
+				vertices[i++] = z;
 				vertices[i++] = rx + bw;
 				vertices[i++] = ry + fullSide;
+				vertices[i++] = z;
 
 				vertices[i++] = rx;
 				vertices[i++] = ry;
+				vertices[i++] = z;
 				vertices[i++] = rx + bw;
 				vertices[i++] = ry + fullSide;
+				vertices[i++] = z;
 				vertices[i++] = rx;
 				vertices[i++] = ry + fullSide;
+				vertices[i++] = z;
 
 				// bottom border
 				var bx = x;
 				var by = y + bw + ts;
 				vertices[i++] = bx;
 				vertices[i++] = by;
+				vertices[i++] = z;
 				vertices[i++] = bx + fullSide;
 				vertices[i++] = by;
+				vertices[i++] = z;
 				vertices[i++] = bx + fullSide;
 				vertices[i++] = by + bw;
+				vertices[i++] = z;
 
 				vertices[i++] = bx;
 				vertices[i++] = by;
+				vertices[i++] = z;
 				vertices[i++] = bx + fullSide;
 				vertices[i++] = by + bw;
+				vertices[i++] = z;
 				vertices[i++] = bx;
 				vertices[i++] = by + bw;
+				vertices[i++] = z;
 
 				// left border
 				var lx = x;
 				var ly = y;
 				vertices[i++] = lx;
 				vertices[i++] = ly;
+				vertices[i++] = z;
 				vertices[i++] = lx + bw;
 				vertices[i++] = ly;
+				vertices[i++] = z;
 				vertices[i++] = lx + bw;
 				vertices[i++] = ly + fullSide;
+				vertices[i++] = z;
 
 				vertices[i++] = lx;
 				vertices[i++] = ly;
+				vertices[i++] = z;
 				vertices[i++] = lx + bw;
 				vertices[i++] = ly + fullSide;
+				vertices[i++] = z;
 				vertices[i++] = lx;
 				vertices[i++] = ly + fullSide;
+				vertices[i++] = z;
 			}
 
 			var ts = this.tileSize;
@@ -2843,7 +2874,7 @@ L7.CanvasBoardRenderMixin = {
 		"gl_FragColor = vColor;" +
 		"}";
 
-	var _vertexShaderCode = "attribute vec2 aVertexPosition;" +
+	var _vertexShaderCode = "attribute vec3 aVertexPosition;" +
 		"attribute vec2 aOffsets;" +
 		"attribute vec2 aVertexCenter;" +
 		"attribute vec4 aVertexColor;" +
@@ -2855,7 +2886,11 @@ L7.CanvasBoardRenderMixin = {
 		"float offsetX = (aOffsets.x * diffX) - diffX;" +
 		"float diffY = aVertexPosition.y - aVertexCenter.y;" +
 		"float offsetY = (aOffsets.y * diffY) - diffY;" +
-		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec2(offsetX, offsetY), 0.0, 1.0);" +
+		"float offsetZ = 0.0;" +
+		"if(offsetX != 0.0 || offsetY != 0.0) {" +
+		"offsetZ = 0.1;" +
+		"}" +
+		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec3(offsetX, offsetY, offsetZ), 1.0);" +
 		"vColor = aVertexColor;" + 
 		"}";
 
@@ -2915,7 +2950,7 @@ L7.CanvasBoardRenderMixin = {
 			this.gl.clearColor(0, 0, 0, 1);
 			this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
     	this.gl.enable(this.gl.BLEND);
-      //this.gl.enable(this.gl.DEPTH_TEST);
+      this.gl.enable(this.gl.DEPTH_TEST);
 			
 			this.pMatrix = mat4.create();
 
@@ -2924,8 +2959,7 @@ L7.CanvasBoardRenderMixin = {
 
 		renderFrame: function(canvas, board, delta, anchorXpx, anchorYpx, timestamp) {
 			this.gl.viewport(0, 0, this.viewport.width, this.viewport.height);
-			//this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-			this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+			this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 			mat4.ortho(0, this.viewport.width, this.viewport.height, 0, -100, 100, this.pMatrix);
 			this.gl.uniformMatrix4fv(this.pMatrixUniform, false, this.pMatrix);

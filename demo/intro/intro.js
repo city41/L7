@@ -15,6 +15,7 @@ function onImagesLoaded(images) {
 
 		var board = levelLoader.load();
 		board.parallaxRatio = i * 0.6;
+		board.depth = i;
 
 		if (boardFillers[i]) {
 			boardFillers[i].fill(board);
