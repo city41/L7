@@ -90,7 +90,8 @@
 				position: position,
 				nextPosition: nextPosition,
 				color: this.color,
-				owner: this
+				owner: this,
+				scale: 1
 			};
 
 			this.pieces.push(newPiece);
@@ -181,7 +182,8 @@
 			position: actor.position,
 			nextPosition: actor.position.add(actor.direction),
 			color: [0, 150, 0, 1],
-			owner: actor
+			owner: actor,
+			scale: 1
 		})];
 
 		var size = config.size || 1;

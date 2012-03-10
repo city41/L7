@@ -1682,6 +1682,11 @@ L7.CanvasBoardRenderMixin = {
 		this.y = config.y;
 		this.color = config.color;
 		this.scale = config.scale;
+
+		if(!_.isNumber(this.scale)) {
+			this.scale = 1;
+		}
+
 		this.board = config.board;
 
 		this.inhabitants = _.clone(config.inhabitants || []);
@@ -1786,7 +1791,6 @@ L7.CanvasBoardRenderMixin = {
 (function() {
 	var _blankColor = [0, 0, 0, 0];
 	var _defaultOffsets = { x: 0, y: 0 };
-	var _outerBorderIndices = [0, 3, 1, 7, 8, 10, 14, 16, 17, 23, 18, 21];
 
 	L7.WebGLBoardRenderMixin = {
 		render: function(delta, gl, anchorXpx, anchorYpx, timestamp) {
@@ -1983,74 +1987,60 @@ L7.CanvasBoardRenderMixin = {
 			gl.bufferData(gl.ARRAY_BUFFER, colorOffsetsData, gl.DYNAMIC_DRAW);
 		},
 
-		_getTileShaderOffsetX: function(index, offsets) {
+		_getTileShaderOffsetX: function(index, offsets, scale) {
+			scale -= 1;
+			scale /= 2;
 			var negator = 1;
 			if(index === 0 || index === 3 || index === 5) {
 				negator = -1;
 			}
+			scale *= negator;
 
-			return negator * 2 * offsets.x + 1;
+			return negator * 2 * (offsets.x + scale) + 1;
 		},
 
-		_getTileShaderOffsetY: function(index, offsets) {
+		_getTileShaderOffsetY: function(index, offsets, scale) {
+			scale -= 1;
+			scale /= 2;
 			var negator = 1;
 			if(index === 0 || index === 3 || index === 1) {
 				negator = -1;
 			}
+			scale *= negator;
 
-			return negator * 2 * offsets.y + 1;
+			return negator * 2 * (offsets.y + scale) + 1;
 		},
 
-		_getBorderShaderOffsetX: function(borderIndex, index, offsets) {
-			if(_outerBorderIndices.indexOf(index) > -1) {
-				return 1;
-			}
-
-			// inner top
-			if(index === 5 || index === 2 || index === 4) {
-				return 1;
-			}
-
+		_getBorderShaderOffsetX: function(index, offsets, scale) {
+			scale -= 1;
+			scale /= 2;
 			// inner right
 			if(index === 6 || index === 9 || index === 11) {
-				return 2 * offsets.x + 1;
-			}
-
-			// inner bottom
-			if(index === 12 || index === 15 || index === 13) {
-				return 1;
+				return 2 * (offsets.x + scale) + 1;
 			}
 
 			// inner left
 			if(index === 18 || index == 21 || index === 23) {
-				return -2 * offsets.x + 1;
+				return -2 * (offsets.x - scale) + 1;
 			}
+
+			return 1;
 		},
 
-		_getBorderShaderOffsetY: function(index, offsets) {
-			if(_outerBorderIndices.indexOf(index) > -1) {
-				return 1;
-			}
-
+		_getBorderShaderOffsetY: function(index, offsets, scale) {
+			scale -= 1;
+			scale /= 2;
 			// inner top
 			if(index === 5 || index === 2 || index === 4) {
-				return -2 * offsets.y + 1;
-			}
-
-			// inner right
-			if(index === 6 || index === 9 || index === 11) {
-				return 1;
+				return -2 * (offsets.y - scale) + 1;
 			}
 
 			// inner bottom
 			if(index === 12 || index === 15 || index === 13) {
-				return 2 * offsets.y + 1;
+				return 2 * (offsets.y + scale) + 1;
 			}
 
-			// inner left
-			if(index === 18 || index == 21 || index === 23) {
-				return 1;
-			}
+			return 1;
 		},
 
 		_glSetTiles: function(gl, anchorXpx, anchorYpx) {
@@ -2084,6 +2074,7 @@ L7.CanvasBoardRenderMixin = {
 							tile = row[x];
 							color = tile.getColor() || _blankColor;
 							offsets = tile.getOffset() || _defaultOffsets;
+							scale = tile.getScale();
 
 							if (this.borderWidth > 0) {
 								// now the border colors, there are 24 border vertices following a tile
@@ -2094,8 +2085,8 @@ L7.CanvasBoardRenderMixin = {
 									this.colorOffsetsData[cdi++] = borderColor[2] / 255;
 									this.colorOffsetsData[cdi++] = borderColor[3];
 									// offsets
-									this.colorOffsetsData[cdi++] = this._getBorderShaderOffsetX(b, offsets);
-									this.colorOffsetsData[cdi++] = this._getBorderShaderOffsetY(b, offsets);
+									this.colorOffsetsData[cdi++] = this._getBorderShaderOffsetX(b, offsets, scale);
+									this.colorOffsetsData[cdi++] = this._getBorderShaderOffsetY(b, offsets, scale);
 								}
 							}
 
@@ -2106,8 +2097,8 @@ L7.CanvasBoardRenderMixin = {
 								this.colorOffsetsData[cdi++] = color[2] / 255;
 								this.colorOffsetsData[cdi++] = color[3];
 								// offsets
-								this.colorOffsetsData[cdi++] = this._getTileShaderOffsetX(t, offsets);
-								this.colorOffsetsData[cdi++] = this._getTileShaderOffsetY(t, offsets);
+								this.colorOffsetsData[cdi++] = this._getTileShaderOffsetX(t, offsets, scale);
+								this.colorOffsetsData[cdi++] = this._getTileShaderOffsetY(t, offsets, scale);
 							}
 						}
 					}
