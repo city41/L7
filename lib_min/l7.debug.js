@@ -1786,6 +1786,7 @@ L7.CanvasBoardRenderMixin = {
 (function() {
 	var _blankColor = [0, 0, 0, 0];
 	var _defaultOffsets = { x: 0, y: 0 };
+	var _outerBorderIndices = [0, 3, 1, 7, 8, 10, 14, 16, 17, 23, 18, 21];
 
 	L7.WebGLBoardRenderMixin = {
 		render: function(delta, gl, anchorXpx, anchorYpx, timestamp) {
@@ -1982,7 +1983,7 @@ L7.CanvasBoardRenderMixin = {
 			gl.bufferData(gl.ARRAY_BUFFER, colorOffsetsData, gl.DYNAMIC_DRAW);
 		},
 
-		_getShaderOffsetX: function(index, offsets) {
+		_getTileShaderOffsetX: function(index, offsets) {
 			var negator = 1;
 			if(index === 0 || index === 3 || index === 5) {
 				negator = -1;
@@ -1991,13 +1992,65 @@ L7.CanvasBoardRenderMixin = {
 			return negator * 2 * offsets.x + 1;
 		},
 
-		_getShaderOffsetY: function(index, offsets) {
+		_getTileShaderOffsetY: function(index, offsets) {
 			var negator = 1;
 			if(index === 0 || index === 3 || index === 1) {
 				negator = -1;
 			}
 
 			return negator * 2 * offsets.y + 1;
+		},
+
+		_getBorderShaderOffsetX: function(borderIndex, index, offsets) {
+			if(_outerBorderIndices.indexOf(index) > -1) {
+				return 1;
+			}
+
+			// inner top
+			if(index === 5 || index === 2 || index === 4) {
+				return 1;
+			}
+
+			// inner right
+			if(index === 6 || index === 9 || index === 11) {
+				return 2 * offsets.x + 1;
+			}
+
+			// inner bottom
+			if(index === 12 || index === 15 || index === 13) {
+				return 1;
+			}
+
+			// inner left
+			if(index === 18 || index == 21 || index === 23) {
+				return -2 * offsets.x + 1;
+			}
+		},
+
+		_getBorderShaderOffsetY: function(index, offsets) {
+			if(_outerBorderIndices.indexOf(index) > -1) {
+				return 1;
+			}
+
+			// inner top
+			if(index === 5 || index === 2 || index === 4) {
+				return -2 * offsets.y + 1;
+			}
+
+			// inner right
+			if(index === 6 || index === 9 || index === 11) {
+				return 1;
+			}
+
+			// inner bottom
+			if(index === 12 || index === 15 || index === 13) {
+				return 2 * offsets.y + 1;
+			}
+
+			// inner left
+			if(index === 18 || index == 21 || index === 23) {
+				return 1;
+			}
 		},
 
 		_glSetTiles: function(gl, anchorXpx, anchorYpx) {
@@ -2041,8 +2094,8 @@ L7.CanvasBoardRenderMixin = {
 									this.colorOffsetsData[cdi++] = borderColor[2] / 255;
 									this.colorOffsetsData[cdi++] = borderColor[3];
 									// offsets
-									this.colorOffsetsData[cdi++] = 1;
-									this.colorOffsetsData[cdi++] = 1;
+									this.colorOffsetsData[cdi++] = this._getBorderShaderOffsetX(b, offsets);
+									this.colorOffsetsData[cdi++] = this._getBorderShaderOffsetY(b, offsets);
 								}
 							}
 
@@ -2053,8 +2106,8 @@ L7.CanvasBoardRenderMixin = {
 								this.colorOffsetsData[cdi++] = color[2] / 255;
 								this.colorOffsetsData[cdi++] = color[3];
 								// offsets
-								this.colorOffsetsData[cdi++] = this._getShaderOffsetX(t, offsets);
-								this.colorOffsetsData[cdi++] = this._getShaderOffsetY(t, offsets);
+								this.colorOffsetsData[cdi++] = this._getTileShaderOffsetX(t, offsets);
+								this.colorOffsetsData[cdi++] = this._getTileShaderOffsetY(t, offsets);
 							}
 						}
 					}
