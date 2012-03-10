@@ -1804,9 +1804,6 @@ L7.CanvasBoardRenderMixin = {
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.centerVertexPositionBuffer);
 			gl.vertexAttribPointer(gl.centerPositionAttribute, this.centerVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexIdBuffer);
-			gl.vertexAttribPointer(gl.vertexIdAttribute, this.vertexIdBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
 			this._glSetTiles(gl, anchorXpx, anchorYpx);
 			gl.drawArrays(gl.TRIANGLES, 0, this.squareVertexPositionBuffer.numItems);
 		},
@@ -1827,7 +1824,6 @@ L7.CanvasBoardRenderMixin = {
 			var i = 0;
 			var centerVertices = new Float32Array(this.width * this.height * 2 * this.verticesPerTile);
 			var ci = 0;
-			var vertexIds = new Float32Array(this.width * this.height * this.verticesPerTile);
 
 			function pushTileVertices(x, y, size) {
 				vertices[i++] = x;
@@ -1937,10 +1933,6 @@ L7.CanvasBoardRenderMixin = {
 				}
 			}
 
-			for(var vi = 0; vi < vertexIds.length; ++vi) {
-				vertexIds[vi] = vi;
-			}
-
 			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 			this.squareVertexPositionBuffer.numItems = vertices.length / this.squareVertexPositionBuffer.itemSize;
 
@@ -1949,16 +1941,11 @@ L7.CanvasBoardRenderMixin = {
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.centerVertexPositionBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, centerVertices, gl.STATIC_DRAW);
 
-			this.vertexIdBuffer = gl.createBuffer();
-			this.vertexIdBuffer.itemSize = 1;
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexIdBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, vertexIds, gl.STATIC_DRAW);
-
-			this.colorBuffer = gl.createBuffer();
-			this.colorBuffer.itemSize = 4;
-			var colorData = new Float32Array(this.squareVertexPositionBuffer.numItems * 4);
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, colorData, gl.DYNAMIC_DRAW);
+			this.colorOffsetsBuffer = gl.createBuffer();
+			this.colorOffsetsBuffer.itemSize = 6;
+			var colorOffsetsData = new Float32Array(this.squareVertexPositionBuffer.numItems * this.colorOffsetsBuffer.itemSize);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorOffsetsBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, colorOffsetsData, gl.DYNAMIC_DRAW);
 		},
 
 		_glSetTiles: function(gl, anchorXpx, anchorYpx) {
@@ -1977,9 +1964,9 @@ L7.CanvasBoardRenderMixin = {
 			cdi;
 
 			var span = xl - Math.max(seedx, 0);
-			this.colorData = this.colorData || new Float32Array(span * this.verticesPerTile * 4);
+			this.colorOffsetsData = this.colorOffsetsData || new Float32Array(span * this.verticesPerTile * this.colorOffsetsBuffer.itemSize);
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorOffsetsBuffer);
 
 			for (y = seedy; y < yl; ++y) {
 				if (y >= 0) {
@@ -1992,20 +1979,26 @@ L7.CanvasBoardRenderMixin = {
 
 							// each tile is made up of six vertices
 							for (var t = 0; t < 6; ++t) {
-								this.colorData[cdi++] = color[0] / 255;
-								this.colorData[cdi++] = color[1] / 255;
-								this.colorData[cdi++] = color[2] / 255;
-								this.colorData[cdi++] = color[3];
+								this.colorOffsetsData[cdi++] = color[0] / 255;
+								this.colorOffsetsData[cdi++] = color[1] / 255;
+								this.colorOffsetsData[cdi++] = color[2] / 255;
+								this.colorOffsetsData[cdi++] = color[3];
+								// offsets
+								this.colorOffsetsData[cdi++] = 1;
+								this.colorOffsetsData[cdi++] = 1;
 							}
 
 							if (this.borderWidth > 0) {
 								// now the border colors, there are 24 border vertices following a tile
 								var borderColor = color[3] ? standardBorderColor: _blankColor;
 								for (var b = 0; b < 24; ++b) {
-									this.colorData[cdi++] = borderColor[0] / 255;
-									this.colorData[cdi++] = borderColor[1] / 255;
-									this.colorData[cdi++] = borderColor[2] / 255;
-									this.colorData[cdi++] = borderColor[3];
+									this.colorOffsetsData[cdi++] = borderColor[0] / 255;
+									this.colorOffsetsData[cdi++] = borderColor[1] / 255;
+									this.colorOffsetsData[cdi++] = borderColor[2] / 255;
+									this.colorOffsetsData[cdi++] = borderColor[3];
+									// offsets
+									this.colorOffsetsData[cdi++] = 1;
+									this.colorOffsetsData[cdi++] = 1;
 								}
 							}
 						}
@@ -2013,12 +2006,16 @@ L7.CanvasBoardRenderMixin = {
 					// bufferSubData here
 					var tileOffset = (y * this.width) + Math.max(0, seedx);
 					var vertexOffset = tileOffset * this.verticesPerTile;
-					var colorOffset = vertexOffset * 4;
-					var byteOffset = colorOffset * 4;
-					gl.bufferSubData(gl.ARRAY_BUFFER, byteOffset, this.colorData);
+					var colorOffsetsOffset = vertexOffset * this.colorOffsetsBuffer.itemSize;
+					var bytesPerFloat = 4;
+					var byteOffset = colorOffsetsOffset * bytesPerFloat;
+					gl.bufferSubData(gl.ARRAY_BUFFER, byteOffset, this.colorOffsetsData);
 				}
 			}
-			gl.vertexAttribPointer(gl.vertexColorAttribute, this.colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+			//gl.vertexAttribPointer(gl.vertexColorAttribute, 4, gl.FLOAT, false, 6, 0);
+			//gl.vertexAttribPointer(gl.offsetsAttribute, 2, gl.FLOAT, false, 6, 4);
+			gl.vertexAttribPointer(gl.vertexColorAttribute, 4, gl.FLOAT, false, this.colorOffsetsBuffer.itemSize * 4, 0);
+			gl.vertexAttribPointer(gl.offsetsAttribute, 2, gl.FLOAT, false, this.colorOffsetsBuffer.itemSize * bytesPerFloat, 4 * 4);
 		}
 	};
 })();
@@ -2823,18 +2820,16 @@ L7.CanvasBoardRenderMixin = {
 		"}";
 
 	var _vertexShaderCode = "attribute vec2 aVertexPosition;" +
+		"attribute vec2 aOffsets;" +
 		"attribute vec2 aVertexCenter;" +
-		"attribute float aVertexID;" +
 		"attribute vec4 aVertexColor;" +
 		"uniform mat4 uMVMatrix;" +
 		"uniform mat4 uPMatrix;" +
 		"varying vec4 vColor;" +
 		"void main(void) {" +
-		"if(mod(aVertexID, 3.0) == 0.0) {" +
-		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexCenter, 0.0, 1.0);" +
-		"} else {" +
-		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 0.0, 1.0);" +
-		"}" +
+		"float diffX = aVertexPosition.x - aVertexCenter.x;" +
+		"float offsetX = (aOffsets.x * diffX) - diffX;" +
+		"gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition + vec2(offsetX, 0), 0.0, 1.0);" +
 		"vColor = aVertexColor;" + 
 		"}";
 
@@ -2874,8 +2869,9 @@ L7.CanvasBoardRenderMixin = {
 			this.gl.vertexPositionAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexPosition");
 			this.gl.enableVertexAttribArray(this.gl.vertexPositionAttribute);
 
-			this.gl.vertexIdAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexID");
-			this.gl.enableVertexAttribArray(this.gl.vertexIdAttribute);
+			this.gl.offsetsAttribute = this.gl.getAttribLocation(shaderProgram, "aOffsets");
+			console.log('offsetsAttribute: ' + this.gl.offsetsAttribute);
+			this.gl.enableVertexAttribArray(this.gl.offsetsAttribute);
 
 			this.gl.centerPositionAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexCenter");
 			this.gl.enableVertexAttribArray(this.gl.centerPositionAttribute);
