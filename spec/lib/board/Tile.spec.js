@@ -282,7 +282,7 @@ describe("Tile", function() {
 
 	describe('rendering parameters', function() {
 		describe('getScale', function() {
-			it('should return falsy if no scale is set', function() {
+			it('should return 1 if no scale is explicitly set', function() {
 				var tile = new L7.Tile({
 					x: 1,
 					y: 2
@@ -290,7 +290,7 @@ describe("Tile", function() {
 
 				var scale = tile.getScale();
 
-				expect(scale).toBeFalsy();
+				expect(scale).toBe(1);
 			});
 
 			it('should set its scale from the config', function() {
