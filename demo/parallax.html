@@ -7,6 +7,7 @@
 	<script type="text/javascript" src="../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../lib_min/l7.debug.js"></script>
 	<script type="text/javascript" src="../lib/board/ParallaxBoard.js"></script>
+	<script type="text/javascript" src="../lib/board/Board.js"></script>
 
 </head>
 <body>
@@ -15,13 +16,14 @@
 	L7.useWebGL = true;
 
 		var farBackground = new L7.Board({
-			width: 200,
+			width: 2000,
 			height: 50,
 			tileSize: 20,
 			borderWidth: 1,
 			borderFill: 'black',
 			parallaxRatio: 0.3,
-			isFarBg: true
+			isFarBg: true,
+			disableHitDetection: true
 		});
 
 		var fbc = ['red', 'darkred'];
@@ -37,7 +39,8 @@
 			borderWidth: 2,
 			tileSize: 30,
 			borderFill: 'black',
-			parallaxRatio: 0.65
+			parallaxRatio: 0.65,
+			disableHitDetection: true
 		});
 
 		var c = ['#003388', '#223499', 'orange', '#000055'];
@@ -52,7 +55,8 @@
 			height: 50,
 			borderWidth: 3,
 			tileSize: 48,
-			parallaxRatio: 1.1
+			parallaxRatio: 1.1,
+			disableHitDetection: true
 		});
 
 		foreground.tiles.forEach(function(tile, index) {
