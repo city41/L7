@@ -1606,11 +1606,14 @@ L7.CanvasBoardRenderMixin = {
 		_.extend(this, config);
 		this.boards = this.boards || [];
 
-		this.boards.forEach(function(board) {
-			if(!_.isNumber(board.parallaxRatio)) {
+		this.boards.forEach(function(board, i) {
+			if (!_.isNumber(board.parallaxRatio)) {
 				throw new Error("ParallaxBoard: given a board that lacks a parallax ratio");
 			}
-		});
+			if (!_.isNumber(board.depth)) {
+				board.depth = i;
+			}
+		}, this);
 	};
 
 	L7.ParallaxBoard.prototype = {
@@ -2077,8 +2080,14 @@ L7.CanvasBoardRenderMixin = {
 							scale = tile.getScale();
 
 							if (this.borderWidth > 0) {
-								// now the border colors, there are 24 border vertices following a tile
-								var borderColor = color[3] ? standardBorderColor: _blankColor;
+								// border colors, there are 24 border vertices preceding a tile
+								var borderColor;
+								if(offsets.x || offsets.y) {
+									borderColor = tile.color || _blankColor;
+								} else {
+									borderColor = color[3] ? standardBorderColor: _blankColor;
+								}
+
 								for (var b = 0; b < 24; ++b) {
 									this.colorOffsetsData[cdi++] = borderColor[0] / 255;
 									this.colorOffsetsData[cdi++] = borderColor[1] / 255;
