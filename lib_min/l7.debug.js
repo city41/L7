@@ -1837,7 +1837,7 @@ L7.CanvasBoardRenderMixin = {
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
 
 			this.verticesPerTile = this.borderWidth > 0 ? 30: 6;
-			var vertices = new Float32Array(this.width * this.height * this.verticesPerTile * this.squareVertexPositionBuffer.itemSize);
+			var vertices = [];
 			var i = 0;
 			var centerVertices = new Float32Array(this.width * this.height * 2 * this.verticesPerTile);
 			var ci = 0;
@@ -1964,8 +1964,9 @@ L7.CanvasBoardRenderMixin = {
 
 			var ts = this.tileSize;
 			var bw = this.borderWidth;
-			this.vboWidth = Math.min(this.width, this.viewport.width / (ts + bw) + 1);
-			this.vboHeight = Math.min(this.height, this.viewport.height / (ts + bw) + 1);
+			this.vboWidth = Math.ceil(Math.min(this.width, this.viewport.width / (ts + bw) + 1));
+			this.vboHeight = Math.ceil(Math.min(this.height, this.viewport.height / (ts + bw) + 1));
+			debugger;
 			for (var y = 0; y < this.vboHeight; ++y) {
 				for (var x = 0; x < this.vboWidth; ++x) {
 					var tx = x * (ts + bw) + bw;
@@ -1984,7 +1985,7 @@ L7.CanvasBoardRenderMixin = {
 				}
 			}
 
-			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 			this.squareVertexPositionBuffer.numItems = vertices.length / this.squareVertexPositionBuffer.itemSize;
 
 			this.centerVertexPositionBuffer = gl.createBuffer();
@@ -1994,9 +1995,9 @@ L7.CanvasBoardRenderMixin = {
 
 			this.colorOffsetsBuffer = gl.createBuffer();
 			this.colorOffsetsBuffer.itemSize = 6;
-			var colorOffsetsData = new Float32Array(this.squareVertexPositionBuffer.numItems * this.colorOffsetsBuffer.itemSize);
+			this.colorOffsetsData = new Float32Array(this.vboWidth * this.vboHeight * this.verticesPerTile * this.colorOffsetsBuffer.itemSize);
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorOffsetsBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, colorOffsetsData, gl.DYNAMIC_DRAW);
+			gl.bufferData(gl.ARRAY_BUFFER, this.colorOffsetsData, gl.DYNAMIC_DRAW);
 		},
 
 		_getTileShaderOffsetX: function(index, offsets, scale) {
@@ -2077,10 +2078,10 @@ L7.CanvasBoardRenderMixin = {
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorOffsetsBuffer);
 
 			for (y = seedy; y < seedy + this.vboHeight; ++y) {
-				if (y >= 0) {
+				if (y >= 0 && y < this.height) {
 					row = this._rows[y];
 					for (x = seedx; x < seedx + this.vboWidth; ++x) {
-						if (x >= 0) {
+						if (x >= 0 && x < this.width) {
 							tile = row[x];
 							color = tile.getColor() || _blankColor;
 							offsets = tile.getOffset() || _defaultOffsets;
