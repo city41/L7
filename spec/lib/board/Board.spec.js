@@ -498,7 +498,6 @@ describe("Board", function() {
 
 	describe('rendering', function() {
 		it('should ask each tile for its color', function() {
-			debugger;
 			var board = new L7.Board({
 				width: 2,
 				height: 2,

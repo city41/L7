@@ -263,4 +263,29 @@ describe("Actor", function() {
 
 		});
 	});
+	describe('queries', function() {
+		it('should give the pieceAt', function() {
+			var actor = new L7.Actor({
+				shape: [[1,5,1]],
+				position: L7.p(2,2)
+			});
+
+			var noPiece = actor.pieceAt(10, 20);
+
+			expect(noPiece).toBeFalsy();
+
+			var piece0 = actor.pieceAt(1,2);
+			expect(piece0.position.x).toBe(1);
+			expect(piece0.position.y).toBe(2);
+
+			var piece1 = actor.pieceAt(2,2);
+			expect(piece1.position.x).toBe(2);
+			expect(piece1.position.y).toBe(2);
+			expect(piece1.isAnchor).toBe(true);
+
+			var piece2 = actor.pieceAt(3,2);
+			expect(piece2.position.x).toBe(3);
+			expect(piece2.position.y).toBe(2);
+		});
+	});
 });

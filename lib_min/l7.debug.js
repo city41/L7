@@ -1089,6 +1089,17 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				}
 			},
 			this);
+		},
+
+		pieceAt: function(x, y) {
+			var l = this.pieces.length, p;
+
+			while(l--) {
+				p = this.pieces[l];	
+				if(p.position.x === x && p.position.y === y) {
+					return p;
+				}
+			}
 		}
 	};
 
@@ -1834,12 +1845,13 @@ L7.CanvasBoardRenderMixin = {
 			this.squareVertexPositionBuffer = gl.createBuffer();
 			this.squareVertexPositionBuffer.itemSize = 3;
 
+			this.centerVertexPositionBuffer = gl.createBuffer();
+			this.centerVertexPositionBuffer.itemSize = 2;
+
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.squareVertexPositionBuffer);
 
 			this.verticesPerTile = this.borderWidth > 0 ? 30: 6;
-			var vertices = [];
 			var i = 0;
-			var centerVertices = new Float32Array(this.width * this.height * 2 * this.verticesPerTile);
 			var ci = 0;
 			var z = this.depth || 0;
 
@@ -1966,7 +1978,10 @@ L7.CanvasBoardRenderMixin = {
 			var bw = this.borderWidth;
 			this.vboWidth = Math.ceil(Math.min(this.width, this.viewport.width / (ts + bw) + 1));
 			this.vboHeight = Math.ceil(Math.min(this.height, this.viewport.height / (ts + bw) + 1));
-			debugger;
+			
+			var vertices = new Float32Array(this.vboWidth * this.vboHeight * this.squareVertexPositionBuffer.itemSize * this.verticesPerTile);
+			var centerVertices = new Float32Array(this.vboWidth * this.vboHeight * this.centerVertexPositionBuffer.itemSize * this.verticesPerTile);
+
 			for (var y = 0; y < this.vboHeight; ++y) {
 				for (var x = 0; x < this.vboWidth; ++x) {
 					var tx = x * (ts + bw) + bw;
@@ -1985,11 +2000,9 @@ L7.CanvasBoardRenderMixin = {
 				}
 			}
 
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+			gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 			this.squareVertexPositionBuffer.numItems = vertices.length / this.squareVertexPositionBuffer.itemSize;
 
-			this.centerVertexPositionBuffer = gl.createBuffer();
-			this.centerVertexPositionBuffer.itemSize = 2;
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.centerVertexPositionBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, centerVertices, gl.STATIC_DRAW);
 
@@ -2070,8 +2083,9 @@ L7.CanvasBoardRenderMixin = {
 			scale,
 			offsets,
 			row,
-			standardBorderColor = this.borderFill ? L7.Color.toArray(this.borderFill) : _blankColor,
 			cdi = 0;
+
+			this.standardBorderColor = this.standardBorderColor || (this.borderFill ? L7.Color.toArray(this.borderFill) : _blankColor);
 
 			this.colorOffsetsData = this.colorOffsetsData || new Float32Array(this.vboWidth * this.vboHeight * this.verticesPerTile * this.colorOffsetsBuffer.itemSize);
 
@@ -2093,7 +2107,7 @@ L7.CanvasBoardRenderMixin = {
 								if (offsets.x || offsets.y) {
 									borderColor = tile.color || _blankColor;
 								} else {
-									borderColor = color[3] ? standardBorderColor: _blankColor;
+									borderColor = color[3] ? this.standardBorderColor: _blankColor;
 								}
 
 								for (var b = 0; b < 24; ++b) {

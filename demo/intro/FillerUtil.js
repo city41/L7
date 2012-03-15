@@ -76,34 +76,32 @@
 			var whiteColor = [255, 255, 255, 1];
 			var blueColor = [0, 0, 255, 1];
 
-			var pieces = [];
+			var shape = [];
 			for (var i = 0; i < height; ++i) {
 				var row = [];
 				for (var k = 0; k < width; ++k) {
 					row.push(1);
 				}
-				pieces.push(row);
+				shape.push(row);
 			}
 
-			pieces[0][0] = 5;
+			shape[0][0] = 5;
 
 			var blueScreen = new L7.Actor({
-				shape: pieces,
+				shape: shape,
 				position: position
 			});
 
 			board.addActor(blueScreen);
 
 			function doBlueScreen() {
-				for (var c = 0; c < width; ++c) {
-					for (var r = 0; r < height; ++r) {
-						var piece = blueScreen.pieces.filter(function(p) {
-							return p.position.x === c + position.x && p.position.y == r + position.y;
-						})[0];
+				for (var c = position.x, cl = position.x + width; c < cl; ++c) {
+					for (var r = position.y, rl = position.y + height; r < rl; ++r) {
+						var piece = blueScreen.pieceAt(c, r);
 
 						var rand = L7.rand(0, 100);
 
-						if (rand < 35) {
+						if (rand < 33) {
 							piece.color = whiteColor;
 						} else {
 							piece.color = blueColor;
@@ -121,31 +119,29 @@
 		addBarGraph: function(board, position, width, height, barColor) {
 			barColor = barColor || [240, 186, 89, 1];
 
-			var pieces = [];
+			var shape = [];
 			for (var i = 0; i < height; ++i) {
 				var row = [];
 				for (var k = 0; k < width; ++k) {
 					row.push(1);
 				}
-				pieces.push(row);
+				shape.push(row);
 			}
 
-			pieces[0][0] = 5;
+			shape[0][0] = 5;
 
 			var barGraph = new L7.Actor({
-				shape: pieces,
+				shape: shape,
 				position: position
 			});
 
 			board.addActor(barGraph);
 
 			function doBarGraph() {
-				for (var c = 0; c < width; ++c) {
-					var max = L7.rand(0, height);
-					for (var r = 0; r < height; ++r) {
-						var piece = barGraph.pieces.filter(function(p) {
-							return p.position.x === c + position.x && p.position.y == r + position.y;
-						})[0];
+				for (var c = position.x, cl = position.x + width; c < cl; ++c) {
+					var max = L7.rand(0, height) + position.y;
+					for (var r = position.y, rl = position.y + height; r < rl; ++r) {
+						var piece = barGraph.pieceAt(c, r);
 
 						if (r >= max) {
 							piece.color = barColor;
@@ -165,19 +161,19 @@
 		addHeartWave: function(board, position, width, height, barColor) {
 			barColor = barColor || [255, 255, 0, 1];
 
-			var pieces = [];
+			var shape = [];
 			for (var i = 0; i < height; ++i) {
 				var row = [];
 				for (var k = 0; k < width; ++k) {
 					row.push(1);
 				}
-				pieces.push(row);
+				shape.push(row);
 			}
 
-			pieces[0][0] = 5;
+			shape[0][0] = 5;
 
 			var heartWave = new L7.Actor({
-				shape: pieces,
+				shape: shape,
 				position: position
 			});
 
@@ -187,11 +183,9 @@
 			var nonBlipHeight = position.y + 2;
 
 			function doHeartWave() {
-				for (var c = 0; c < width; ++c) {
-					for (var r = 0; r < height; ++r) {
-						var piece = heartWave.pieces.filter(function(p) {
-							return p.position.x === c + position.x && p.position.y == r + position.y;
-						})[0];
+				for (var c = position.x, cl = position.x + width; c < cl; ++c) {
+					for (var r = position.y, rl = position.y + height; r < rl; ++r) {
+						var piece = heartWave.pieceAt(c, r);
 
 						if (piece.position.equals(blipPosition) || (piece.position.y === nonBlipHeight && piece.position.x !== blipPosition.x)) {
 							piece.color = barColor;
@@ -216,19 +210,19 @@
 		addSinWave: function(board, position, width, height, barColor) {
 			barColor = barColor || [255, 255, 0, 1];
 
-			var pieces = [];
+			var shape = [];
 			for (var i = 0; i < height; ++i) {
 				var row = [];
 				for (var k = 0; k < width; ++k) {
 					row.push(1);
 				}
-				pieces.push(row);
+				shape.push(row);
 			}
 
-			pieces[0][0] = 5;
+			shape[0][0] = 5;
 
 			var sinWave = new L7.Actor({
-				shape: pieces,
+				shape: shape,
 				position: position
 			});
 
@@ -239,17 +233,16 @@
 			var sinCounter = 0;
 
 			function doSinWave() {
-				sinWave.pieces.forEach(function(p) {
-					p.color = noColor;
-				});
+				var l = sinWave.pieces.length;
+				while(l--) {
+					sinWave.pieces[l].color = noColor;
+				}
 
 				for (var i = 0; i < width; ++i) {
 					var x = position.x + i;
 					var yOffset = (Math.sin(sinCounter + i) * (height/2)) | 0;
 					var y = (position.y + (height / 2) + yOffset) | 0;
-					var piece = sinWave.pieces.filter(function(p) {
-						return p.position.x === x && p.position.y === y;
-					})[0];
+					var piece = sinWave.pieceAt(x, y);
 					if(!piece) {
 						debugger;
 					}
