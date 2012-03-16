@@ -169,6 +169,13 @@ function onImagesLoaded(images) {
 		});
 	});
 
+	b3.ani.repeat(20, function(ani) {
+		ani.waitBetween(1000, 6000);
+		ani.invoke(function() {
+			i.sounds.computer.play();
+		});
+	});
+
 	// for debug purposes
 	var a = new L7.Actor({
 		color: [0, 0, 0, 0],
@@ -190,12 +197,30 @@ function onImagesLoaded(images) {
 	});
 
 	b3.addActor(a);
+
+	i.sounds.bubbles.play();
+
 	game.go();
+
+
 }
 
-var imageLoader = new L7.ImageLoader({
-	srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png"],
-	handler: onImagesLoaded,
-	loadNow: true
+soundManager.onready(function() {
+	i.sounds = {
+		bubbles: soundManager.createSound({
+			id: 'bubbles',
+			url: 'audio/bubbles.mp3'
+		}),
+		computer: soundManager.createSound({
+			id: 'computer',
+			url: 'audio/computer.mp3'
+		})
+	};
+
+	var imageLoader = new L7.ImageLoader({
+		srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png"],
+		handler: onImagesLoaded,
+		loadNow: true
+	});
 });
 

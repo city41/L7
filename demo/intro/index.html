@@ -13,15 +13,15 @@
 	</center>
 	<script type="text/javascript" src="../../lib/third/underscore-min.js"></script>
 	<script type="text/javascript" src="../../lib_min/l7.debug.js"></script>
-	<script type="text/javascript" src="../../lib/board/WebGLBoardRenderMixin.js"></script>
-	<script type="text/javascript" src="../../lib/board/Board.js"></script>
-	<script type="text/javascript" src="../../lib/board/Tile.js"></script>
-	<script type="text/javascript" src="../../lib/color/Color.js"></script>
-	<script type="text/javascript" src="../../lib/game/WebGLGameRenderer.js"></script>
-	<script type="text/javascript" src="../../lib/animation/Tween.js"></script>
+	<script type="text/javascript" src="audio/soundManager2/soundmanager2-nodebug-jsmin.js"></script>
+
 	<script type="text/javascript">
 		window.i = window.i || {};
+		soundManager.debugMode = false;
+		soundManager.useHTML5Audio = false;
+		soundManager.url = "audio/soundmanager2/swf";
 	</script>
+
 	<script type="text/javascript" src="FillerUtil.js"></script>
 	<script type="text/javascript" src="BackgroundFiller.js"></script>
 	<script type="text/javascript" src="MidBackgroundFiller.js"></script>
