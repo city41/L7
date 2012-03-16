@@ -1577,6 +1577,17 @@ L7.CanvasBoardRenderMixin = {
 	L7.HitManager = function() {};
 
 	L7.HitManager.prototype = {
+		detectHitsForActor: function(actor) {
+			var l = actor.pieces.length;
+			while(l--) {
+				var piece = actor.pieces[l];
+				var tile = actor.board.tileAt(piece.position);
+				if(tile) {
+					this._detectTileHits(tile);
+				}
+			}
+		},
+
 		detectHits: function(tiles) {
 			tiles.forEach(function(tile) {
 				this._detectTileHits(tile);
@@ -2074,10 +2085,10 @@ L7.CanvasBoardRenderMixin = {
 			ts = this.tileSize,
 			seedy = (anchorYpx / (ts + bw)) | 0,
 			y,
-			yl = Math.min(this.height, Math.ceil((anchorYpx + this.viewport.height) / (ts + bw))),
+			yl,
 			seedx = (anchorXpx / (ts + bw)) | 0,
 			x,
-			xl = Math.min(this.width, Math.ceil((anchorXpx + this.viewport.width) / (ts + bw))),
+			xl,
 			tile,
 			color,
 			scale,
@@ -2091,10 +2102,10 @@ L7.CanvasBoardRenderMixin = {
 
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.colorOffsetsBuffer);
 
-			for (y = seedy; y < seedy + this.vboHeight; ++y) {
+			for (y = seedy, yl = seedy + this.vboHeight; y < yl; ++y) {
 				if (y >= 0 && y < this.height) {
 					row = this._rows[y];
-					for (x = seedx; x < seedx + this.vboWidth; ++x) {
+					for (x = seedx, xl = seedx + this.vboWidth; x < xl; ++x) {
 						if (x >= 0 && x < this.width) {
 							tile = row[x];
 							color = tile.getColor() || _blankColor;
@@ -3376,19 +3387,24 @@ L7.CanvasBoardRenderMixin = {
 
 		_updateParticle: function(p, delta, i) {
 			if (p.life > 0) {
-				var tmp = { x: 0, y: 0 };
-				var radial = { x: 0, y: 0 };
+				p.tmp = p.tmp || { x: 0, y: 0 };
+				p.tmp.x = 0;
+				p.tmp.y = 0;
 
-				//if (p.rx !== 0 && p.ry !== 0) {
+				p.radial = p.radial || { x: 0, y: 0 };
+				p.radial.x = 0;
+				p.radial.y = 0;
+
 				if(p.position.x !== this.position.x || p.position.y !== this.position.y) {
 					var radialP = L7.p(p.rx, p.ry).normalize();
-					radial = { x: radialP.x, y: radialP.y };
+					p.radial.x = radialP.x;
+					p.radial.y = radialP.y;
 				}
 
-				var tangential = _.clone(radial);
+				var tangential = _.clone(p.radial);
 
-				radial.x *= p.radialAccel;
-				radial.y *= p.radialAccel;
+				p.radial.x *= p.radialAccel;
+				p.radial.y *= p.radialAccel;
 
 				var newy = tangential.x;
 				tangential.x = - tangential.y;
@@ -3396,20 +3412,20 @@ L7.CanvasBoardRenderMixin = {
 				tangential.x *= p.tangentialAccel;
 				tangential.y *= p.tangentialAccel;
 
-				tmp.x = radial.x + tangential.x + this.gravity.x;
-				tmp.y = radial.y + tangential.y + this.gravity.y;
+				p.tmp.x = p.radial.x + tangential.x + this.gravity.x;
+				p.tmp.y = p.radial.y + tangential.y + this.gravity.y;
 
-				tmp.x *= delta;
-				tmp.y *= delta;
+				p.tmp.x *= delta;
+				p.tmp.y *= delta;
 
-				p.dir.x += tmp.x;
-				p.dir.y += tmp.y;
+				p.dir.x += p.tmp.x;
+				p.dir.y += p.tmp.y;
 
-				tmp.x = p.dir.x * delta;
-				tmp.y = p.dir.y * delta;
+				p.tmp.x = p.dir.x * delta;
+				p.tmp.y = p.dir.y * delta;
 
-				p.rx += tmp.x;
-				p.ry += tmp.y;
+				p.rx += p.tmp.x;
+				p.ry += p.tmp.y;
 
 				p.goTo(L7.pr(p.rx, p.ry));
 

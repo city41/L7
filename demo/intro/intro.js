@@ -15,6 +15,7 @@ function onImagesLoaded(images) {
 
 		var board = levelLoader.load();
 		board.parallaxRatio = i * 0.6;
+		board.disableHitDetection = true;
 
 		if (boardFillers[i]) {
 			boardFillers[i].fill(board);
@@ -162,9 +163,9 @@ function onImagesLoaded(images) {
 		console.log('duration: ' + duration);
 		ani.repeat(duration, function(ani) {
 			ani.invoke(function() {
-				//game.viewport.scrollX(1);
+				game.viewport.scrollX(1);
 			});
-			ani.wait(1);
+			ani.wait(10);
 		});
 	});
 

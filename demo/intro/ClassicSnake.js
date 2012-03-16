@@ -164,6 +164,8 @@
 					};
 				}
 			});
+
+			this.hitManager.detectHitsForActor(this);
 		}
 	};
 
@@ -194,6 +196,8 @@
 		if (config.dontGrow) {
 			actor.grow = function() {};
 		}
+
+		actor.hitManager = new L7.HitManager();
 
 		return actor;
 	};
