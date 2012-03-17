@@ -103,8 +103,10 @@
 
 						if (rand < 33) {
 							piece.color = whiteColor;
+							piece.scale = 0.60;
 						} else {
 							piece.color = blueColor;
+							piece.scale = 0;
 						}
 					}
 				}
@@ -228,25 +230,22 @@
 
 			board.addActor(sinWave);
 
-			var blipPosition = position.add(0, 1);
-			var nonBlipHeight = position.y + 2;
 			var sinCounter = 0;
 
 			function doSinWave() {
 				var l = sinWave.pieces.length;
 				while(l--) {
-					sinWave.pieces[l].color = noColor;
+					sinWave.pieces[l].color = barColor;
+					sinWave.pieces[l].scale = 0;
 				}
 
 				for (var i = 0; i < width; ++i) {
 					var x = position.x + i;
-					var yOffset = (Math.sin(sinCounter + i) * (height/2)) | 0;
+					var yOffset = (Math.sin(sinCounter + i) * ((height-1)/2)) | 0;
 					var y = (position.y + (height / 2) + yOffset) | 0;
 					var piece = sinWave.pieceAt(x, y);
-					if(!piece) {
-						debugger;
-					}
-					piece.color = barColor;
+
+					piece.scale = 0.8;
 				}
 				++sinCounter;
 			}

@@ -2,6 +2,8 @@ i.ForegroundFiller = {
 	fill: function(board) {
 		i.FillerUtil.addWater(board, L7.p(1, 1), 3, 8);
 		i.FillerUtil.addWater(board, L7.p(61, 4), 2, 7);
+		i.FillerUtil.addWater(board, L7.p(126, 7), 9, 4);
+		i.FillerUtil.addWater(board, L7.p(229, 8), 9, 4);
 
 		board.ani.repeat(Infinity, function(ani) {
 			ani.shimmer({
@@ -15,12 +17,14 @@ i.ForegroundFiller = {
 
 		this._addFirstAlien(board);
 		this._addSecondAlien(board);
+		this._addSecondAlien(board, L7.p(233, 9));
 
-		i.FillerUtil.addWater(board, L7.p(126, 7), 9, 4);
 		i.FillerUtil.pulsate(board, L7.p(63, 1));
 		i.FillerUtil.pulsate(board, L7.p(63, 3));
 		i.FillerUtil.pulsate(board, L7.p(133, 13));
 		i.FillerUtil.pulsate(board, L7.p(137, 13));
+		i.FillerUtil.pulsate(board, L7.p(236, 14));
+		i.FillerUtil.pulsate(board, L7.p(240, 14));
 	},
 
 	_addFirstAlien: function(board) {
@@ -49,14 +53,14 @@ i.ForegroundFiller = {
 		});
 	},
 
-	_addSecondAlien: function(board) {
+	_addSecondAlien: function(board, position) {
 		var r = [179, 14, 52, 1];
 		var d = [128, 11, 37, 1];
 		var g = [98, 108, 36, 1];
 		var n = null;
 
 		var alien = new L7.Actor({
-			position: L7.p(130, 8),
+			position: position || L7.p(130, 8),
 			shape: [[0, 5, 1, 1, 0], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 1, 0, 1]],
 			color: [[n, r, r, r, n], [d, g, r, g, r], [d, d, r, r, r], [d, n, d, n, d]]
 		});

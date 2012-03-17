@@ -32,7 +32,7 @@ function onImagesLoaded(images) {
 
 	var game = new L7.Game({
 		board: parallax,
-		width: (b3.height * 2) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		width: (b3.height * 3) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container'),
@@ -163,7 +163,7 @@ function onImagesLoaded(images) {
 		console.log('duration: ' + duration);
 		ani.repeat(duration, function(ani) {
 			ani.invoke(function() {
-				game.viewport.scrollX(1);
+				//game.viewport.scrollX(1);
 			});
 			ani.wait(10);
 		});

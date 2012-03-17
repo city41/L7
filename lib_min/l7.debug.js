@@ -1027,7 +1027,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				}
 			}
 
-			this._lastPosition = this.position.clone();
+			this._lastPosition = this.position;
 
 			this.position = pos;
 
@@ -2115,7 +2115,7 @@ L7.CanvasBoardRenderMixin = {
 							if (this.borderWidth > 0) {
 								// border colors, there are 24 border vertices preceding a tile
 								var borderColor;
-								if (offsets.x || offsets.y) {
+								if (offsets.x || offsets.y || scale != 1) {
 									borderColor = tile.color || _blankColor;
 								} else {
 									borderColor = color[3] ? this.standardBorderColor: _blankColor;

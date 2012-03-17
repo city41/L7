@@ -18,7 +18,7 @@ i.MidForegroundFiller = {
 		i.FillerUtil.pulsate(board, L7.p(81, 10));
 		i.FillerUtil.pulsate(board, L7.p(83, 10));
 
-		i.FillerUtil.addSinWave(board, L7.p(91, 1), 7, 4, [255, 0, 0, 1]);
+		i.FillerUtil.addSinWave(board, L7.p(91, 1), 7, 5, [255, 0, 0, 1]);
 	},
 
 	_addControlPanelShimmer: function(board, targets) {
