@@ -50,12 +50,29 @@ function onImagesLoaded(images) {
 
 	boards[2].addActor(snake);
 
-	var appleXs = [40, 100, 125];
+	var appleXs = [40, 100, 102, 105, 106, 110, 125];
 
 	appleXs.forEach(function(x) {
-		boards[2].addActor(new i.ClassicApple({
+		var apple = new i.ClassicApple({
 			position: L7.p(x, 15)
-		}));
+		});
+		boards[2].addActor(apple);
+
+		apple.ani.repeat(Infinity, function(ani) {
+			ani.tween({
+				property: 'scale',
+				from: 1,
+				to: 0.8,
+				duration: 500
+			});
+			ani.wait(200);
+			ani.tween({
+				property: 'scale',
+				from: 0.8,
+				to: 1,
+				duration: 500
+			});
+		});
 	});
 
 	function doSnakeAnimation() {
