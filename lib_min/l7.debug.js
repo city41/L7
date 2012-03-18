@@ -1481,6 +1481,20 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 		}
 	};
+
+	Object.defineProperty(L7.Board.prototype, 'pixelHeight', {
+		get: function() {
+			return this.height * (this.tileSize + this.borderWidth) + this.borderWidth;
+		},
+		enumerable: true
+	});
+
+	Object.defineProperty(L7.Board.prototype, 'pixelWidth', {
+		get: function() {
+			return this.width * (this.tileSize + this.borderWidth) + this.borderWidth;
+		},
+		enumerable: true
+	});
 })();
 
 L7.CanvasBoardRenderMixin = {

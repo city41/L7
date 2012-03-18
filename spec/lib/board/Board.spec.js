@@ -64,6 +64,20 @@ describe("Board", function() {
 
 			expect(board.canvas).toBeFalsy();
 		});
+
+		it('should report its pixel height and width', function() {
+			var tileSize = 4;
+			var borderWidth = 2;
+			var board = new L7.Board({
+				width: 3,
+				height: 7,
+				tileSize: tileSize,
+				borderWidth: borderWidth
+			});
+
+			expect(board.pixelHeight).toBe(board.height * (tileSize + borderWidth) + borderWidth);
+			expect(board.pixelWidth).toBe(board.width * (tileSize + borderWidth) + borderWidth);
+		});
 	});
 
 	describe("tile traversal", function() {
