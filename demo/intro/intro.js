@@ -3,15 +3,15 @@ L7.useWebGL = true;
 function onImagesLoaded(images) {
 	var boards = [];
 
-	var tileSize = 7;
 	var borderWidth = 1;
-	var borderWidths = [4, 0, 1, 2];
+	var borderWidths = [4, 0, 1, 2, 1];
+	var tileSizes = [7, 11, 15, 19, 9];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller];
 
 	images.forEach(function(image, i) {
+		var tileSize = tileSizes[i];
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
 
-		tileSize += 4;
 
 		var board = levelLoader.load();
 		board.parallaxRatio = i * 0.6;
@@ -28,12 +28,14 @@ function onImagesLoaded(images) {
 		boards: boards
 	});
 
-	var b3 = boards[3];
+	var foreground = boards[3];
+	var chrome = boards.last;
+	chrome.offsetY = -30;
 
 	var game = new L7.Game({
 		board: parallax,
-		width: (b3.height * 3) * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
-		height: b3.height * (b3.tileSize + b3.borderWidth) + b3.borderWidth,
+		width: foreground.pixelHeight * 3,
+		height: foreground.pixelHeight + chrome.pixelHeight,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container'),
 		fpsContainer: document.getElementById('fpsContainer')
@@ -164,12 +166,12 @@ function onImagesLoaded(images) {
 	}
 
 	// TODO: scrolling the viewport, not sure where to put this
-	b3.ani.sequence(function(ani) {
+	foreground.ani.sequence(function(ani) {
 		ani.wait(2000);
 
-		var duration = (b3.tileSize + b3.borderWidth) * images[3].width;
+		var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
 		duration -= game.width;
-		duration /= b3.parallaxRatio;
+		duration /= foreground.parallaxRatio;
 		duration = duration | 0;
 		//var duration = 2530;
 		ani.invoke(function() {
@@ -186,12 +188,12 @@ function onImagesLoaded(images) {
 		});
 	});
 
-	b3.ani.repeat(20, function(ani) {
-		ani.waitBetween(1000, 6000);
-		ani.invoke(function() {
-			i.sounds.computer.play();
-		});
-	});
+	//foreground.ani.repeat(20, function(ani) {
+		//ani.waitBetween(1000, 6000);
+		//ani.invoke(function() {
+			//i.sounds.computer.play();
+		//});
+	//});
 
 	// for debug purposes
 	var a = new L7.Actor({
@@ -213,9 +215,9 @@ function onImagesLoaded(images) {
 		}
 	});
 
-	b3.addActor(a);
+	foreground.addActor(a);
 
-	i.sounds.bubbles.play();
+	//i.sounds.bubbles.play();
 
 	game.go();
 
@@ -235,7 +237,7 @@ soundManager.onready(function() {
 	};
 
 	var imageLoader = new L7.ImageLoader({
-		srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png"],
+		srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "chrome.png"],
 		handler: onImagesLoaded,
 		loadNow: true
 	});

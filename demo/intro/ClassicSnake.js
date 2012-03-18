@@ -91,10 +91,14 @@
 				nextPosition: nextPosition,
 				color: this.color,
 				owner: this,
-				scale: 1
+				scale: 0.85
 			};
 
 			this.pieces.push(newPiece);
+
+			for(var i = 0; i < this.pieces.length - 1; ++i) {
+				this.pieces[i].scale = 1;
+			}
 
 			if(this.board) {
 				this.board.movePiece({
