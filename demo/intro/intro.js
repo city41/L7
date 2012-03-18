@@ -5,7 +5,7 @@ function onImagesLoaded(images) {
 
 	var borderWidth = 1;
 	var borderWidths = [4, 0, 1, 2, 1];
-	var tileSizes = [7, 11, 15, 19, 9];
+	var tileSizes = [7, 11, 15, 19, 6];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller];
 
 	images.forEach(function(image, i) {
@@ -30,7 +30,8 @@ function onImagesLoaded(images) {
 
 	var foreground = boards[3];
 	var chrome = boards.last;
-	chrome.offsetY = -30;
+	chrome.offsetY = -foreground.pixelHeight;
+	chrome.parallaxRatio = 0;
 
 	var game = new L7.Game({
 		board: parallax,
