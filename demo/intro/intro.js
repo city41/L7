@@ -4,9 +4,9 @@ function onImagesLoaded(images) {
 	var boards = [];
 
 	var borderWidth = 1;
-	var borderWidths = [4, 0, 1, 2, 1];
+	var borderWidths = [4, 0, 1, 2, 0];
 	var tileSizes = [7, 11, 15, 19, 6];
-	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller];
+	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, i.ChromeFiller];
 
 	images.forEach(function(image, i) {
 		var tileSize = tileSizes[i];
@@ -42,6 +42,7 @@ function onImagesLoaded(images) {
 		fpsContainer: document.getElementById('fpsContainer')
 	});
 	game.fpsContainer.innerHTML = 'webgl? ' + L7.useWebGL;
+	game.paused = true;
 
 	var snake = new i.ClassicSnake({
 		position: L7.p(-9, 15),

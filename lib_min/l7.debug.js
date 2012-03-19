@@ -936,6 +936,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 		},
 
+		clicked: function() {
+			this.fireEvent('click', this);
+		},
+
+
 		_getAnchorOffset: function() {
 			var x, y;
 
@@ -1189,6 +1194,17 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	};
 
 	L7.Board.prototype = {
+		clicked: function(position) {
+			var tile = this.tileAtPixels(position);
+
+			if(tile && tile.inhabitants.length > 0) {
+				tile.inhabitants.last.clicked();
+				return true;
+			} else {
+				return false;
+			}
+		},
+
 		dump: function() {
 			console.log('');
 			console.log('');
@@ -1682,7 +1698,8 @@ L7.CanvasBoardRenderMixin = {
 			if (!_.isNumber(board.depth)) {
 				board.depth = i;
 			}
-		}, this);
+		},
+		this);
 	};
 
 	L7.ParallaxBoard.prototype = {
@@ -1696,6 +1713,15 @@ L7.CanvasBoardRenderMixin = {
 			this.boards.forEach(function(board) {
 				board.render(delta, context, anchorX * board.parallaxRatio, anchorY * board.parallaxRatio, timestamp);
 			});
+		},
+
+		clicked: function(position) {
+			var l = this.boards.length;
+			while(l--) {
+				if(this.boards[l].clicked(position)) {
+					return;
+				}
+			}
 		}
 	};
 
@@ -1710,6 +1736,19 @@ L7.CanvasBoardRenderMixin = {
 		},
 		enumerable: true
 	});
+
+	Object.defineProperty(L7.ParallaxBoard.prototype, 'game', {
+		get: function() {
+			return this.game;
+		},
+		set: function(game) {
+			this.boards.forEach(function(board) {
+				board.game = game;
+			});
+		},
+		enumerable: true
+	});
+
 })();
 
 (function() {
@@ -1873,10 +1912,12 @@ L7.CanvasBoardRenderMixin = {
 				this._glInit(gl);
 			}
 
-			anchorXpx += this.offsetX || 0;
-			anchorYpx += this.offsetY || 0;
-			var translateX = anchorXpx % (this.tileSize + this.borderWidth);
-			var translateY = anchorYpx % (this.tileSize + this.borderWidth);
+			// just shifting the view within the offset of one tile
+			var shiftX = anchorXpx % (this.tileSize + this.borderWidth);
+			var shiftY = anchorYpx % (this.tileSize + this.borderWidth);
+
+			var translateX = shiftX + (this.offsetX || 0);
+			var translateY = shiftY + (this.offsetY || 0);
 
 			mat4.identity(this.mvMatrix);
 			mat4.translate(this.mvMatrix, [-translateX, - translateY, 0]);
@@ -2777,6 +2818,10 @@ L7.CanvasBoardRenderMixin = {
 		L7.global.addEventListener('blur', function() {
 			delete me._lastTimestamp;
 		});
+
+		if(this.board) {
+			this.board.game = this;
+		}
 	};
 
 	L7.Game.prototype = {
@@ -2786,6 +2831,11 @@ L7.CanvasBoardRenderMixin = {
 			this.canvas.height = this.viewport.height;
 
 			this.container.appendChild(this.canvas);
+
+			var me = this;
+			this.canvas.addEventListener('click', function(e) {
+				me._onCanvasClick(e);
+			}, false);
 		},
 
 		go: function() {
@@ -2806,6 +2856,7 @@ L7.CanvasBoardRenderMixin = {
 			}
 			this.board = newBoard;
 			this.board.viewport = this.viewport;
+			this.board.game = this;
 			this.viewport.reset();
 		},
 
@@ -2870,6 +2921,13 @@ L7.CanvasBoardRenderMixin = {
 			if (!this.paused) {
 				requestAnimationFrame(this._doFrame);
 			}
+		},
+
+		_onCanvasClick: function(e) {
+			var canvasX = (e.x || e.clientX) - e.target.offsetLeft;
+			var canvasY = (e.y || e.clientY) - e.target.offsetTop;
+
+			this.board.clicked(L7.p(canvasX, canvasY));
 		}
 	};
 
@@ -2883,6 +2941,8 @@ L7.CanvasBoardRenderMixin = {
 
 			if (!paused) {
 				this.go();
+			} else {
+				this._doFrame(Date.now());
 			}
 		}
 	});
