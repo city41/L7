@@ -792,7 +792,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					target[this._saveProperty] = target[this._saveProperty].slice(0);
 				}
 
-				var value = this.from;
+				var value = this.from || target[this.property];
 
 				if (!_.isUndefined(value)) {
 					if (_.isArray(value)) {
@@ -1198,7 +1198,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var tile = this.tileAtPixels(position);
 
 			if(tile && tile.inhabitants.length > 0) {
-				tile.inhabitants.last.clicked();
+				tile.inhabitants.last.owner.clicked();
 				return true;
 			} else {
 				return false;
@@ -1357,8 +1357,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var x = _.isObject(positionOrX) ? positionOrX.x: positionOrX;
 			var y = _.isNumber(yOrUndefined) ? yOrUndefined: positionOrX.y;
 
-			var tileX = Math.floor(x / (this.tileSize + this.borderWidth));
-			var tileY = Math.floor(y / (this.tileSize + this.borderWidth));
+			var ox = this.offsetX || 0;
+			var oy = this.offsetY || 0;
+
+			var tileX = Math.floor((x + ox) / (this.tileSize + this.borderWidth));
+			var tileY = Math.floor((y + oy) / (this.tileSize + this.borderWidth));
 
 			return this.tileAt(tileX, tileY);
 		},

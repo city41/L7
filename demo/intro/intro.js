@@ -4,14 +4,13 @@ function onImagesLoaded(images) {
 	var boards = [];
 
 	var borderWidth = 1;
-	var borderWidths = [4, 0, 1, 2, 0];
-	var tileSizes = [7, 11, 15, 19, 6];
-	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, i.ChromeFiller];
+	var borderWidths = [4, 0, 1, 2, 0, 0];
+	var tileSizes = [7, 11, 15, 19, 6, 6];
+	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, null, i.ChromeFiller];
 
 	images.forEach(function(image, i) {
 		var tileSize = tileSizes[i];
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
-
 
 		var board = levelLoader.load();
 		board.parallaxRatio = i * 0.6;
@@ -30,7 +29,7 @@ function onImagesLoaded(images) {
 
 	var foreground = boards[3];
 	var chrome = boards.last;
-	chrome.offsetY = -foreground.pixelHeight;
+	chrome.offsetY = - foreground.pixelHeight;
 	chrome.parallaxRatio = 0;
 
 	var game = new L7.Game({
@@ -167,36 +166,52 @@ function onImagesLoaded(images) {
 		});
 	}
 
-	// TODO: scrolling the viewport, not sure where to put this
-	foreground.ani.sequence(function(ani) {
-		ani.wait(2000);
+	var overlay = boards[4];
 
-		var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
-		duration -= game.width;
-		duration /= foreground.parallaxRatio;
-		duration = duration | 0;
-		//var duration = 2530;
-		ani.invoke(function() {
-			snake.active = true;
-			doSnakeAnimation();
+	// TODO: scrolling the viewport, not sure where to put this
+	foreground.ani.together(function(ani) {
+		ani.sequence(function(ani) {
+			ani.tween({
+				targets: overlay.tiles,
+				property: 'color',
+				to: [0, 0, 0, 0],
+				duration: 3000
+			});
+			ani.wait(500);
+			ani.invoke(function() {
+				overlay.destroy();
+				boards.remove(overlay);
+			});
 		});
 
-		console.log('duration: ' + duration);
-		ani.repeat(duration, function(ani) {
+		ani.sequence(function(ani) {
+			ani.wait(5000);
+
+			var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
+			duration -= game.width;
+			duration /= foreground.parallaxRatio;
+			duration = duration | 0;
+			//var duration = 2530;
 			ani.invoke(function() {
-				//game.viewport.scrollX(1);
+				snake.active = true;
+				doSnakeAnimation();
 			});
-			ani.wait(10);
+
+			ani.repeat(duration, function(ani) {
+				ani.invoke(function() {
+					game.viewport.scrollX(1);
+				});
+				ani.wait(10);
+			});
 		});
 	});
 
 	//foreground.ani.repeat(20, function(ani) {
-		//ani.waitBetween(1000, 6000);
-		//ani.invoke(function() {
-			//i.sounds.computer.play();
-		//});
+	//ani.waitBetween(1000, 6000);
+	//ani.invoke(function() {
+	//i.sounds.computer.play();
 	//});
-
+	//});
 	// for debug purposes
 	var a = new L7.Actor({
 		color: [0, 0, 0, 0],
@@ -220,9 +235,7 @@ function onImagesLoaded(images) {
 	foreground.addActor(a);
 
 	//i.sounds.bubbles.play();
-
 	game.go();
-
 
 }
 
@@ -239,7 +252,7 @@ soundManager.onready(function() {
 	};
 
 	var imageLoader = new L7.ImageLoader({
-		srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "chrome.png"],
+		srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "overlay.png", "chrome.png"],
 		handler: onImagesLoaded,
 		loadNow: true
 	});
