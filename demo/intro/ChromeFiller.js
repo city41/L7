@@ -19,8 +19,6 @@
 				tile.opaque = true;
 			});
 
-			this._addPlayButton(board);
-
 			this._addClickActor(board, 'facebook', L7.p(124, 2));
 			this._addClickActor(board, 'gplus', L7.p(134, 2));
 			this._addClickActor(board, 'twitter', L7.p(144, 2));

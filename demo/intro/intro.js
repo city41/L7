@@ -1,11 +1,42 @@
 L7.useWebGL = true;
 
+function fadeInBoard(board, duration) {
+	var targets = board.query(function(tile) {
+		return tile.color && tile.color[3] !== 0;
+	});
+	var tilesNeedingOpaque = board.query(function(tile) {
+		return tile.color && tile.color[3] === 1;
+	});
+	tilesNeedingOpaque.forEach(function(tile) {
+		tile.opaque = true;
+	});
+
+	board.ani.sequence({ targets: targets }, function(ani) {
+		ani.copyProperty({
+			srcProperty: 'overlayColor',
+			destProperty: '_overlayColorSaved'
+		});
+		ani.tween({
+			property: 'overlayColor',
+			from: [0, 0, 0, 1],
+			to: [0, 0, 0, 0],
+			duration: duration
+		});
+		ani.copyProperty({
+			srcProperty: '_overlayColorSaved',
+			destProperty: 'overlayColor'
+		});
+	});
+
+}
+
 function onImagesLoaded(images) {
 	var boards = [];
 
 	var borderWidth = 1;
 	var borderWidths = [4, 0, 1, 2, 0, 0];
 	var tileSizes = [7, 11, 15, 19, 6, 6];
+	var fadeDuration = [10000, 9000, 7000, 4000];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, null, i.ChromeFiller];
 
 	images.forEach(function(image, i) {
@@ -18,6 +49,10 @@ function onImagesLoaded(images) {
 
 		if (boardFillers[i]) {
 			boardFillers[i].fill(board);
+		}
+
+		if(fadeDuration[i]) {
+			fadeInBoard(board, fadeDuration[i]);
 		}
 
 		boards.push(board);
@@ -167,6 +202,10 @@ function onImagesLoaded(images) {
 	}
 
 	var overlay = boards[4];
+	overlay.clicked = function() {
+		game.paused = false;
+		i.ChromeFiller._addPauseButton(chrome);
+	};
 
 	// TODO: scrolling the viewport, not sure where to put this
 	foreground.ani.together(function(ani) {
@@ -175,7 +214,7 @@ function onImagesLoaded(images) {
 				targets: overlay.tiles,
 				property: 'color',
 				to: [0, 0, 0, 0],
-				duration: 3000
+				duration: 0
 			});
 			ani.wait(500);
 			ani.invoke(function() {

@@ -94,6 +94,9 @@
 			config.from = config.to = config.value;
 			return this.tween(config);
 		},
+		copyProperty: function(config) {
+			return this._addAnimation(config, L7.CopyProperty);
+		},
 		tween: function(config) {
 			return this._addAnimation(config, L7.Tween);
 		},
@@ -159,6 +162,31 @@
 		}
 	};
 
+})();
+
+(function() {
+	L7.CopyProperty = function(config) {
+		_.extend(this, config);
+	};
+
+	L7.CopyProperty.prototype = {
+		reset: function() {
+		},
+
+		update: function() {
+			if(this.done || this.disabled) {
+				return;
+			}
+
+			var target;
+			for(var i = 0; i < this.targets.length; ++i) {
+				target = this.targets[i];
+				target[this.destProperty] = target[this.srcProperty];
+			}
+
+			this.done = true;
+		}
+	};
 })();
 
 (function() {
@@ -776,7 +804,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 		this._easeFunc = Math[this.easing || 'linearTween'];
 		this._easeFunc = this._easeFunc || Math.linearTween;
-	}
+	};
 
 	L7.Tween.prototype = {
 		reset: function() {
@@ -792,7 +820,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					target[this._saveProperty] = target[this._saveProperty].slice(0);
 				}
 
-				var value = this.from || target[this.property];
+				var value = this.hasOwnProperty('from') ? this.from : target[this.property];
 
 				if (!_.isUndefined(value)) {
 					if (_.isArray(value)) {
