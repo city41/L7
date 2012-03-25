@@ -14,7 +14,8 @@
 			});
 		},
 
-		addSmoke: function(board, position, radius) {
+		addSmoke: function(board, position, radius, life) {
+			life = life || 2;
 			var fireSystem = new L7.ParticleSystem({
 				totalParticles: 50,
 				duration: Infinity,
@@ -30,9 +31,9 @@
 				tangentialAccelVar: 0,
 				position: position,
 				posVar: L7.p(radius, 1),
-				life: 2,
+				life: life,
 				lifeVar: 0.15,
-				emissionRate: 50 / 1,
+				emissionRate: 50 / life,
 				startColor: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
 				startColorVar: [0, 0, 0, 0],
 				endColor: L7.Color.fromFloats(1, 1, 1, 0.25),

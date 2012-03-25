@@ -67,13 +67,20 @@ function onImagesLoaded(images) {
 	chrome.offsetY = - foreground.pixelHeight;
 	chrome.parallaxRatio = 0;
 
+	var fpsContainer = document.getElementById('fpsContainer');
+	if(window.location.href.toLowerCase().indexOf('showfps') > 0) {
+		fpsContainer.style.display = '';
+	} else {
+		fpsContainer.style.display = 'none';
+	}
+
 	var game = new L7.Game({
 		board: parallax,
 		width: foreground.pixelHeight * 3,
 		height: foreground.pixelHeight + chrome.pixelHeight,
 		initialAnchor: L7.p(),
 		container: document.getElementById('container'),
-		fpsContainer: document.getElementById('fpsContainer')
+		fpsContainer: fpsContainer
 	});
 	game.fpsContainer.innerHTML = 'webgl? ' + L7.useWebGL;
 	game.paused = true;

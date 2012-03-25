@@ -18,13 +18,7 @@ i.ForegroundFiller = {
 		this._addSecondAlien(board);
 
 		// last alien enclosure
-		//this._addSecondAlien(board, L7.p(207, 9));
-		//i.FillerUtil.addWater(board, L7.p(203, 8), 9, 4);
-		//i.FillerUtil.addSparks(board, L7.p(207, 8));
-		i.FillerUtil.addSmoke(board, L7.p(209, 10), 3);
-		//i.FillerUtil.addSparks(board, L7.p(20, 8));
-		//i.FillerUtil.pulsate(board, L7.p(209, 14));
-		//i.FillerUtil.pulsate(board, L7.p(213, 14));
+		i.FillerUtil.addSmoke(board, L7.p(209, 10), 3, 3);
 
 		i.FillerUtil.pulsate(board, L7.p(63, 1));
 		i.FillerUtil.pulsate(board, L7.p(63, 3));
