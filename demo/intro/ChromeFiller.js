@@ -1,7 +1,7 @@
 (function() {
 	var _socialNetworks = {
 		facebook: 'http://www.facebook.com/sharer.php?u=',
-		twitter: 'https://twitter.com/share?url=',
+		twitter: 'https://twitter.com/home?status=Check out Lab Adder, an upcoming HTML5 game: ',
 		gplus: 'https://plusone.google.com/_/+1/confirm?hl=en&url='
 	};
 

@@ -1,4 +1,4 @@
-L7.useWebGL = true;
+L7.useWebGL = !(window.location.href.toLowerCase().indexOf('canvas') > 0);
 
 function fadeInBoard(board, duration) {
 	var targets = board.query(function(tile) {
@@ -79,7 +79,7 @@ function onImagesLoaded(images) {
 		width: foreground.pixelHeight * 3,
 		height: foreground.pixelHeight + chrome.pixelHeight,
 		initialAnchor: L7.p(),
-		container: document.getElementById('container'),
+		container: document.getElementById('introContainer'),
 		fpsContainer: fpsContainer
 	});
 	game.fpsContainer.innerHTML = 'webgl? ' + L7.useWebGL;
