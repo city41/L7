@@ -3,7 +3,6 @@ i.ForegroundFiller = {
 		i.FillerUtil.addWater(board, L7.p(1, 1), 3, 8);
 		i.FillerUtil.addWater(board, L7.p(61, 4), 2, 7);
 		i.FillerUtil.addWater(board, L7.p(126, 7), 9, 4);
-		i.FillerUtil.addWater(board, L7.p(229, 8), 9, 4);
 
 		board.ani.repeat(Infinity, function(ani) {
 			ani.shimmer({
@@ -17,14 +16,20 @@ i.ForegroundFiller = {
 
 		this._addFirstAlien(board);
 		this._addSecondAlien(board);
-		this._addSecondAlien(board, L7.p(233, 9));
+
+		// last alien enclosure
+		//this._addSecondAlien(board, L7.p(207, 9));
+		//i.FillerUtil.addWater(board, L7.p(203, 8), 9, 4);
+		//i.FillerUtil.addSparks(board, L7.p(207, 8));
+		i.FillerUtil.addSmoke(board, L7.p(209, 10), 3);
+		//i.FillerUtil.addSparks(board, L7.p(20, 8));
+		//i.FillerUtil.pulsate(board, L7.p(209, 14));
+		//i.FillerUtil.pulsate(board, L7.p(213, 14));
 
 		i.FillerUtil.pulsate(board, L7.p(63, 1));
 		i.FillerUtil.pulsate(board, L7.p(63, 3));
 		i.FillerUtil.pulsate(board, L7.p(133, 13));
 		i.FillerUtil.pulsate(board, L7.p(137, 13));
-		i.FillerUtil.pulsate(board, L7.p(236, 14));
-		i.FillerUtil.pulsate(board, L7.p(240, 14));
 	},
 
 	_addFirstAlien: function(board) {

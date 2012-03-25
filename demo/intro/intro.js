@@ -228,6 +228,7 @@ function onImagesLoaded(images) {
 
 			var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
 			duration -= game.width;
+			duration -= 85; // arbitrarily choosing where to center the title
 			duration /= foreground.parallaxRatio;
 			duration = duration | 0;
 			//var duration = 2530;

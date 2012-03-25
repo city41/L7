@@ -14,6 +14,68 @@
 			});
 		},
 
+		addSmoke: function(board, position, radius) {
+			var fireSystem = new L7.ParticleSystem({
+				totalParticles: 50,
+				duration: Infinity,
+				gravity: L7.p(),
+				centerOfGravity: L7.p(),
+				angle: - 90,
+				angleVar: 8,
+				speed: 2,
+				speedVar: 1,
+				radialAccel: 0,
+				radialAccelVar: 0,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: position,
+				posVar: L7.p(radius, 1),
+				life: 2,
+				lifeVar: 0.15,
+				emissionRate: 50 / 1,
+				startColor: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+				startColorVar: [0, 0, 0, 0],
+				endColor: L7.Color.fromFloats(1, 1, 1, 0.25),
+				endColorVar: [0, 0, 0, 0],
+				active: true
+			});
+
+			board.addDaemon(fireSystem);
+		},
+
+		addSparks: function(board, position) {
+			var sparks = new L7.ParticleSystem({
+				totalParticles: 10,
+				duration: Infinity,
+				gravity: L7.p(0, 0),
+				centerOfGravity: L7.p(),
+				angle: - 70,
+				angleVar: 30,
+				speed: 40,
+				speedVar: 3,
+				radialAccel: 10,
+				radialAccelVar: 2,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: position,
+				posVar: L7.p(),
+				life: 0.3,
+				lifeVar: 0,
+				emissionRate: 10,
+				startColor: [255, 255, 200, 1],
+				startColorVar: [10, 10, 0, 0],
+				endColor: [255, 255, 255, 0.25],
+				endColorVar: [0, 0, 0, 0],
+				active: true,
+				startSize: 0.75,
+				startSizeVar: 0,
+				endSize: 0.75,
+				endSizeVar: 0
+			});
+
+			board.addDaemon(sparks);
+		},
+
 		addWater: function(board, corner, width, height) {
 			var bubbles = new L7.ParticleSystem({
 				totalParticles: 4,
@@ -234,20 +296,19 @@
 
 			function doSinWave() {
 				var l = sinWave.pieces.length;
-				while(l--) {
+				while (l--) {
 					sinWave.pieces[l].color = barColor;
 					sinWave.pieces[l].scale = 0;
 				}
 
 				for (var i = 0; i < width; ++i) {
 					var x = position.x + i;
-					var yOffset = (Math.sin(sinCounter + i) * ((height-1)/2)) | 0;
+					var yOffset = (Math.sin(sinCounter + i) * ((height - 1) / 2)) | 0;
 					var y = (position.y + (height / 2) + yOffset) | 0;
 					var piece = sinWave.pieceAt(x, y);
 
 					piece.scale = 0.8;
-				}
-				++sinCounter;
+				}++sinCounter;
 			}
 
 			sinWave.ani.repeat(Infinity, function(ani) {
