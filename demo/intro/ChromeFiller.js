@@ -52,10 +52,13 @@
 		},
 
 		_addPauseButton: function(board) {
+			var g = [212, 212, 212, 1];
+			var b = [0,0,0,0];
+
 			if (!this.pauseButton) {
 				this.pauseButton = new L7.Actor({
-					color: [212, 212, 212, 1],
-					shape: [[5, 1, 0, 1, 1], [1, 1, 0, 1, 1], [1, 1, 0, 1, 1], [1, 1, 0, 1, 1], [1, 1, 0, 1, 1]],
+					shape: [[5, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
+					color: [[g, g, b, g, g], [g, g, b, g, g], [g, g, b, g, g], [g, g, b, g, g], [g, g, b, g, g]],
 					position: L7.p(2, 3)
 				});
 				this.pauseButton.on('click', this._togglePause, this);
