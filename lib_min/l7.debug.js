@@ -17,6 +17,12 @@
 		}
 	});
 
+	_global.L7.isSupportedBrowser = (function() {
+		var ua = window.navigator.userAgent.toLowerCase();
+
+		return ua.indexOf('chrome') > -1 || ua.indexOf('firefox') > -1;
+	})();
+
 })();
 
 (function() {

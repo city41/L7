@@ -1,4 +1,4 @@
-L7.useWebGL = !(window.location.href.toLowerCase().indexOf('canvas') > 0);
+L7.useWebGL = ! (window.location.href.toLowerCase().indexOf('canvas') > 0);
 
 function fadeInBoard(board, duration) {
 	var targets = board.query(function(tile) {
@@ -11,7 +11,10 @@ function fadeInBoard(board, duration) {
 		tile.opaque = true;
 	});
 
-	board.ani.sequence({ targets: targets }, function(ani) {
+	board.ani.sequence({
+		targets: targets
+	},
+	function(ani) {
 		ani.copyProperty({
 			srcProperty: 'overlayColor',
 			destProperty: '_overlayColorSaved'
@@ -51,7 +54,7 @@ function onImagesLoaded(images) {
 			boardFillers[i].fill(board);
 		}
 
-		if(fadeDuration[i]) {
+		if (fadeDuration[i]) {
 			fadeInBoard(board, fadeDuration[i]);
 		}
 
@@ -68,7 +71,7 @@ function onImagesLoaded(images) {
 	chrome.parallaxRatio = 0;
 
 	var fpsContainer = document.getElementById('fpsContainer');
-	if(window.location.href.toLowerCase().indexOf('showfps') > 0) {
+	if (window.location.href.toLowerCase().indexOf('showfps') > 0) {
 		fpsContainer.style.display = '';
 	} else {
 		fpsContainer.style.display = 'none';
@@ -286,22 +289,28 @@ function onImagesLoaded(images) {
 
 }
 
-soundManager.onready(function() {
-	i.sounds = {
-		bubbles: soundManager.createSound({
-			id: 'bubbles',
-			url: 'audio/bubbles.mp3'
-		}),
-		computer: soundManager.createSound({
-			id: 'computer',
-			url: 'audio/computer.mp3'
-		})
-	};
+if (L7.isSupportedBrowser) {
+	soundManager.onready(function() {
+		i.sounds = {
+			bubbles: soundManager.createSound({
+				id: 'bubbles',
+				url: 'audio/bubbles.mp3'
+			}),
+			computer: soundManager.createSound({
+				id: 'computer',
+				url: 'audio/computer.mp3'
+			})
+		};
 
-	var imageLoader = new L7.ImageLoader({
-		srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "overlay.png", "chrome.png"],
-		handler: onImagesLoaded,
-		loadNow: true
+		var imageLoader = new L7.ImageLoader({
+			srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "overlay.png", "chrome.png"],
+			handler: onImagesLoaded,
+			loadNow: true
+		});
 	});
-});
+
+} else {
+	var container = document.getElementById('introContainer');
+	container.innerHTML = '<img id="browserSupportImg" src="browserSupportBigG.gif" alt="supported browsers" /><div>Sorry, your browser is lacking features needed by Lab Adder. So far Lab Adder works in Chrome (recommended) or the latest Firefox</div>';
+}
 
