@@ -1,4 +1,64 @@
 (function() {
+	var _evens = [];
+	var _odds = [];
+	function setupSlinkAnimation(snake) {
+		var span = 80;
+		var scale = 1.25;
+		_evens = [];
+		_odds = [];
+
+		snake.pieces.forEach(function(piece, i) {
+			if (i > 0) {
+				if (i & 1 === 1) {
+					_odds.push(piece);
+				} else {
+					_evens.push(piece);
+				}
+			}
+		});
+
+		snake.ani.repeat(Infinity, function(ani) {
+			ani.together(function(ani) {
+				ani.sequence({
+					targets: _evens
+				},
+				function(ani) {
+					ani.wait(span);
+					ani.tween({
+						property: 'scale',
+						from: 1,
+						to: scale,
+						duration: span / 2
+					});
+					ani.tween({
+						property: 'scale',
+						from: scale,
+						to: 1,
+						duration: span / 2
+					});
+				});
+				ani.sequence({
+					targets: _odds
+				},
+				function(ani) {
+					ani.tween({
+						property: 'scale',
+						from: 1,
+						to: scale,
+						duration: span / 2
+					});
+					ani.tween({
+						property: 'scale',
+						from: scale,
+						to: 1,
+						duration: span / 2
+					});
+					ani.wait(span);
+				});
+			});
+		});
+	}
+
 	var _snakeConfig = {
 		keyInputs: {
 			left: {
@@ -49,7 +109,7 @@
 		color: [0, 255, 0, 1],
 
 		moveSnake: function() {
-			for(var i = this.pieces.length - 1; i > 0; --i) {
+			for (var i = this.pieces.length - 1; i > 0; --i) {
 				var piece = this.pieces[i];
 
 				this.board.movePiece({
@@ -58,7 +118,7 @@
 					to: piece.nextPosition
 				});
 
-				var nextPiece = this.pieces[i-1];
+				var nextPiece = this.pieces[i - 1];
 				piece.nextPosition = nextPiece.nextPosition;
 			}
 
@@ -96,16 +156,21 @@
 
 			this.pieces.push(newPiece);
 
-			for(var i = 0; i < this.pieces.length - 1; ++i) {
+			for (var i = 0; i < this.pieces.length - 1; ++i) {
 				this.pieces[i].scale = 1;
 			}
 
-			if(this.board) {
+			if (this.board) {
 				this.board.movePiece({
 					piece: newPiece,
 					from: newPiece.position,
 					to: newPiece.position
 				});
+				if((this.pieces.length-1) & 1 === 1) {
+					_odds.push(newPiece);	
+				} else {
+					_evens.push(newPiece);
+				}
 			}
 		},
 
@@ -146,13 +211,13 @@
 		update: function(delta, timestamp) {
 			L7.Actor.prototype.update.call(this, delta, timestamp);
 
-			if(!this.active) {
+			if (!this.active) {
 				return;
 			}
 
 			this._offsetElapsed += delta;
 
-			if(this._offsetElapsed >= this.rate) {
+			if (this._offsetElapsed >= this.rate) {
 				this._offsetElapsed -= this.rate;
 				this.moveSnake();
 			}
@@ -160,7 +225,7 @@
 			var offset = this._offsetElapsed / this.rate;
 
 			this.pieces.forEach(function(piece) {
-				if(piece.nextPosition) {
+				if (piece.nextPosition) {
 					var towards = piece.nextPosition.delta(piece.position);
 					piece.offset = {
 						x: offset * towards.x,
@@ -202,6 +267,16 @@
 		}
 
 		actor.hitManager = new L7.HitManager();
+
+		Object.defineProperty(actor, 'board', {
+			get: function() {
+				return this._board;
+			},
+			set: function(b) {
+				this._board = b;
+				//setupSlinkAnimation(this);
+			}
+		});
 
 		return actor;
 	};
