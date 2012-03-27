@@ -274,6 +274,8 @@
 
 		addSinWave: function(board, position, width, height, barColor) {
 			barColor = barColor || [255, 255, 0, 1];
+			var barColor2 = [0, 0, 255, 1];
+			var backColor = [100, 100, 100, 1];
 
 			var shape = [];
 			for (var i = 0; i < height; ++i) {
@@ -298,8 +300,7 @@
 			function doSinWave() {
 				var l = sinWave.pieces.length;
 				while (l--) {
-					sinWave.pieces[l].color = barColor;
-					sinWave.pieces[l].scale = 0;
+					sinWave.pieces[l].color = backColor;
 				}
 
 				for (var i = 0; i < width; ++i) {
@@ -307,8 +308,12 @@
 					var yOffset = (Math.sin(sinCounter + i) * ((height - 1) / 2)) | 0;
 					var y = (position.y + (height / 2) + yOffset) | 0;
 					var piece = sinWave.pieceAt(x, y);
+					piece.color = barColor;
 
-					piece.scale = 0.8;
+					yOffset = (Math.cos(sinCounter + i) * ((height - 1) / 2)) | 0;
+					y = (position.y + (height / 2) + yOffset) | 0;
+					piece = sinWave.pieceAt(x, y);
+					piece.color = barColor2;
 				}++sinCounter;
 			}
 

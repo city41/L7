@@ -93,7 +93,7 @@ function onImagesLoaded(images) {
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
-		rate: 250
+		rate: 150
 	});
 
 	boards[2].addActor(snake);
@@ -105,18 +105,19 @@ function onImagesLoaded(images) {
 			position: L7.p(x, 15)
 		});
 		boards[2].addActor(apple);
+		return;
 
 		apple.ani.repeat(Infinity, function(ani) {
 			ani.tween({
 				property: 'scale',
 				from: 1,
-				to: 0.8,
+				to: 1.2,
 				duration: 500
 			});
 			ani.wait(200);
 			ani.tween({
 				property: 'scale',
-				from: 0.8,
+				from: 1.2,
 				to: 1,
 				duration: 500
 			});

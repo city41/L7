@@ -22,10 +22,11 @@ a {
 
 #introContainer {
 	margin-top: 90px;
-	width: 950px; 
+	width: 954px; 
 	margin-left: auto; 
 	margin-right: auto; 
 	background-color: black;
+	padding: 0;
 }
 
 #copyContainer {
