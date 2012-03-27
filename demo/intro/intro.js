@@ -90,7 +90,15 @@ function onImagesLoaded(images) {
 
 	var snake = new i.ClassicSnake({
 		position: L7.p(-9, 15),
-		script: [L7.p(10, 15), L7.p(10, 7), L7.p(18, 7), L7.p(18, 12), L7.p(10, 12), L7.p(10, 12), L7.p(11, 12)],
+		script: [
+			{ p: L7.p(10, 15), r: 75 },
+			{ p: L7.p(10, 7) },
+			{ p: L7.p(18, 7), r: 600 },
+			{ p: L7.p(18, 12) },
+			{ p: L7.p(10, 12), r: 150 },
+			{ p: L7.p(10, 12) }, 
+			{ p: L7.p(11, 12) }
+		],
 		direction: i.Direction.East,
 		size: 4,
 		active: false,

@@ -216,9 +216,11 @@
 			}
 
 			if(this.script && this.curScript < this.script.length - 1) {
-				if(this.position.equals(this.script[this.curScript])) {
+				if(this.position.equals(this.script[this.curScript].p)) {
+					this.rate = this.script[this.curScript].r || this.rate;
+
 					this.curScript += 1;
-					this.direction = this.script[this.curScript].delta(this.script[this.curScript-1]).normalize();
+					this.direction = this.script[this.curScript].p.delta(this.script[this.curScript-1].p).normalize();
 					this.pieces.first.nextPosition = this.position.add(this.direction);
 				}
 			}
