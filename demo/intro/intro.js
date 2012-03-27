@@ -90,6 +90,7 @@ function onImagesLoaded(images) {
 
 	var snake = new i.ClassicSnake({
 		position: L7.p(-9, 15),
+		script: [L7.p(10, 15), L7.p(10, 7), L7.p(18, 7), L7.p(18, 12), L7.p(10, 12), L7.p(10, 12), L7.p(11, 12)],
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
@@ -124,94 +125,6 @@ function onImagesLoaded(images) {
 		});
 	});
 
-	function doSnakeAnimation() {
-		return;
-		snake.ani.sequence({
-			targets: [snake]
-		},
-		function(ani) {
-			ani.wait(20000);
-
-			// loop
-			var startRate = snake.rate;
-			var loopWait = startRate * 1.75;
-			ani.setProperty({
-				property: 'direction',
-				value: i.Direction.South
-			});
-			ani.wait(loopWait);
-			ani.setProperty({
-				property: 'direction',
-				value: i.Direction.West
-			});
-			ani.wait(loopWait);
-			ani.setProperty({
-				property: 'direction',
-				value: i.Direction.North
-			});
-			ani.wait(loopWait);
-			ani.setProperty({
-				property: 'direction',
-				value: i.Direction.East
-			});
-			ani.wait(3000);
-			ani.tween({
-				property: 'rate',
-				from: startRate,
-				to: startRate * 2,
-				duration: 1000
-			});
-			ani.wait(4000);
-			ani.setProperty({
-				property: 'rate',
-				value: startRate * 0.75
-			});
-			for (var k = 0; k < 5; ++k) {
-				ani.setProperty({
-					property: 'direction',
-					value: i.Direction.South
-				});
-				ani.wait(loopWait);
-				ani.setProperty({
-					property: 'direction',
-					value: i.Direction.East
-				});
-				ani.wait(loopWait);
-				ani.setProperty({
-					property: 'direction',
-					value: i.Direction.North
-				});
-				ani.wait(loopWait);
-				ani.setProperty({
-					property: 'direction',
-					value: i.Direction.East
-				});
-				ani.wait(loopWait);
-			}
-			ani.tween({
-				property: 'rate',
-				from: startRate * 0.75,
-				to: startRate * 1.25,
-				duration: 1000
-			});
-			ani.wait(32000);
-			// this doesnt work quite right, needs to be nextPosition ill bet
-			ani.invoke(function() {
-				snake.pieces[0].position = L7.p(snake.pieces[0].position.x, 17);
-			});
-			ani.setProperty({
-				property: 'direction',
-				value: i.Direction.West
-			});
-			ani.wait(10000);
-			ani.setProperty({
-				property: 'active',
-				value: false
-			});
-
-		});
-	}
-
 	var overlay = boards[4];
 	overlay.clicked = function() {
 		game.paused = false;
@@ -245,12 +158,11 @@ function onImagesLoaded(images) {
 			//var duration = 2530;
 			ani.invoke(function() {
 				snake.active = true;
-				doSnakeAnimation();
 			});
 
 			ani.repeat(duration, function(ani) {
 				ani.invoke(function() {
-					game.viewport.scrollX(1);
+					//game.viewport.scrollX(1);
 				});
 				ani.wait(10);
 			});
