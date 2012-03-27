@@ -85,7 +85,7 @@
 				centerOfGravity: L7.p(),
 				angle: - 90,
 				angleVar: 0,
-				speed: 2,
+				speed: 4,
 				speedVar: 0.4,
 				radialAccel: 0,
 				radialAccelVar: 0,
@@ -93,7 +93,7 @@
 				tangentialAccelVar: 0,
 				position: L7.p(corner.x + width / 2, corner.y + height),
 				posVar: L7.p(width / 2, 0),
-				life: 1.4,
+				life: 0.7,
 				lifeVar: 0.15,
 				emissionRate: 4,
 				startColor: [255, 255, 255, 1],
@@ -310,7 +310,7 @@
 					var piece = sinWave.pieceAt(x, y);
 					piece.color = barColor;
 
-					yOffset = (Math.cos(sinCounter + i) * ((height - 1) / 2)) | 0;
+					yOffset = -yOffset;
 					y = (position.y + (height / 2) + yOffset) | 0;
 					piece = sinWave.pieceAt(x, y);
 					piece.color = barColor2;
