@@ -170,7 +170,7 @@ function onImagesLoaded(images) {
 
 			ani.repeat(duration, function(ani) {
 				ani.invoke(function() {
-					//game.viewport.scrollX(1);
+					game.viewport.scrollX(1);
 				});
 				ani.wait(10);
 			});
