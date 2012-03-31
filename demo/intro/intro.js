@@ -1,16 +1,9 @@
 L7.useWebGL = ! (window.location.href.toLowerCase().indexOf('canvas') > 0);
 
-function fadeInBoard(board, duration) {
+function lightSwitchBoard(board, delay, overlayColor) {
 	var targets = board.query(function(tile) {
 		return tile.color && tile.color[3] !== 0;
 	});
-	var tilesNeedingOpaque = board.query(function(tile) {
-		return tile.color && tile.color[3] === 1;
-	});
-	tilesNeedingOpaque.forEach(function(tile) {
-		tile.opaque = true;
-	});
-
 	board.ani.sequence({
 		targets: targets
 	},
@@ -19,15 +12,29 @@ function fadeInBoard(board, duration) {
 			srcProperty: 'overlayColor',
 			destProperty: '_overlayColorSaved'
 		});
-		ani.tween({
+		ani.copyProperty({
+			srcProperty: 'opaque',
+			destProperty: '_opaqueSaved'
+		});
+		ani.setProperty({
+			property: 'opaque',
+			value: true
+		});
+		ani.setProperty({
 			property: 'overlayColor',
-			from: [0, 0, 0, 1],
-			to: [0, 0, 0, 0],
-			duration: duration
+			value: overlayColor || [0,0,0,1]
+		});
+		ani.wait(delay);
+		ani.invoke(function() {
+			i.sounds['switch' + Number(L7.coin())].play();
 		});
 		ani.copyProperty({
 			srcProperty: '_overlayColorSaved',
 			destProperty: 'overlayColor'
+		});
+		ani.copyProperty({
+			srcProperty: '_opaqueSaved',
+			destProperty: 'opaque'
 		});
 	});
 
@@ -39,7 +46,8 @@ function onImagesLoaded(images) {
 	var borderWidth = 1;
 	var borderWidths = [4, 0, 1, 2, 0, 0];
 	var tileSizes = [7, 11, 15, 19, 6, 6];
-	var fadeDuration = [10000, 9000, 7000, 4000];
+	var lightSwitchDelay = [15000, 11000, 9000, 5000];
+	var lightSwitchColors = [[40,40,40,1], undefined, undefined, undefined];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, null, i.ChromeFiller];
 
 	images.forEach(function(image, i) {
@@ -54,8 +62,8 @@ function onImagesLoaded(images) {
 			boardFillers[i].fill(board);
 		}
 
-		if (fadeDuration[i]) {
-			fadeInBoard(board, fadeDuration[i]);
+		if (lightSwitchDelay[i]) {
+			lightSwitchBoard(board, lightSwitchDelay[i], lightSwitchColors[i]);
 		}
 
 		boards.push(board);
@@ -90,15 +98,30 @@ function onImagesLoaded(images) {
 
 	var snake = new i.ClassicSnake({
 		position: L7.p(-9, 15),
-		script: [
-			{ p: L7.p(10, 15), r: 75 },
-			{ p: L7.p(10, 7) },
-			{ p: L7.p(18, 7), r: 600 },
-			{ p: L7.p(18, 12) },
-			{ p: L7.p(10, 12), r: 150 },
-			{ p: L7.p(10, 12) }, 
-			{ p: L7.p(11, 12) }
-		],
+		script: [{
+			p: L7.p(10, 15),
+			r: 75
+		},
+		{
+			p: L7.p(10, 7)
+		},
+		{
+			p: L7.p(18, 7),
+			r: 600
+		},
+		{
+			p: L7.p(18, 12)
+		},
+		{
+			p: L7.p(10, 12),
+			r: 150
+		},
+		{
+			p: L7.p(10, 12)
+		},
+		{
+			p: L7.p(11, 12)
+		}],
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
@@ -134,6 +157,10 @@ function onImagesLoaded(images) {
 	});
 
 	var overlay = boards[4];
+	overlay.tiles.forEach(function(tile) {
+		tile.opaque = true;
+	});
+
 	overlay.clicked = function() {
 		game.paused = false;
 		i.ChromeFiller._addPauseButton(chrome);
@@ -142,16 +169,37 @@ function onImagesLoaded(images) {
 	// TODO: scrolling the viewport, not sure where to put this
 	foreground.ani.together(function(ani) {
 		ani.sequence(function(ani) {
+			ani.wait(500);
 			ani.tween({
 				targets: overlay.tiles,
 				property: 'color',
 				to: [0, 0, 0, 0],
-				duration: 0
+				duration: 2000
 			});
-			ani.wait(500);
 			ani.invoke(function() {
 				overlay.destroy();
 				boards.remove(overlay);
+			});
+			ani.invoke(function() {
+				i.sounds.bubbles.setVolume(10);
+				i.sounds.bubbles.play({
+					loops: 200,
+					volume: 10
+				});
+			});
+			ani.together(function(ani) {
+				//ani.repeat(Infinity, function(ani) {
+					//ani.waitBetween(4000, 8000);
+					//ani.invoke(function() {
+						//i.sounds['bleep' + L7.rand(0, 4)].play( { volume: 50 });
+					//});
+				//});
+				ani.repeat(9, function(ani) {
+					ani.wait(3000);
+					ani.invoke(function() {
+						i.sounds.bubbles.setVolume(i.sounds.bubbles.volume + 10);
+					});
+				});
 			});
 		});
 
@@ -177,12 +225,6 @@ function onImagesLoaded(images) {
 		});
 	});
 
-	//foreground.ani.repeat(20, function(ani) {
-	//ani.waitBetween(1000, 6000);
-	//ani.invoke(function() {
-	//i.sounds.computer.play();
-	//});
-	//});
 	// for debug purposes
 	var a = new L7.Actor({
 		color: [0, 0, 0, 0],
@@ -205,7 +247,6 @@ function onImagesLoaded(images) {
 
 	foreground.addActor(a);
 
-	//i.sounds.bubbles.play();
 	game.go();
 
 }
@@ -220,6 +261,30 @@ if (L7.isSupportedBrowser) {
 			computer: soundManager.createSound({
 				id: 'computer',
 				url: 'audio/computer.mp3'
+			}),
+			switch0: soundManager.createSound({
+				id: 'switch1',
+				url: 'audio/switch1.mp3'
+			}),
+			switch1: soundManager.createSound({
+				id: 'switch2',
+				url: 'audio/switch2.mp3'
+			}),
+			bleep0: soundManager.createSound({
+				id: 'bleep0',
+				url: 'audio/bleep1.mp3'
+			}),
+			bleep1: soundManager.createSound({
+				id: 'bleep1',
+				url: 'audio/bleep2.mp3'
+			}),
+			bleep2: soundManager.createSound({
+				id: 'bleep2',
+				url: 'audio/bleep3.mp3'
+			}),
+			bleep3: soundManager.createSound({
+				id: 'bleep3',
+				url: 'audio/bleep4.mp3'
 			})
 		};
 
