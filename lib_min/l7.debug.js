@@ -2891,7 +2891,7 @@ L7.CanvasBoardRenderMixin = {
 			var fps = this._frameCount / seconds;
 
 			if(this.fpsContainer) {
-				this.fpsContainer.innerHTML = fps;
+				this.fpsContainer.innerHTML = (fps | 0) + ' fps';
 			} else {
 				console.log('fps: ' + fps);
 			}
