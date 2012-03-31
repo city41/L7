@@ -1,6 +1,6 @@
 L7.useWebGL = ! (window.location.href.toLowerCase().indexOf('canvas') > 0);
 
-function lightSwitchBoard(board, delay, overlayColor) {
+function lightSwitchBoard(board, delay, overlayColor, volume) {
 	var targets = board.query(function(tile) {
 		return tile.color && tile.color[3] !== 0;
 	});
@@ -26,7 +26,7 @@ function lightSwitchBoard(board, delay, overlayColor) {
 		});
 		ani.wait(delay);
 		ani.invoke(function() {
-			i.sounds['switch' + Number(L7.coin())].play();
+			i.sounds.switch.play({volume: volume});
 		});
 		ani.copyProperty({
 			srcProperty: '_overlayColorSaved',
@@ -48,6 +48,7 @@ function onImagesLoaded(images) {
 	var tileSizes = [7, 11, 15, 19, 6, 6];
 	var lightSwitchDelay = [15000, 11000, 9000, 5000];
 	var lightSwitchColors = [[40,40,40,1], undefined, undefined, undefined];
+	var lightSwitchVolumes = [20, 40, 60, 90];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, null, i.ChromeFiller];
 
 	images.forEach(function(image, i) {
@@ -63,7 +64,7 @@ function onImagesLoaded(images) {
 		}
 
 		if (lightSwitchDelay[i]) {
-			lightSwitchBoard(board, lightSwitchDelay[i], lightSwitchColors[i]);
+			lightSwitchBoard(board, lightSwitchDelay[i], lightSwitchColors[i], lightSwitchVolumes[i]);
 		}
 
 		boards.push(board);
@@ -265,33 +266,10 @@ if (L7.isSupportedBrowser) {
 				id: 'bubbles',
 				url: 'audio/bubbles.mp3'
 			}),
-			computer: soundManager.createSound({
-				id: 'computer',
-				url: 'audio/computer.mp3'
-			}),
-			switch0: soundManager.createSound({
-				id: 'switch1',
-				url: 'audio/switch1.mp3'
-			}),
-			switch1: soundManager.createSound({
-				id: 'switch2',
-				url: 'audio/switch2.mp3'
-			}),
-			bleep0: soundManager.createSound({
-				id: 'bleep0',
-				url: 'audio/bleep1.mp3'
-			}),
-			bleep1: soundManager.createSound({
-				id: 'bleep1',
-				url: 'audio/bleep2.mp3'
-			}),
-			bleep2: soundManager.createSound({
-				id: 'bleep2',
-				url: 'audio/bleep3.mp3'
-			}),
-			bleep3: soundManager.createSound({
-				id: 'bleep3',
-				url: 'audio/bleep4.mp3'
+			switch: soundManager.createSound({
+				id: 'switch',
+				url: 'audio/switch.mp3',
+				autoLoad: true
 			})
 		};
 
