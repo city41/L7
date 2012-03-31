@@ -93,6 +93,13 @@ function onImagesLoaded(images) {
 		container: document.getElementById('introContainer'),
 		fpsContainer: fpsContainer
 	});
+	game.on('pausechanged', function(paused) {
+		if(paused) {
+			soundManager.pauseAll();
+		} else {
+			soundManager.resumeAll();
+		}
+	});
 	game.fpsContainer.innerHTML = 'webgl? ' + L7.useWebGL;
 	game.paused = true;
 

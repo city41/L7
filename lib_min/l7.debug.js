@@ -925,6 +925,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	var _noOffset = { x: 0, y: 0 };
 
 	L7.Actor = function(config) {
+		_.extend(this, L7.Observable);
 		_.extend(this, config);
 		this.ani = new L7.AnimationFactory(this);
 
@@ -944,29 +945,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				return this.pieces.filter(filter);
 			} else {
 				return this.pieces;
-			}
-		},
-
-		on: function(eventName, handler, scope) {
-			if (!this._listeners[eventName]) {
-				this._listeners[eventName] = [];
-			}
-
-			this._listeners[eventName].push({
-				handler: handler,
-				scope: scope
-			});
-		},
-
-		fireEvent: function(eventName, varargs) {
-			var listeners = this._listeners[eventName];
-
-			if (_.isArray(listeners)) {
-				var args = _.toArray(arguments);
-				args.shift();
-				_.each(listeners, function(listener) {
-					listener.handler.apply(listener.scope, args);
-				});
 			}
 		},
 
@@ -2826,6 +2804,7 @@ L7.CanvasBoardRenderMixin = {
 	}
 
 	L7.Game = function(configOrBoard) {
+		_.extend(this, L7.Observable);
 		var config = _getConfig(configOrBoard);
 		_.extend(this, config);
 		_.bindAll(this, '_doFrame');
@@ -2973,6 +2952,10 @@ L7.CanvasBoardRenderMixin = {
 				this.go();
 			} else {
 				this._doFrame(Date.now());
+			}
+
+			if(curPaused !== paused) {
+				this.fireEvent('pausechanged', paused);
 			}
 		}
 	});
@@ -3369,6 +3352,36 @@ L7.CanvasBoardRenderMixin = {
 	};
 
 	L7.pr = L7.sr;
+})();
+
+(function() {
+	L7.Observable = {
+		on: function(eventName, handler, scope) {
+			this._listeners = this._listeners || {};
+
+			if (!this._listeners[eventName]) {
+				this._listeners[eventName] = [];
+			}
+
+			this._listeners[eventName].push({
+				handler: handler,
+				scope: scope
+			});
+		},
+
+		fireEvent: function(eventName, varargs) {
+			this._listeners = this._listeners || {};
+			var listeners = this._listeners[eventName];
+
+			if (_.isArray(listeners)) {
+				var args = _.toArray(arguments);
+				args.shift();
+				_.each(listeners, function(listener) {
+					listener.handler.apply(listener.scope, args);
+				});
+			}
+		}
+	};
 })();
 
 (function() {
