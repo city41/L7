@@ -102,6 +102,7 @@
 				return this.active;
 			},
 			apple: function(tile, actor) {
+				i.sounds.bite.play({ volume: L7.rand(50, 100) });
 				this.grow();
 				actor.die();
 			}

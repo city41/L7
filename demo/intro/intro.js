@@ -39,6 +39,10 @@ function lightSwitchBoard(board, delay, overlayColor, volume) {
 			srcProperty: '_opaqueSaved',
 			destProperty: 'opaque'
 		});
+		ani.invoke(function() {
+			delete board.standardBorderColor;
+			board.borderFill = [0,0,0,1];
+		});
 	});
 
 }
@@ -72,6 +76,8 @@ function onImagesLoaded(images) {
 
 		boards.push(board);
 	});
+
+	boards[0].borderFill = lightSwitchColors[0];
 
 	var parallax = new L7.ParallaxBoard({
 		boards: boards
@@ -343,6 +349,11 @@ if (L7.isSupportedBrowser) {
 			switch: soundManager.createSound({
 				id: 'switch',
 				url: 'audio/switch.mp3',
+				autoLoad: true
+			}),
+			bite: soundManager.createSound({
+				id: 'bite',
+				url: 'audio/bite.mp3',
 				autoLoad: true
 			})
 		};
