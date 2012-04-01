@@ -160,10 +160,10 @@ function onImagesLoaded(images) {
 			p: L7.p(75, 14)
 		},
 		{
-			p: L7.p(92, 14)
+			p: L7.p(91, 14)
 		},
 		{
-			p: L7.p(92, 16)
+			p: L7.p(91, 16)
 		},
 		{
 			p: L7.p(103, 16)
@@ -292,7 +292,7 @@ function onImagesLoaded(images) {
 				});
 				ani.wait(10);
 			});
-			ani.wait(13000);
+			ani.wait(11000);
 			ani.setProperty({
 				targets: [outro],
 				property: 'visible',

@@ -212,7 +212,7 @@
 		burp: function() {
 			var targets = [this.pieces[0]];
 			this.ani.sequence(function(ani) {
-				ani.wait(2500);
+				ani.wait(2800);
 				ani.tween({
 					targets: targets,
 					property: 'scale',
