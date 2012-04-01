@@ -106,6 +106,9 @@
 		tween: function(config) {
 			return this._addAnimation(config, L7.Tween);
 		},
+		fadeIn: function(config) {
+			return this._addAnimation(config, L7.FadeIn);
+		},
 		sequence: function(targetOptionsOrBuilder, builderOrUndefined) {
 			return this.repeat(1, targetOptionsOrBuilder, builderOrUndefined);
 		},
@@ -538,6 +541,55 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 
 
+
+(function() {
+	var _idCounter = 0;
+	L7.FadeIn = function(config) {
+		_.extend(this, config);
+		this.reset();
+
+		this._easeFunc = Math[this.easing || 'linearTween'];
+		this._easeFunc = this._easeFunc || Math.linearTween;
+	};
+
+	L7.FadeIn.prototype = {
+		reset: function() {
+			this._elapsed = 0;
+			this.done = this._elapsed >= this.duration;
+			this._initted = false;
+		},
+
+		_initTargets: function() {
+			this.targets.forEach(function(target) {
+				target.color[3] = 0;
+			});
+		},
+
+		update: function(delta, timestamp, board) {
+			if (!this._initted) {
+				this._initTargets();
+				this._initted = true;
+			}
+
+			if (this.done || this.disabled) {
+				return;
+			}
+
+			this._elapsed += delta;
+			if (this._elapsed > this.duration) {
+				this._elapsed = this.duration;
+				this.done = true;
+			}
+
+			var l = this.targets.length;
+
+			var alpha = this._easeFunc(this._elapsed, 0, 1, this.duration);
+			while (l--) {
+				this.targets[l].color[3] = alpha;
+			}
+		}
+	};
+})();
 
 (function() {
 	var _idCounter = 0;
@@ -1726,7 +1778,9 @@ L7.CanvasBoardRenderMixin = {
 		},
 		render: function(delta, context, anchorX, anchorY, timestamp) {
 			this.boards.forEach(function(board) {
-				board.render(delta, context, anchorX * board.parallaxRatio, anchorY * board.parallaxRatio, timestamp);
+				if(board.visible !== false) {
+					board.render(delta, context, anchorX * board.parallaxRatio, anchorY * board.parallaxRatio, timestamp);
+				}
 			});
 		},
 
@@ -2912,6 +2966,7 @@ L7.CanvasBoardRenderMixin = {
 		},
 
 		_doFrame: function(timestamp) {
+			this._hasDoneFrame = true;
 			this._updateFps(timestamp);
 
 			var fullDelta = timestamp - (this._lastTimestamp || timestamp);
@@ -2950,7 +3005,7 @@ L7.CanvasBoardRenderMixin = {
 
 			if (!paused) {
 				this.go();
-			} else {
+			} else if(!this._hasDoneFrame) {
 				this._doFrame(Date.now());
 			}
 
@@ -3137,7 +3192,6 @@ L7.CanvasBoardRenderMixin = {
 			this.gl.enableVertexAttribArray(this.gl.vertexPositionAttribute);
 
 			this.gl.offsetsAttribute = this.gl.getAttribLocation(shaderProgram, "aOffsets");
-			console.log('offsetsAttribute: ' + this.gl.offsetsAttribute);
 			this.gl.enableVertexAttribArray(this.gl.offsetsAttribute);
 
 			this.gl.centerPositionAttribute = this.gl.getAttribLocation(shaderProgram, "aVertexCenter");
@@ -3700,14 +3754,14 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 
 
 (function() {
-	L7.FadeIn = function(config) {
+	L7.TransitionFadeIn = function(config) {
 		config.color = config.from;
 		L7.FadeBase.call(this, config);
 	};
 
-	L7.FadeIn.prototype = new L7.FadeBase();
+	L7.TransitionFadeIn.prototype = new L7.FadeBase();
 
-	L7.FadeIn.prototype.updateColor = function(color, percentage) {
+	L7.TransitionFadeIn.prototype.updateColor = function(color, percentage) {
 		color[3] = 1 - percentage;
 	};
 })();

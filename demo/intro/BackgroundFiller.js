@@ -1,7 +1,7 @@
 i.BackgroundFiller = {
 	fill: function(board) {
 		board.ani.sequence(function(ani) {
-			ani.wait(15200);
+			ani.wait(16200);
 			ani.repeat(Infinity, function(ani) {
 				ani.shimmer({
 					targets: board.query(function(t) {

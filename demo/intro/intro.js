@@ -22,11 +22,14 @@ function lightSwitchBoard(board, delay, overlayColor, volume) {
 		});
 		ani.setProperty({
 			property: 'overlayColor',
-			value: overlayColor || [0,0,0,1]
+			value: overlayColor || [0, 0, 0, 1]
 		});
 		ani.wait(delay);
 		ani.invoke(function() {
-			i.sounds.switch.play({volume: volume});
+			i.sounds.
+			switch.play({
+				volume: volume
+			});
 		});
 		ani.copyProperty({
 			srcProperty: '_overlayColorSaved',
@@ -44,12 +47,12 @@ function onImagesLoaded(images) {
 	var boards = [];
 
 	var borderWidth = 1;
-	var borderWidths = [4, 0, 1, 2, 0, 0];
-	var tileSizes = [7, 11, 15, 19, 6, 6];
-	var lightSwitchDelay = [15000, 11000, 9000, 5000];
-	var lightSwitchColors = [[40,40,40,1], undefined, undefined, undefined];
+	var borderWidths = [4, 0, 1, 2, 0, 0, 0];
+	var tileSizes = [7, 11, 15, 19, 6, 6, 6];
+	var lightSwitchDelay = [16000, 13000, 9800, 5700];
+	var lightSwitchColors = [[40, 40, 40, 1], undefined, undefined, undefined];
 	var lightSwitchVolumes = [20, 40, 60, 90];
-	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, null, i.ChromeFiller];
+	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, undefined, i.ChromeFiller, undefined];
 
 	images.forEach(function(image, i) {
 		var tileSize = tileSizes[i];
@@ -75,7 +78,7 @@ function onImagesLoaded(images) {
 	});
 
 	var foreground = boards[3];
-	var chrome = boards.last;
+	var chrome = boards[boards.length - 2];
 	chrome.offsetY = - foreground.pixelHeight;
 	chrome.parallaxRatio = 0;
 
@@ -94,8 +97,16 @@ function onImagesLoaded(images) {
 		container: document.getElementById('introContainer'),
 		fpsContainer: fpsContainer
 	});
+
+	var outro = boards.last;
+	outro.parallaxRatio = 0;
+	outro.visible = false;
+	outro.tiles.forEach(function(tile) {
+		tile.color[3] = 0;
+	});
+
 	game.on('pausechanged', function(paused) {
-		if(paused) {
+		if (paused) {
 			soundManager.pauseAll();
 		} else {
 			soundManager.resumeAll();
@@ -143,7 +154,7 @@ function onImagesLoaded(images) {
 			p: L7.p(75, 14)
 		},
 		{
-			p: L7.p(92, 14) 
+			p: L7.p(92, 14)
 		},
 		{
 			p: L7.p(92, 16)
@@ -204,17 +215,7 @@ function onImagesLoaded(images) {
 
 	var appleXs = [44, 100, 102, 105, 106, 110, 125];
 	var applePositions = [
-		L7.p(44, 15),
-		L7.p(71, 15),
-		L7.p(107, 14),
-		L7.p(113, 17),
-		L7.p(138, 9),
-		L7.p(167, 13),
-		L7.p(173, 13),
-		L7.p(175, 13),
-		L7.p(179, 13)
-	];
-
+	L7.p(44, 15), L7.p(71, 15), L7.p(107, 14), L7.p(113, 17), L7.p(138, 9), L7.p(167, 13), L7.p(173, 13), L7.p(175, 13), L7.p(179, 13)];
 
 	applePositions.forEach(function(position) {
 		var apple = new i.ClassicApple({
@@ -254,24 +255,16 @@ function onImagesLoaded(images) {
 					volume: 10
 				});
 			});
-			ani.together(function(ani) {
-				//ani.repeat(Infinity, function(ani) {
-					//ani.waitBetween(4000, 8000);
-					//ani.invoke(function() {
-						//i.sounds['bleep' + L7.rand(0, 4)].play( { volume: 50 });
-					//});
-				//});
-				ani.repeat(9, function(ani) {
-					ani.wait(3000);
-					ani.invoke(function() {
-						i.sounds.bubbles.setVolume(i.sounds.bubbles.volume + 10);
-					});
+			ani.repeat(9, function(ani) {
+				ani.wait(3000);
+				ani.invoke(function() {
+					i.sounds.bubbles.setVolume(i.sounds.bubbles.volume + 10);
 				});
 			});
 		});
 
 		ani.sequence(function(ani) {
-			ani.wait(5000);
+			ani.wait(6000);
 
 			var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
 			duration -= game.width;
@@ -288,6 +281,28 @@ function onImagesLoaded(images) {
 					game.viewport.scrollX(1);
 				});
 				ani.wait(10);
+			});
+			ani.wait(14000);
+			ani.setProperty({
+				targets: [outro],
+				property: 'visible',
+				value: true
+			});
+			ani.together(function(ani) {
+				ani.repeat(10, function(ani) {
+					ani.wait(300);
+					ani.invoke(function() {
+						i.sounds.bubbles.setVolume(i.sounds.bubbles.volume - 10);
+					});
+				});
+				ani.fadeIn({
+					targets: outro.tiles,
+					duration: 4000
+				});
+			});
+			ani.wait(1000);
+			ani.invoke(function() {
+				game.paused = true;
 			});
 		});
 	});
@@ -333,7 +348,7 @@ if (L7.isSupportedBrowser) {
 		};
 
 		var imageLoader = new L7.ImageLoader({
-			srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "overlay.png", "chrome.png"],
+			srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "overlay.png", "chrome.png", "outro.png"],
 			handler: onImagesLoaded,
 			loadNow: true
 		});
