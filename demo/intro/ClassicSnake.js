@@ -209,6 +209,31 @@
 			});
 		},
 
+		burp: function() {
+			var targets = [this.pieces[0]];
+			this.ani.sequence(function(ani) {
+				ani.wait(2500);
+				ani.tween({
+					targets: targets,
+					property: 'scale',
+					from: 1,
+					to: 1.75,
+					duration: 100
+				});
+				ani.invoke(function() {
+					i.sounds.burp.play();
+				});
+				ani.wait(400);
+				ani.tween({
+					targets: targets,
+					property: 'scale',
+					from: 1.75,
+					to: 1,
+					duration: 75
+				});
+			});
+		},
+
 		update: function(delta, timestamp) {
 			L7.Actor.prototype.update.call(this, delta, timestamp);
 
@@ -224,8 +249,8 @@
 					this.direction = this.script[this.curScript].p.delta(this.script[this.curScript-1].p).normalize();
 					this.pieces.first.nextPosition = this.position.add(this.direction);
 				}
-				if((this.curScript === this.script.length - 1) && this.stopAfterScript) {
-					this.active = false;
+				if(this.curScript === this.script.length - 1) {
+					this.fireEvent('scriptdone', this);
 				}
 			}
 

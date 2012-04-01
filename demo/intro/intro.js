@@ -122,7 +122,7 @@ function onImagesLoaded(images) {
 	game.paused = true;
 
 	var snake = new i.ClassicSnake({
-		position: L7.p(-15, 15),
+		position: L7.p(-20, 15),
 		script: [{
 			p: L7.p(14, 15)
 		},
@@ -210,11 +210,15 @@ function onImagesLoaded(images) {
 		{
 			p: L7.p(154, 13)
 		}],
-		stopAfterScript: true,
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
 		rate: 170
+	});
+
+	snake.on('scriptdone', function(snake) {
+		snake.active = false;
+		snake.burp();
 	});
 
 	boards[2].addActor(snake);
@@ -288,7 +292,7 @@ function onImagesLoaded(images) {
 				});
 				ani.wait(10);
 			});
-			ani.wait(14000);
+			ani.wait(13000);
 			ani.setProperty({
 				targets: [outro],
 				property: 'visible',
@@ -354,6 +358,11 @@ if (L7.isSupportedBrowser) {
 			bite: soundManager.createSound({
 				id: 'bite',
 				url: 'audio/bite.mp3',
+				autoLoad: true
+			}),
+			burp: soundManager.createSound({
+				id: 'burp',
+				url: 'audio/burp.mp3',
 				autoLoad: true
 			})
 		};
