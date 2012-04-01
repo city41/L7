@@ -223,6 +223,9 @@
 					this.direction = this.script[this.curScript].p.delta(this.script[this.curScript-1].p).normalize();
 					this.pieces.first.nextPosition = this.position.add(this.direction);
 				}
+				if((this.curScript === this.script.length - 1) && this.stopAfterScript) {
+					this.active = false;
+				}
 			}
 
 			this._offsetElapsed += delta;

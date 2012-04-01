@@ -105,63 +105,122 @@ function onImagesLoaded(images) {
 	game.paused = true;
 
 	var snake = new i.ClassicSnake({
-		position: L7.p(-9, 15),
+		position: L7.p(-15, 15),
 		script: [{
-			p: L7.p(10, 15),
-			r: 75
+			p: L7.p(14, 15)
 		},
 		{
-			p: L7.p(10, 7)
+			p: L7.p(14, 17)
 		},
 		{
-			p: L7.p(18, 7),
-			r: 600
+			p: L7.p(27, 17)
 		},
 		{
-			p: L7.p(18, 12)
+			p: L7.p(27, 13)
 		},
 		{
-			p: L7.p(10, 12),
-			r: 150
+			p: L7.p(44, 13)
 		},
 		{
-			p: L7.p(10, 12)
+			p: L7.p(44, 16)
 		},
 		{
-			p: L7.p(11, 12)
+			p: L7.p(68, 16)
+		},
+		{
+			p: L7.p(68, 15)
+		},
+		{
+			p: L7.p(80, 15)
+		},
+		{
+			p: L7.p(80, 17)
+		},
+		{
+			p: L7.p(75, 17)
+		},
+		{
+			p: L7.p(75, 14)
+		},
+		{
+			p: L7.p(92, 14) 
+		},
+		{
+			p: L7.p(92, 16)
+		},
+		{
+			p: L7.p(103, 16)
+		},
+		{
+			p: L7.p(106, 16)
+		},
+		{
+			p: L7.p(106, 14)
+		},
+		{
+			p: L7.p(110, 14)
+		},
+		{
+			p: L7.p(110, 17)
+		},
+		{
+			p: L7.p(114, 17)
+		},
+		{
+			p: L7.p(114, 14)
+		},
+		{
+			p: L7.p(127, 14)
+		},
+		{
+			p: L7.p(127, 9)
+		},
+		{
+			p: L7.p(142, 9)
+		},
+		{
+			p: L7.p(142, 15)
+		},
+		{
+			p: L7.p(228, 15)
+		},
+		{
+			p: L7.p(228, 13)
+		},
+		{
+			p: L7.p(155, 13)
+		},
+		{
+			p: L7.p(154, 13)
 		}],
+		stopAfterScript: true,
 		direction: i.Direction.East,
 		size: 4,
 		active: false,
-		rate: 150
+		rate: 170
 	});
 
 	boards[2].addActor(snake);
 
-	var appleXs = [40, 100, 102, 105, 106, 110, 125];
+	var appleXs = [44, 100, 102, 105, 106, 110, 125];
+	var applePositions = [
+		L7.p(44, 15),
+		L7.p(71, 15),
+		L7.p(107, 14),
+		L7.p(113, 17),
+		L7.p(138, 9),
+		L7.p(167, 13),
+		L7.p(173, 13),
+		L7.p(175, 13),
+		L7.p(179, 13)
+	];
 
-	appleXs.forEach(function(x) {
+
+	applePositions.forEach(function(position) {
 		var apple = new i.ClassicApple({
-			position: L7.p(x, 15)
+			position: position
 		});
 		boards[2].addActor(apple);
-		return;
-
-		apple.ani.repeat(Infinity, function(ani) {
-			ani.tween({
-				property: 'scale',
-				from: 1,
-				to: 1.2,
-				duration: 500
-			});
-			ani.wait(200);
-			ani.tween({
-				property: 'scale',
-				from: 1.2,
-				to: 1,
-				duration: 500
-			});
-		});
 	});
 
 	var overlay = boards[4];
