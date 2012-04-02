@@ -939,9 +939,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		_tweenValue: function(elapsed, from, to, duration) {
 			var position = this._easeFunc(elapsed, from, to - from, duration);
 
-			if (this.jitter) {
-				position += L7.rand(-this.jitter, this.jitter);
+			if (_.isNumber(this.jitterMin)) {
+				position += L7.rand(this.jitterMin, this.jitterMax || 0);
 			}
+
 			return position;
 		}
 	};

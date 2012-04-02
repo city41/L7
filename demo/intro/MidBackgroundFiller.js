@@ -6,8 +6,7 @@
 			i.FillerUtil.addHighWater(board, L7.p(128, 2), 30, 18);
 
 			i.FillerUtil.addSmoke(board, L7.p(104, 7), 1);
-		},
-
+		}
 	};
 })();
 

@@ -16,9 +16,19 @@ a {
 	color: #ff5a00;
 }
 
-#browserSupportImg {
+#loadingContainer {
+	height: 371px;
+	width: 951px;
 }
 
+#loadingText {
+	text-align: center;
+	width: 400px;
+	height: 40px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 100px;
+}
 
 #introContainer {
 	margin-top: 90px;

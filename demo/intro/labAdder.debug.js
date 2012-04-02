@@ -152,3 +152,1331 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 else this.game&&this.game.replaceBoard(this.toBoard)},update:function(){this.delegate.update.apply(this.delegate,arguments)},render:function(){this.delegate.render.apply(this.delegate,arguments)}};Object.defineProperty(L7.FadeOutIn.prototype,"viewport",{set:function(a){this._viewport=a;this.delegate&&(this.delegate.viewport=a)},get:function(){return this._viewport},enumerable:!0})})();
 (function(){"undefined"===typeof Array.prototype.add&&(Array.prototype.add=function(a){this.push(a);return this});"undefined"===typeof Array.prototype.remove&&(Array.prototype.remove=function(a){a=this.indexOf(a);0<=a&&this.splice(a,1);return this});"undefined"===typeof Array.prototype.last&&Object.defineProperty(Array.prototype,"last",{get:function(){return this[this.length-1]},enumerable:!1});"undefined"===typeof Array.prototype.first&&Object.defineProperty(Array.prototype,"first",{get:function(){return this[0]},
 enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1);var d=_.isNumber(b)?a:0,a=_.isNumber(b)?b:a,b=Math.random()*(a-d)+d;return d===(d|0)&&a===(a|0)&&!c?Math.floor(b):b};L7.coin=function(){return 0===L7.rand(0,2)};L7.degreesToRadians=function(a){return(a||0)*Math.PI/180};L7.radiansToDegrees=function(a){return 180*(a||0)/Math.PI}})();
+i.BackgroundFiller = {
+	fill: function(board) {
+		board.ani.sequence(function(ani) {
+			ani.wait(16200);
+			ani.repeat(Infinity, function(ani) {
+				ani.shimmer({
+					targets: board.query(function(t) {
+						return t.color[0] === 193;
+					}),
+					minAlpha: 0.2,
+					maxAlpha: 0.9,
+					baseRate: 1000,
+					rateVariance: 0.4,
+					color: [250, 250, 120, 1]
+				});
+			});
+		});
+	}
+};
+
+(function() {
+	var _socialNetworks = {
+		facebook: 'http://www.facebook.com/sharer.php?u=',
+		twitter: 'https://twitter.com/home?status=Check out Lab Adder, an upcoming HTML5 game: ',
+		gplus: 'https://plusone.google.com/_/+1/confirm?hl=en&url='
+	};
+
+	function popup(key) {
+		var url = _socialNetworks[key] + window.location;
+
+		window.open(url, '_blank', 'channelmode=0,directories=0,fullscreen=0,location=1,width=500,height=500');
+	}
+
+	i.ChromeFiller = {
+		fill: function(board) {
+			this._board = board;
+
+			board.tiles.forEach(function(tile) {
+				tile.opaque = true;
+			});
+
+			this._addClickActor(board, 'facebook', L7.p(124, 2));
+			this._addClickActor(board, 'gplus', L7.p(134, 2));
+			this._addClickActor(board, 'twitter', L7.p(144, 2));
+		},
+
+		_addClickActor: function(board, key, position) {
+			var click = new L7.Actor({
+				color: [0,0,0,0],
+				position: position,
+				shape: [[5, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1]]
+			});
+
+			board.addActor(click);
+
+			click.on('click', function() {
+				popup(key);
+			});
+		},
+
+		_addPlayButton: function(board) {
+			if (!this.playButton) {
+				this.playButton = new L7.Actor({
+					color: [212, 212, 212, 1],
+					shape: [[5, 0, 0, 0], [1, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 0], [1, 0, 0, 0]],
+					position: L7.p(2, 3)
+				});
+				this.playButton.on('click', this._togglePause, this);
+			}
+
+			board.addActor(this.playButton);
+		},
+
+		_addPauseButton: function(board) {
+			var g = [212, 212, 212, 1];
+			var b = [0,0,0,0];
+
+			if (!this.pauseButton) {
+				this.pauseButton = new L7.Actor({
+					shape: [[5, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]],
+					color: [[g, g, b, g, g], [g, g, b, g, g], [g, g, b, g, g], [g, g, b, g, g], [g, g, b, g, g]],
+					position: L7.p(2, 3)
+				});
+				this.pauseButton.on('click', this._togglePause, this);
+			}
+
+			board.addActor(this.pauseButton);
+		},
+
+		_togglePause: function(actor) {
+			actor.board.game.paused = ! actor.board.game.paused;
+
+			if (actor.board.game.paused) {
+				if (this.pauseButton) {
+					this._board.removeActor(this.pauseButton);
+				}
+				this._addPlayButton(this._board);
+			} else {
+				if (this.playButton) {
+					this._board.removeActor(this.playButton);
+				}
+				this._addPauseButton(this._board);
+			}
+		}
+	};
+})();
+
+(function() {
+	var _appleConfig = {
+		team: 'apple',
+		color: [255, 0, 0, 1],
+		die: function() {
+			if(this.board) {
+				this.board.removeActor(this);
+			}
+			this.fireEvent('death', this);
+		}
+	};
+
+	i.ClassicApple = function(config) {
+		var actor = new L7.Actor(_.extend(config || {}, _appleConfig));
+		return actor;
+	};
+
+})();
+
+
+(function() {
+	var _evens = [];
+	var _odds = [];
+	function setupSlinkAnimation(snake) {
+		var span = 80;
+		var scale = 1.25;
+		_evens = [];
+		_odds = [];
+
+		snake.pieces.forEach(function(piece, i) {
+			if (i > 0) {
+				if (i & 1 === 1) {
+					_odds.push(piece);
+				} else {
+					_evens.push(piece);
+				}
+			}
+		});
+
+		snake.ani.repeat(Infinity, function(ani) {
+			ani.together(function(ani) {
+				ani.sequence({
+					targets: _evens
+				},
+				function(ani) {
+					ani.wait(span);
+					ani.tween({
+						property: 'scale',
+						from: 1,
+						to: scale,
+						duration: span / 2
+					});
+					ani.tween({
+						property: 'scale',
+						from: scale,
+						to: 1,
+						duration: span / 2
+					});
+				});
+				ani.sequence({
+					targets: _odds
+				},
+				function(ani) {
+					ani.tween({
+						property: 'scale',
+						from: 1,
+						to: scale,
+						duration: span / 2
+					});
+					ani.tween({
+						property: 'scale',
+						from: scale,
+						to: 1,
+						duration: span / 2
+					});
+					ani.wait(span);
+				});
+			});
+		});
+	}
+
+	var _snakeConfig = {
+		keyInputs: {
+			left: {
+				repeat: false,
+				handler: function() {
+					this.setDirection(i.Direction.West);
+				}
+			},
+			right: {
+				repeat: false,
+				handler: function() {
+					this.setDirection(i.Direction.East);
+				}
+			},
+			up: {
+				repeat: false,
+				handler: function() {
+					this.setDirection(i.Direction.North);
+				}
+			},
+			down: {
+				repeat: false,
+				handler: function() {
+					this.setDirection(i.Direction.South);
+				}
+			}
+		},
+		setDirection: function(dir) {
+			if (!this._directionPending) {
+				var added = this.direction.add(dir);
+
+				if (added.x !== 0 && added.y !== 0) {
+					this.direction = dir;
+					this._directionPending = true;
+				}
+			}
+		},
+		team: 'snake',
+		hitDetection: {
+			enabled: function() {
+				return this.active;
+			},
+			apple: function(tile, actor) {
+				i.sounds.bite.play({ volume: L7.rand(50, 100) });
+				this.grow();
+				actor.die();
+			}
+		},
+		color: [0, 255, 0, 1],
+
+		moveSnake: function() {
+			for (var i = this.pieces.length - 1; i > 0; --i) {
+				var piece = this.pieces[i];
+
+				this.board.movePiece({
+					piece: piece,
+					from: piece.position,
+					to: piece.nextPosition
+				});
+
+				var nextPiece = this.pieces[i - 1];
+				piece.nextPosition = nextPiece.nextPosition;
+			}
+
+			var firstPiece = this.pieces.first;
+
+			this.board.movePiece({
+				piece: firstPiece,
+				from: firstPiece.position,
+				to: firstPiece.nextPosition
+			});
+
+			firstPiece.nextPosition = firstPiece.nextPosition.add(this.direction);
+			this.position = firstPiece.position;
+			this._directionPending = false;
+		},
+
+		addPiece: function() {
+			var position, nextPosition;
+			if (this.pieces.length === 1) {
+				nextPosition = this.pieces.last.position;
+				position = nextPosition.add(this.direction.negate());
+			} else {
+				delta = this.pieces.last.position.delta(this.pieces[this.pieces.length - 2].position);
+				position = this.pieces.last.position.add(delta);
+				nextPosition = this.pieces.last.position;
+			}
+
+			var newPiece = {
+				position: position,
+				nextPosition: nextPosition,
+				color: this.color,
+				owner: this,
+				scale: 0.85
+			};
+
+			this.pieces.push(newPiece);
+
+			for (var i = 0; i < this.pieces.length - 1; ++i) {
+				this.pieces[i].scale = 1;
+			}
+
+			if (this.board) {
+				this.board.movePiece({
+					piece: newPiece,
+					from: newPiece.position,
+					to: newPiece.position
+				});
+				if((this.pieces.length-1) & 1 === 1) {
+					_odds.push(newPiece);	
+				} else {
+					_evens.push(newPiece);
+				}
+			}
+		},
+
+		grow: function() {
+			if (this.board) {
+				this.doEatAnimation();
+			} else {
+				this.addPiece();
+			}
+		},
+
+		doEatAnimation: function() {
+			var me = this;
+			this.ani.sequence(function(ani) {
+				me.pieces.forEach(function(piece) {
+					ani.tween({
+						targets: [piece],
+						property: 'scale',
+						from: 1,
+						to: 1.5,
+						duration: 75
+					});
+					ani.tween({
+						targets: [piece],
+						property: 'scale',
+						from: 1.5,
+						to: 1,
+						duration: 75
+					});
+				});
+				ani.invoke(function() {
+					me.addPiece();
+				});
+				ani.die();
+			});
+		},
+
+		burp: function() {
+			var targets = [this.pieces[0]];
+			this.ani.sequence(function(ani) {
+				ani.wait(2800);
+				ani.tween({
+					targets: targets,
+					property: 'scale',
+					from: 1,
+					to: 1.75,
+					duration: 100,
+					jitterMin: 0,
+					jitterMax: 0.2
+				});
+				ani.invoke(function() {
+					i.sounds.burp.play();
+				});
+				ani.tween({
+					targets: targets,
+					property: 'scale',
+					from: 1.75,
+					to: 1.75,
+					jitterMin: -0.1,
+					jitterMax: 0.2,
+					duration: 400
+				});
+				ani.tween({
+					targets: targets,
+					property: 'scale',
+					from: 1.75,
+					to: 1,
+					duration: 75
+				});
+			});
+		},
+
+		update: function(delta, timestamp) {
+			L7.Actor.prototype.update.call(this, delta, timestamp);
+
+			if (!this.active) {
+				return;
+			}
+
+			if(this.script && this.curScript < this.script.length - 1) {
+				if(this.position.equals(this.script[this.curScript].p)) {
+					this.rate = this.script[this.curScript].r || this.rate;
+
+					this.curScript += 1;
+					this.direction = this.script[this.curScript].p.delta(this.script[this.curScript-1].p).normalize();
+					this.pieces.first.nextPosition = this.position.add(this.direction);
+				}
+				if(this.curScript === this.script.length - 1) {
+					this.fireEvent('scriptdone', this);
+				}
+			}
+
+			this._offsetElapsed += delta;
+
+			if (this._offsetElapsed >= this.rate) {
+				this._offsetElapsed -= this.rate;
+				this.moveSnake();
+			}
+
+			var offset = this._offsetElapsed / this.rate;
+
+			this.pieces.forEach(function(piece) {
+				if (piece.nextPosition) {
+					var towards = piece.nextPosition.delta(piece.position);
+					piece.offset = {
+						x: offset * towards.x,
+						y: offset * towards.y
+					};
+				}
+			});
+
+			this.hitManager.detectHitsForActor(this);
+		}
+	};
+
+	i.ClassicSnake = function(config) {
+		config = _.extend({
+			rate: 1000,
+			direction: window.i.Direction.East,
+			active: false
+		},
+		config);
+
+		var actor = new L7.Actor(_.extend(config, _snakeConfig));
+		actor._offsetElapsed = 0;
+
+		if(actor.script) {
+			actor.curScript = 0;
+		}
+
+		actor.pieces = [new L7.Piece({
+			position: actor.position,
+			nextPosition: actor.position.add(actor.direction),
+			color: [0, 150, 0, 1],
+			owner: actor,
+			scale: 1
+		})];
+
+		var size = config.size || 1;
+		for (var i = 1; i < size; ++i) {
+			actor.grow();
+		}
+
+		if (config.dontGrow) {
+			actor.grow = function() {};
+		}
+
+		actor.hitManager = new L7.HitManager();
+
+		Object.defineProperty(actor, 'board', {
+			get: function() {
+				return this._board;
+			},
+			set: function(b) {
+				this._board = b;
+				//setupSlinkAnimation(this);
+			}
+		});
+
+		return actor;
+	};
+
+})();
+
+(function() {
+	i.Direction = {
+		North: L7.p(0, -1),
+		East: L7.p(1, 0),
+		South: L7.p(0, 1),
+		West: L7.p(-1, 0)
+	};
+})();
+
+
+
+(function() {
+	var noColor = [121, 133, 164, 1];
+
+	i.FillerUtil = {
+		pulsate: function(board, position) {
+			board.ani.repeat(Infinity, function(ani) {
+				ani.shimmer({
+					targets: [board.tileAt(position)],
+					minAlpha: 0,
+					maxAlpha: 0.9,
+					baseRate: 600,
+					rateVariance: 0
+				});
+			});
+		},
+
+		addSmoke: function(board, position, radius, life) {
+			life = life || 2;
+			var fireSystem = new L7.ParticleSystem({
+				totalParticles: 50,
+				duration: Infinity,
+				gravity: L7.p(),
+				centerOfGravity: L7.p(),
+				angle: - 90,
+				angleVar: 8,
+				speed: 2,
+				speedVar: 1,
+				radialAccel: 0,
+				radialAccelVar: 0,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: position,
+				posVar: L7.p(radius, 1),
+				life: life,
+				lifeVar: 0.15,
+				emissionRate: 50 / life,
+				startColor: L7.Color.fromFloats(0.5, 0.5, 0.5, 1),
+				startColorVar: [0, 0, 0, 0],
+				endColor: L7.Color.fromFloats(1, 1, 1, 0.25),
+				endColorVar: [0, 0, 0, 0],
+				active: true
+			});
+
+			board.addDaemon(fireSystem);
+		},
+
+		addSparks: function(board, position) {
+			var sparks = new L7.ParticleSystem({
+				totalParticles: 10,
+				duration: Infinity,
+				gravity: L7.p(0, 0),
+				centerOfGravity: L7.p(),
+				angle: - 70,
+				angleVar: 30,
+				speed: 40,
+				speedVar: 3,
+				radialAccel: 10,
+				radialAccelVar: 2,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: position,
+				posVar: L7.p(),
+				life: 0.3,
+				lifeVar: 0,
+				emissionRate: 10,
+				startColor: [255, 255, 200, 1],
+				startColorVar: [10, 10, 0, 0],
+				endColor: [255, 255, 255, 0.25],
+				endColorVar: [0, 0, 0, 0],
+				active: true,
+				startSize: 0.75,
+				startSizeVar: 0,
+				endSize: 0.75,
+				endSizeVar: 0
+			});
+
+			board.addDaemon(sparks);
+		},
+
+		addWater: function(board, corner, width, height) {
+			var bubbles = new L7.ParticleSystem({
+				totalParticles: 4,
+				duration: Infinity,
+				gravity: L7.p(),
+				centerOfGravity: L7.p(),
+				angle: - 90,
+				angleVar: 0,
+				speed: 4,
+				speedVar: 0.4,
+				radialAccel: 0,
+				radialAccelVar: 0,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: L7.p(corner.x + width / 2, corner.y + height),
+				posVar: L7.p(width / 2, 0),
+				life: 0.7,
+				lifeVar: 0.15,
+				emissionRate: 4,
+				startColor: [255, 255, 255, 1],
+				startColorVar: [0, 0, 0, 0],
+				endColor: [145, 220, 255, 1],
+				endColorVar: [0, 0, 0, 0],
+				active: true
+			});
+
+			board.addDaemon(bubbles);
+		},
+
+		addHighWater: function(board, corner, width, height) {
+			var bubbles = new L7.ParticleSystem({
+				totalParticles: 30,
+				duration: Infinity,
+				gravity: L7.p(),
+				centerOfGravity: L7.p(),
+				angle: - 90,
+				angleVar: 0,
+				speed: 3,
+				speedVar: 0.6,
+				radialAccel: 0,
+				radialAccelVar: 0,
+				tangentialAccel: 0,
+				tangentialAccelVar: 0,
+				position: L7.p(corner.x + width / 2, corner.y + height),
+				posVar: L7.p(width / 2, 0),
+				life: 5,
+				lifeVar: 0.15,
+				emissionRate: 7,
+				startColor: [255, 255, 255, 1],
+				startColorVar: [0, 0, 0, 0],
+				endColor: [145, 220, 255, 1],
+				endColorVar: [0, 0, 0, 0],
+				active: true
+			});
+
+			board.addDaemon(bubbles);
+		},
+
+		addBlueScreen: function(board, position, width, height) {
+			var whiteColor = [255, 255, 255, 1];
+			var blueColor = [0, 0, 255, 1];
+
+			var shape = [];
+			for (var i = 0; i < height; ++i) {
+				var row = [];
+				for (var k = 0; k < width; ++k) {
+					row.push(1);
+				}
+				shape.push(row);
+			}
+
+			shape[0][0] = 5;
+
+			var blueScreen = new L7.Actor({
+				shape: shape,
+				position: position
+			});
+
+			board.addActor(blueScreen);
+
+			function doBlueScreen() {
+				for (var c = position.x, cl = position.x + width; c < cl; ++c) {
+					for (var r = position.y, rl = position.y + height; r < rl; ++r) {
+						var piece = blueScreen.pieceAt(c, r);
+
+						var rand = L7.rand(0, 100);
+
+						if (rand < 33) {
+							piece.color = whiteColor;
+							piece.scale = 0.60;
+						} else {
+							piece.color = blueColor;
+							piece.scale = 0;
+						}
+					}
+				}
+			}
+
+			blueScreen.ani.repeat(Infinity, function(ani) {
+				ani.invoke(doBlueScreen);
+				ani.waitBetween(1000, 3000);
+			});
+		},
+
+		addBarGraph: function(board, position, width, height, barColor) {
+			barColor = barColor || [240, 186, 89, 1];
+
+			var shape = [];
+			for (var i = 0; i < height; ++i) {
+				var row = [];
+				for (var k = 0; k < width; ++k) {
+					row.push(1);
+				}
+				shape.push(row);
+			}
+
+			shape[0][0] = 5;
+
+			var barGraph = new L7.Actor({
+				shape: shape,
+				position: position
+			});
+
+			board.addActor(barGraph);
+
+			function doBarGraph() {
+				for (var c = position.x, cl = position.x + width; c < cl; ++c) {
+					var max = L7.rand(0, height) + position.y;
+					for (var r = position.y, rl = position.y + height; r < rl; ++r) {
+						var piece = barGraph.pieceAt(c, r);
+
+						if (r >= max) {
+							piece.color = barColor;
+						} else {
+							piece.color = noColor;
+						}
+					}
+				}
+			}
+
+			barGraph.ani.repeat(Infinity, function(ani) {
+				ani.invoke(doBarGraph);
+				ani.waitBetween(100, 1000);
+			});
+		},
+
+		addHeartWave: function(board, position, width, height, barColor) {
+			barColor = barColor || [255, 255, 0, 1];
+
+			var shape = [];
+			for (var i = 0; i < height; ++i) {
+				var row = [];
+				for (var k = 0; k < width; ++k) {
+					row.push(1);
+				}
+				shape.push(row);
+			}
+
+			shape[0][0] = 5;
+
+			var heartWave = new L7.Actor({
+				shape: shape,
+				position: position
+			});
+
+			board.addActor(heartWave);
+
+			var blipPosition = position.add(0, 1);
+			var nonBlipHeight = position.y + 2;
+
+			function doHeartWave() {
+				for (var c = position.x, cl = position.x + width; c < cl; ++c) {
+					for (var r = position.y, rl = position.y + height; r < rl; ++r) {
+						var piece = heartWave.pieceAt(c, r);
+
+						if (piece.position.equals(blipPosition) || (piece.position.y === nonBlipHeight && piece.position.x !== blipPosition.x)) {
+							piece.color = barColor;
+						} else {
+							piece.color = noColor;
+						}
+					}
+				}
+
+				blipPosition = blipPosition.add(1, 0);
+				if (blipPosition.x >= position.x + width) {
+					blipPosition = position.add(0, 1);
+				}
+			}
+
+			heartWave.ani.repeat(Infinity, function(ani) {
+				ani.invoke(doHeartWave);
+				ani.wait(400);
+			});
+		},
+
+		addSinWave: function(board, position, width, height, barColor) {
+			barColor = barColor || [255, 255, 0, 1];
+			var barColor2 = [0, 0, 255, 1];
+			var backColor = [100, 100, 100, 1];
+
+			var shape = [];
+			for (var i = 0; i < height; ++i) {
+				var row = [];
+				for (var k = 0; k < width; ++k) {
+					row.push(1);
+				}
+				shape.push(row);
+			}
+
+			shape[0][0] = 5;
+
+			var sinWave = new L7.Actor({
+				shape: shape,
+				position: position
+			});
+
+			board.addActor(sinWave);
+
+			var sinCounter = 0;
+
+			function doSinWave() {
+				var l = sinWave.pieces.length;
+				while (l--) {
+					sinWave.pieces[l].color = backColor;
+				}
+
+				for (var i = 0; i < width; ++i) {
+					var x = position.x + i;
+					var yOffset = (Math.sin(sinCounter + i) * ((height - 1) / 2)) | 0;
+					var y = (position.y + (height / 2) + yOffset) | 0;
+					var piece = sinWave.pieceAt(x, y);
+					piece.color = barColor;
+
+					yOffset = -yOffset;
+					y = (position.y + (height / 2) + yOffset) | 0;
+					piece = sinWave.pieceAt(x, y);
+					piece.color = barColor2;
+				}++sinCounter;
+			}
+
+			sinWave.ani.repeat(Infinity, function(ani) {
+				ani.invoke(doSinWave);
+				ani.wait(600);
+			});
+		}
+
+	};
+})();
+
+i.ForegroundFiller = {
+	fill: function(board) {
+		i.FillerUtil.addWater(board, L7.p(1, 1), 3, 8);
+		i.FillerUtil.addWater(board, L7.p(61, 4), 2, 7);
+		i.FillerUtil.addWater(board, L7.p(126, 7), 9, 4);
+
+		board.ani.repeat(Infinity, function(ani) {
+			ani.shimmer({
+				targets: board.rect(22, 7, 4, 5),
+				minAlpha: 0.4,
+				maxAlpha: 0.7,
+				baseRate: 500,
+				rateVariance: 0.2
+			});
+		});
+
+		this._addFirstAlien(board);
+		this._addSecondAlien(board);
+
+		// last alien enclosure
+		i.FillerUtil.addSmoke(board, L7.p(209, 10), 3, 3);
+
+		i.FillerUtil.pulsate(board, L7.p(63, 1));
+		i.FillerUtil.pulsate(board, L7.p(63, 3));
+		i.FillerUtil.pulsate(board, L7.p(133, 13));
+		i.FillerUtil.pulsate(board, L7.p(137, 13));
+	},
+
+	_addFirstAlien: function(board) {
+		var r = [179, 14, 52, 1];
+		var d = [128, 11, 37, 1];
+		var g = [98, 108, 36, 1];
+		var n = null;
+
+		var alien = new L7.Actor({
+			position: L7.p(2, 4),
+			shape: [[0, 5, 1, 0], [1, 1, 1, 1], [1, 1, 1, 1], [1, 0, 1, 0]],
+			color: [[n, r, r, n], [d, r, g, r], [d, d, r, r], [d, n, d, n]]
+		});
+
+		board.addActor(alien);
+
+		alien.ani.repeat(Infinity, function(ani) {
+			ani.waitBetween(600, 2000);
+			ani.invoke(function() {
+				alien.down(1);
+			});
+			ani.waitBetween(600, 2500);
+			ani.invoke(function() {
+				alien.up(1);
+			});
+		});
+	},
+
+	_addSecondAlien: function(board, position) {
+		var r = [179, 14, 52, 1];
+		var d = [128, 11, 37, 1];
+		var g = [98, 108, 36, 1];
+		var n = null;
+
+		var alien = new L7.Actor({
+			position: position || L7.p(130, 8),
+			shape: [[0, 5, 1, 1, 0], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1], [1, 0, 1, 0, 1]],
+			color: [[n, r, r, r, n], [d, g, r, g, r], [d, d, r, r, r], [d, n, d, n, d]]
+		});
+
+		board.addActor(alien);
+
+		alien.ani.repeat(Infinity, function(ani) {
+			ani.waitBetween(600, 2000);
+			ani.invoke(function() {
+				alien.left(1);
+			});
+			ani.waitBetween(300, 700);
+			ani.invoke(function() {
+				alien.left(1);
+			});
+			ani.waitBetween(800, 2000);
+			ani.invoke(function() {
+				alien.right(1);
+			});
+			ani.waitBetween(800, 2000);
+			ani.invoke(function() {
+				alien.right(1);
+			});
+		});
+	}
+};
+
+
+L7.useWebGL = ! (window.location.href.toLowerCase().indexOf('canvas') > 0);
+
+function lightSwitchBoard(board, delay, overlayColor, volume) {
+	var targets = board.query(function(tile) {
+		return tile.color && tile.color[3] !== 0;
+	});
+	board.ani.sequence({
+		targets: targets
+	},
+	function(ani) {
+		ani.copyProperty({
+			srcProperty: 'overlayColor',
+			destProperty: '_overlayColorSaved'
+		});
+		ani.copyProperty({
+			srcProperty: 'opaque',
+			destProperty: '_opaqueSaved'
+		});
+		ani.setProperty({
+			property: 'opaque',
+			value: true
+		});
+		ani.setProperty({
+			property: 'overlayColor',
+			value: overlayColor || [0, 0, 0, 1]
+		});
+		ani.wait(delay);
+		ani.invoke(function() {
+			i.sounds.
+			lightswitch.play({
+				volume: volume
+			});
+		});
+		ani.copyProperty({
+			srcProperty: '_overlayColorSaved',
+			destProperty: 'overlayColor'
+		});
+		ani.copyProperty({
+			srcProperty: '_opaqueSaved',
+			destProperty: 'opaque'
+		});
+		ani.invoke(function() {
+			delete board.standardBorderColor;
+			board.borderFill = [0,0,0,1];
+		});
+	});
+
+}
+
+function onImagesLoaded(images) {
+	var boards = [];
+
+	var borderWidth = 1;
+	var borderWidths = [4, 0, 1, 2, 0, 0, 0];
+	var tileSizes = [7, 11, 15, 19, 6, 6, 6];
+	var lightSwitchDelay = [16000, 13000, 9800, 5700];
+	var lightSwitchColors = [[40, 40, 40, 1], undefined, undefined, undefined];
+	var lightSwitchVolumes = [20, 40, 60, 90];
+	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, undefined, i.ChromeFiller, undefined];
+
+	images.forEach(function(image, i) {
+		var tileSize = tileSizes[i];
+		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
+
+		var board = levelLoader.load();
+		board.parallaxRatio = i * 0.6;
+		board.disableHitDetection = true;
+
+		if (boardFillers[i]) {
+			boardFillers[i].fill(board);
+		}
+
+		if (lightSwitchDelay[i]) {
+			lightSwitchBoard(board, lightSwitchDelay[i], lightSwitchColors[i], lightSwitchVolumes[i]);
+		}
+
+		boards.push(board);
+	});
+
+	boards[0].borderFill = lightSwitchColors[0];
+
+	var parallax = new L7.ParallaxBoard({
+		boards: boards
+	});
+
+	var foreground = boards[3];
+	var chrome = boards[boards.length - 2];
+	chrome.offsetY = - foreground.pixelHeight;
+	chrome.parallaxRatio = 0;
+
+	var fpsContainer = document.getElementById('fpsContainer');
+	if (window.location.href.toLowerCase().indexOf('showfps') > 0) {
+		fpsContainer.style.display = '';
+	} else {
+		fpsContainer.style.display = 'none';
+	}
+	
+	var gameContainer = document.getElementById('introContainer');
+	gameContainer.innerHTML = "";
+
+	var game = new L7.Game({
+		board: parallax,
+		width: foreground.pixelHeight * 3,
+		height: foreground.pixelHeight + chrome.pixelHeight,
+		initialAnchor: L7.p(),
+		container: gameContainer,
+		fpsContainer: fpsContainer
+	});
+	console.log('game width: ' + game.width);
+	console.log('game height: ' + game.height);
+
+	var outro = boards.last;
+	outro.parallaxRatio = 0;
+	outro.visible = false;
+	outro.tiles.forEach(function(tile) {
+		tile.color[3] = 0;
+	});
+
+	game.on('pausechanged', function(paused) {
+		if (paused) {
+			soundManager.pauseAll();
+		} else {
+			soundManager.resumeAll();
+		}
+	});
+	game.fpsContainer.innerHTML = 'webgl? ' + L7.useWebGL;
+	game.paused = true;
+
+	var snake = new i.ClassicSnake({
+		position: L7.p(-20, 15),
+		script: [{
+			p: L7.p(14, 15)
+		},
+		{
+			p: L7.p(14, 17)
+		},
+		{
+			p: L7.p(27, 17)
+		},
+		{
+			p: L7.p(27, 13)
+		},
+		{
+			p: L7.p(44, 13)
+		},
+		{
+			p: L7.p(44, 16)
+		},
+		{
+			p: L7.p(68, 16)
+		},
+		{
+			p: L7.p(68, 15)
+		},
+		{
+			p: L7.p(80, 15)
+		},
+		{
+			p: L7.p(80, 17)
+		},
+		{
+			p: L7.p(75, 17)
+		},
+		{
+			p: L7.p(75, 14)
+		},
+		{
+			p: L7.p(91, 14)
+		},
+		{
+			p: L7.p(91, 16)
+		},
+		{
+			p: L7.p(103, 16)
+		},
+		{
+			p: L7.p(106, 16)
+		},
+		{
+			p: L7.p(106, 14)
+		},
+		{
+			p: L7.p(110, 14)
+		},
+		{
+			p: L7.p(110, 17)
+		},
+		{
+			p: L7.p(114, 17)
+		},
+		{
+			p: L7.p(114, 14)
+		},
+		{
+			p: L7.p(127, 14)
+		},
+		{
+			p: L7.p(127, 9)
+		},
+		{
+			p: L7.p(142, 9)
+		},
+		{
+			p: L7.p(142, 15)
+		},
+		{
+			p: L7.p(228, 15)
+		},
+		{
+			p: L7.p(228, 13)
+		},
+		{
+			p: L7.p(155, 13)
+		},
+		{
+			p: L7.p(154, 13)
+		}],
+		direction: i.Direction.East,
+		size: 4,
+		active: false,
+		rate: 170
+	});
+
+	snake.on('scriptdone', function(snake) {
+		snake.active = false;
+		snake.burp();
+	});
+
+	boards[2].addActor(snake);
+
+	var appleXs = [44, 100, 102, 105, 106, 110, 125];
+	var applePositions = [
+	L7.p(44, 15), L7.p(71, 15), L7.p(107, 14), L7.p(113, 17), L7.p(138, 9), L7.p(167, 13), L7.p(173, 13), L7.p(175, 13), L7.p(179, 13)];
+
+	applePositions.forEach(function(position) {
+		var apple = new i.ClassicApple({
+			position: position
+		});
+		boards[2].addActor(apple);
+	});
+
+	var overlay = boards[4];
+	overlay.tiles.forEach(function(tile) {
+		tile.opaque = true;
+	});
+
+	overlay.clicked = function() {
+		game.paused = false;
+		i.ChromeFiller._addPauseButton(chrome);
+	};
+
+	// TODO: scrolling the viewport, not sure where to put this
+	foreground.ani.together(function(ani) {
+		ani.sequence(function(ani) {
+			ani.wait(500);
+			ani.tween({
+				targets: overlay.tiles,
+				property: 'color',
+				to: [0, 0, 0, 0],
+				duration: 2000
+			});
+			ani.invoke(function() {
+				overlay.destroy();
+				boards.remove(overlay);
+			});
+			ani.invoke(function() {
+				i.sounds.bubbles.setVolume(10);
+				i.sounds.bubbles.play({
+					loops: 200,
+					volume: 10
+				});
+			});
+			ani.repeat(9, function(ani) {
+				ani.wait(3000);
+				ani.invoke(function() {
+					i.sounds.bubbles.setVolume(i.sounds.bubbles.volume + 10);
+				});
+			});
+		});
+
+		ani.sequence(function(ani) {
+			ani.wait(6000);
+
+			var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
+			duration -= game.width;
+			duration -= 85; // arbitrarily choosing where to center the title
+			duration /= foreground.parallaxRatio;
+			duration = duration | 0;
+			//var duration = 2530;
+			ani.invoke(function() {
+				snake.active = true;
+			});
+
+			ani.repeat(duration, function(ani) {
+				ani.invoke(function() {
+					game.viewport.scrollX(1);
+				});
+				ani.wait(10);
+			});
+			ani.wait(11000);
+			ani.setProperty({
+				targets: [outro],
+				property: 'visible',
+				value: true
+			});
+			ani.together(function(ani) {
+				ani.repeat(10, function(ani) {
+					ani.wait(300);
+					ani.invoke(function() {
+						i.sounds.bubbles.setVolume(i.sounds.bubbles.volume - 10);
+					});
+				});
+				ani.fadeIn({
+					targets: outro.tiles,
+					duration: 4000
+				});
+			});
+			ani.wait(1000);
+			ani.invoke(function() {
+				game.paused = true;
+			});
+		});
+	});
+
+	// for debug purposes
+	var a = new L7.Actor({
+		color: [0, 0, 0, 0],
+		position: L7.p(500, 5),
+		keyInputs: {
+			left: {
+				repeat: true,
+				handler: function() {
+					game.viewport.scrollX(-3);
+				}
+			},
+			right: {
+				repeat: true,
+				handler: function() {
+					game.viewport.scrollX(3);
+				}
+			}
+		}
+	});
+
+	foreground.addActor(a);
+
+	game.go();
+
+}
+
+if (L7.isSupportedBrowser) {
+	soundManager.onready(function() {
+		i.sounds = {
+			bubbles: soundManager.createSound({
+				id: 'bubbles',
+				url: 'audio/bubbles.mp3'
+			}),
+			lightswitch: soundManager.createSound({
+				id: 'lightswitch',
+				url: 'audio/switch.mp3',
+				autoLoad: true
+			}),
+			bite: soundManager.createSound({
+				id: 'bite',
+				url: 'audio/bite.mp3',
+				autoLoad: true
+			}),
+			burp: soundManager.createSound({
+				id: 'burp',
+				url: 'audio/burp.mp3',
+				autoLoad: true
+			})
+		};
+
+		var imageLoader = new L7.ImageLoader({
+			srcs: ["background.png", "midBackground.png", "midForeground.png", "foreground.png", "overlay.png", "chrome.png", "outro.png"],
+			handler: onImagesLoaded,
+			loadNow: true
+		});
+	});
+
+} else {
+	var container = document.getElementById('introContainer');
+	container.innerHTML = '<img id="browserSupportImg" src="browserSupportBigG.gif" alt="supported browsers" /><div>Sorry, your browser is lacking features needed by Lab Adder. So far Lab Adder works in Chrome (recommended) or the latest Firefox</div>';
+}
+
+(function() {
+	i.MidBackgroundFiller = {
+		fill: function(board) {
+			i.FillerUtil.addBarGraph(board, L7.p(12, 5), 5, 4);
+			i.FillerUtil.addWater(board, L7.p(28, 5), 3, 7);
+			i.FillerUtil.addHighWater(board, L7.p(128, 2), 30, 18);
+
+			i.FillerUtil.addSmoke(board, L7.p(104, 7), 1);
+		}
+	};
+})();
+
+i.MidForegroundFiller = {
+	fill: function(board) {
+		this._addControlPanelShimmer(board, board.rect(137, 11, 5, 3));
+		i.FillerUtil.addWater(board, L7.p(6, 5), 2, 6);
+		i.FillerUtil.addWater(board, L7.p(75, 1), 2, 5);
+		i.FillerUtil.addBlueScreen(board, L7.p(129, 11), 5, 3);
+
+		i.FillerUtil.addBlueScreen(board, L7.p(66, 11), 8, 3);
+		i.FillerUtil.pulsate(board, L7.p(64, 11));
+		i.FillerUtil.pulsate(board, L7.p(63, 13));
+
+		i.FillerUtil.addHeartWave(board, L7.p(30, 9), 5, 4);
+		i.FillerUtil.pulsate(board, L7.p(30, 14));
+		i.FillerUtil.pulsate(board, L7.p(32, 14));
+		i.FillerUtil.pulsate(board, L7.p(34, 14));
+		i.FillerUtil.addBarGraph(board, L7.p(46, 8), 4, 7, [0, 255, 0, 1]);
+		i.FillerUtil.pulsate(board, L7.p(79, 10));
+		i.FillerUtil.pulsate(board, L7.p(81, 10));
+		i.FillerUtil.pulsate(board, L7.p(83, 10));
+
+		i.FillerUtil.addSinWave(board, L7.p(91, 1), 7, 5, [255, 0, 0, 1]);
+	},
+
+	_addControlPanelShimmer: function(board, targets) {
+		board.ani.repeat(Infinity, function(ani) {
+			ani.shimmer({
+				targets: targets,
+				minAlpha: 0.4,
+				maxAlpha: 0.7,
+				baseRate: 500,
+				rateVariance: 0.2
+			});
+		});
+	}
+};
+

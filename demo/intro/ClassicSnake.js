@@ -84,7 +84,7 @@
 				handler: function() {
 					this.setDirection(i.Direction.South);
 				}
-			},
+			}
 		},
 		setDirection: function(dir) {
 			if (!this._directionPending) {
@@ -218,12 +218,22 @@
 					property: 'scale',
 					from: 1,
 					to: 1.75,
-					duration: 100
+					duration: 100,
+					jitterMin: 0,
+					jitterMax: 0.2
 				});
 				ani.invoke(function() {
 					i.sounds.burp.play();
 				});
-				ani.wait(400);
+				ani.tween({
+					targets: targets,
+					property: 'scale',
+					from: 1.75,
+					to: 1.75,
+					jitterMin: -0.1,
+					jitterMax: 0.2,
+					duration: 400
+				});
 				ani.tween({
 					targets: targets,
 					property: 'scale',

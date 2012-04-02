@@ -27,7 +27,7 @@ function lightSwitchBoard(board, delay, overlayColor, volume) {
 		ani.wait(delay);
 		ani.invoke(function() {
 			i.sounds.
-			switch.play({
+			lightswitch.play({
 				volume: volume
 			});
 		});
@@ -94,15 +94,20 @@ function onImagesLoaded(images) {
 	} else {
 		fpsContainer.style.display = 'none';
 	}
+	
+	var gameContainer = document.getElementById('introContainer');
+	gameContainer.innerHTML = "";
 
 	var game = new L7.Game({
 		board: parallax,
 		width: foreground.pixelHeight * 3,
 		height: foreground.pixelHeight + chrome.pixelHeight,
 		initialAnchor: L7.p(),
-		container: document.getElementById('introContainer'),
+		container: gameContainer,
 		fpsContainer: fpsContainer
 	});
+	console.log('game width: ' + game.width);
+	console.log('game height: ' + game.height);
 
 	var outro = boards.last;
 	outro.parallaxRatio = 0;
@@ -350,8 +355,8 @@ if (L7.isSupportedBrowser) {
 				id: 'bubbles',
 				url: 'audio/bubbles.mp3'
 			}),
-			switch: soundManager.createSound({
-				id: 'switch',
+			lightswitch: soundManager.createSound({
+				id: 'lightswitch',
 				url: 'audio/switch.mp3',
 				autoLoad: true
 			}),

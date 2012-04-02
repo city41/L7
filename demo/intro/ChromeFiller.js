@@ -42,7 +42,7 @@
 			if (!this.playButton) {
 				this.playButton = new L7.Actor({
 					color: [212, 212, 212, 1],
-					shape: [[5, 0, 0, 0, ], [1, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 0], [1, 0, 0, 0]],
+					shape: [[5, 0, 0, 0], [1, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 0], [1, 0, 0, 0]],
 					position: L7.p(2, 3)
 				});
 				this.playButton.on('click', this._togglePause, this);

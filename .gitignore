@@ -3,4 +3,5 @@
 *.log
 *.swp
 .DS_Store
+demo/introDeploy/
 
