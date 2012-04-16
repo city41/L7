@@ -17,6 +17,7 @@
 			},
 			position: L7.p(10, 10)
 		});
+		window.actor = a;
 
 		var board = new L7.Board({
 			width: 50,
