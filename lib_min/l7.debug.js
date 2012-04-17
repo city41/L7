@@ -106,6 +106,9 @@
 		tween: function(config) {
 			return this._addAnimation(config, L7.Tween);
 		},
+		frame: function(config) {
+			return this._addAnimation(config, L7.Frame);
+		},
 		fadeIn: function(config) {
 			return this._addAnimation(config, L7.FadeIn);
 		},
@@ -592,6 +595,75 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
+	L7.Frame = function(config) {
+		_.extend(this, config);
+		this.pieceSetIndex = this.pieceSetIndex || 0;
+		this.reset();
+	};
+
+	L7.Frame.prototype = {
+		reset: function() {
+			this._elapsed = 0;
+			this._curFrame = 0;
+			this.done = false;
+			this._initted = false;
+		},
+
+		_initTargets: function() {
+			this.targets.forEach(function(target) {
+				target.setFrame(this.pieceSetIndex, 0);
+				target._frameDir = 1;
+				target._curFrame = 0;
+			},
+			this);
+		},
+
+		update: function(delta, timestamp, board) {
+			if (!this._initted) {
+				this._initTargets();
+				this._initted = true;
+			}
+
+			if (this.done || this.disabled) {
+				return;
+			}
+
+			this._elapsed += delta;
+			if (this._elapsed >= this.rate) {
+				this._elapsed -= this.rate;
+				this._nextFrame();
+			}
+		},
+
+		_nextFrame: function() {
+			var looping = this.looping;
+			var psi = this.pieceSetIndex;
+
+			this.targets.forEach(function(target) {
+				var max = target.pieceSets[psi].length - 1;
+				target._curFrame += target._frameDir;
+
+				if (target._curFrame < 0) {
+					target._curFrame = 1;
+					target._frameDir = 1;
+				}
+
+				if (target._curFrame > max) {
+					if (looping === 'backforth') {
+						target._curFrame = max - 1;
+						target._frameDir = - 1;
+					} else {
+						target._curFrame = 0;
+					}
+				}
+
+				target.setFrame(psi, target._curFrame);
+			});
+		}
+	}
+})();
+
+(function() {
 	var _idCounter = 0;
 	L7.Invoke = function(config) {
 		_.extend(this, config);
@@ -975,7 +1047,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 })();
 
 (function() {
-	var _noOffset = { x: 0, y: 0 };
+	var _noOffset = {
+		x: 0,
+		y: 0
+	};
 
 	L7.Actor = function(config) {
 		_.extend(this, L7.Observable);
@@ -983,16 +1058,98 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		this.ani = new L7.AnimationFactory(this);
 
 		this.position = this.position || L7.p(0, 0);
-		this.shape = this.shape || [[5]];
 		this.keyInputs = this.keyInputs || {};
 
-		this.pieces = this._createPieces();
+		if (this.framesConfig) {
+			this.pieces = this._initFrames();
+		} else {
+			this.shape = this.shape || [[5]];
+			this.pieces = this._createPieces();
+		}
+
 		this._listeners = {};
 
 		this._offsetElapsed = 0;
 	};
 
 	L7.Actor.prototype = {
+		setFrame: function(setIndex, frameIndex) {
+			if(this.board) {
+				var board = this.board;
+				board.removeActor(this);
+				this.pieces = this.pieceSets[setIndex][frameIndex];
+				board.addActor(this);
+			} else {
+				this.pieces = this.pieceSets[setIndex][frameIndex];
+			}
+		},
+
+		_createPiecesFromImagehorizontal: function() {
+			var offset = this.framesConfig.offset || L7.p(0,0);
+			var me = this;
+			var pieceSources = [];
+
+			var canvas = document.createElement('canvas');
+			var context = canvas.getContext('2d');
+			context.drawImage(this.framesConfig.src, 0, 0);
+
+			var anchorOffset = this.framesConfig.anchor;
+			var anchorPosition = this.position;
+
+			function getRelPos(i) {
+				i = i / 4;
+				var x = i % me.framesConfig.width;
+				var y = Math.floor(i / me.framesConfig.width);
+
+				return L7.p(x, y);
+			}
+
+			for (var x = 0; x < this.framesConfig.src.width; x += this.framesConfig.width) {
+				var imageData = context.getImageData(x + offset.x,
+																						 0 + offset.y, 
+																						 this.framesConfig.width, this.framesConfig.height);
+				var pieceSource = [];
+
+				for (var i = 0; i < imageData.data.length; i += 4) {
+					var alpha = imageData.data[i + 3] / 255;
+
+					if (alpha) {
+						var relPos = getRelPos(i);
+						var anchorDelta = relPos.delta(anchorOffset);
+						var piecePosition = anchorPosition.add(anchorDelta);
+						var piece = new L7.Piece({
+							position: piecePosition,
+							color: [imageData.data[i], imageData.data[i+1], imageData.data[i+2], alpha],
+							isAnchor: anchorDelta.x === 0 && anchorDelta.y === 0,
+							owner: this,
+							scale: _.isNumber(this.scale) ? this.scale: 1
+						});
+						pieceSource.push(piece);
+					}
+				}
+				pieceSources.push(pieceSource);
+			}
+
+			return pieceSources;
+		},
+
+		_initFrames: function() {
+			var pieceSources = this['_createPiecesFromImage' + this.framesConfig.direction]();
+
+			this.pieceSets = [];
+
+			this.framesConfig.sets.forEach(function(set) {
+				var pieces = [];
+				for (var i = 0; i < set.length; ++i) {
+					pieces.push(pieceSources[set[i]]);
+				}
+				this.pieceSets.push(pieces);
+			},
+			this);
+
+			return this.pieceSets[this.framesConfig.initialSet][this.framesConfig.initialFrame];
+		},
+
 		getAnimationTargets: function(filter) {
 			if (filter) {
 				return this.pieces.filter(filter);
@@ -1004,7 +1161,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		clicked: function() {
 			this.fireEvent('click', this);
 		},
-
 
 		_getAnchorOffset: function() {
 			var x, y;
@@ -1139,7 +1295,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 						x: offset * towards.x,
 						y: offset * towards.y
 					};
-				} 
+				}
 
 				this.pieces.forEach(function(piece) {
 					piece.offset = offsets;

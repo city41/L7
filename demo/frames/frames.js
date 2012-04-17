@@ -1,23 +1,35 @@
 (function() {
 
 	function onImagesLoaded(images) {
-		var a = new L7.Actor({
+		var m = new L7.Actor({
 			framesConfig: {
 				src: images[0],
 				width: 9,
 				height: 14,
 				direction: 'horizontal',
-				sets: [
-					[0],
-					[1,2,3]
-				],
+				sets: [[0], [1, 2, 3]],
 				initialSet: 0,
 				initialFrame: 0,
-				anchor: L7.p(0,0)
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 0)
 			},
 			position: L7.p(10, 10)
 		});
-		window.actor = a;
+
+		var s = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 9,
+				height: 13,
+				direction: 'horizontal',
+				sets: [[0], [1, 2, 1, 2, 3, 4, 5, 4, 5]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 15)
+			},
+			position: L7.p(30, 11)
+		});
 
 		var board = new L7.Board({
 			width: 50,
@@ -26,7 +38,16 @@
 			borderWidth: 0
 		});
 
-		board.addActor(a);
+		board.addActor(m);
+		board.addActor(s);
+
+		m.ani.frame({
+			targets: [m,s],
+			pieceSetIndex: 1,
+			rate: 150,
+			looping: 'backforth',
+			loops: Infinity
+		});
 
 		var game = new L7.Game(board);
 
