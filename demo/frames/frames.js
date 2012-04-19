@@ -1,4 +1,5 @@
 (function() {
+	L7.useWebGL = true;
 
 	function onImagesLoaded(images) {
 		var m = new L7.Actor({
@@ -28,21 +29,42 @@
 				anchor: L7.p(0, 0),
 				offset: L7.p(0, 15)
 			},
-			position: L7.p(30, 11)
+			position: L7.p(20, 11)
 		});
 
+		var l = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 9,
+				height: 9,
+				direction: 'horizontal',
+				sets: [[], [0, 1, 2]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 28)
+			},
+			position: L7.p(30, 15)
+		});
+
+
 		var board = new L7.Board({
-			width: 50,
-			height: 50,
+			width: 60,
+			height: 60,
 			tileSize: 8,
 			borderWidth: 0
 		});
 
+		board.tiles.forEach(function(tile) {
+			tile.color = [150,150,150,1];
+		});
+
 		board.addActor(m);
 		board.addActor(s);
+		board.addActor(l);
 
 		m.ani.frame({
-			targets: [m,s],
+			targets: [m,s,l],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
