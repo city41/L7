@@ -23,7 +23,7 @@
 				width: 9,
 				height: 13,
 				direction: 'horizontal',
-				sets: [[0], [1, 2, 1, 2, 3, 4, 5, 4, 5]],
+				sets: [[0], [2, 1, 2, 3, 4, 5, 4]],
 				initialSet: 0,
 				initialFrame: 0,
 				anchor: L7.p(0, 0),
@@ -62,6 +62,20 @@
 			position: L7.p(40, 13)
 		});
 
+		var ted = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 10,
+				height: 13,
+				direction: 'horizontal',
+				sets: [[0], [1, 2, 3]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 42)
+			},
+			position: L7.p(10, 28)
+		});
 
 		var board = new L7.Board({
 			width: 60,
@@ -71,16 +85,17 @@
 		});
 
 		board.tiles.forEach(function(tile) {
-			tile.color = [150,150,150,1];
+			tile.color = [100, 100, 100, 1];
 		});
 
 		board.addActor(m);
 		board.addActor(s);
 		board.addActor(l);
 		board.addActor(or);
+		board.addActor(ted);
 
 		m.ani.frame({
-			targets: [m,s,l,or],
+			targets: [m, s, l, or, ted],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
