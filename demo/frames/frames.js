@@ -42,9 +42,24 @@
 				initialSet: 0,
 				initialFrame: 0,
 				anchor: L7.p(0, 0),
-				offset: L7.p(0, 28)
+				offset: L7.p(0, 30)
 			},
 			position: L7.p(30, 15)
+		});
+
+		var or = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 10,
+				height: 11,
+				direction: 'horizontal',
+				sets: [[], [0, 1, 2]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(27, 30)
+			},
+			position: L7.p(40, 13)
 		});
 
 
@@ -62,9 +77,10 @@
 		board.addActor(m);
 		board.addActor(s);
 		board.addActor(l);
+		board.addActor(or);
 
 		m.ani.frame({
-			targets: [m,s,l],
+			targets: [m,s,l,or],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
