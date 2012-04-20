@@ -14,7 +14,7 @@
 				anchor: L7.p(0, 0),
 				offset: L7.p(0, 0)
 			},
-			position: L7.p(10, 10)
+			position: L7.p(5, 10)
 		});
 
 		var s = new L7.Actor({
@@ -29,7 +29,7 @@
 				anchor: L7.p(0, 0),
 				offset: L7.p(0, 15)
 			},
-			position: L7.p(20, 11)
+			position: L7.p(15, 11)
 		});
 
 		var l = new L7.Actor({
@@ -44,8 +44,24 @@
 				anchor: L7.p(0, 0),
 				offset: L7.p(0, 30)
 			},
-			position: L7.p(30, 15)
+			position: L7.p(25, 15)
 		});
+
+		var lily = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 9,
+				height: 9,
+				direction: 'horizontal',
+				sets: [[], [0, 1, 2]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(30, 61)
+			},
+			position: L7.p(45, 15)
+		});
+
 
 		var or = new L7.Actor({
 			framesConfig: {
@@ -59,7 +75,7 @@
 				anchor: L7.p(0, 0),
 				offset: L7.p(27, 30)
 			},
-			position: L7.p(40, 13)
+			position: L7.p(35, 13)
 		});
 
 		var ted = new L7.Actor({
@@ -77,6 +93,22 @@
 			position: L7.p(10, 28)
 		});
 
+		var dad = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 10,
+				height: 13,
+				direction: 'horizontal',
+				sets: [[0], [1, 2]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 57)
+			},
+			position: L7.p(32, 28)
+		});
+
+
 		var board = new L7.Board({
 			width: 60,
 			height: 60,
@@ -91,16 +123,27 @@
 		board.addActor(m);
 		board.addActor(s);
 		board.addActor(l);
+		board.addActor(lily);
 		board.addActor(or);
 		board.addActor(ted);
+		board.addActor(dad);
 
 		m.ani.frame({
-			targets: [m, s, l, or, ted],
+			targets: [m, s, l, lily, or, ted],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
 			loops: Infinity
 		});
+
+		dad.ani.frame({
+			targets: [dad],
+			pieceSetIndex: 1,
+			rate: 400,
+			looping: 'backforth',
+			loops: Infinity
+		});
+
 
 		var game = new L7.Game(board);
 
