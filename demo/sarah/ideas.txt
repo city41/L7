@@ -19,4 +19,24 @@ scenes
 
 
 
+people
+======
+me*
+sarah*
+mom
+dad*
+ted*
+chris
+phil
+emily
+chad
+
+animals
+=====
+lucy*
+schoeff*
+ben
+livi
+lily*
+ein
 
