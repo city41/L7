@@ -27,9 +27,9 @@ mom*
 dad*
 ted*
 chris*
-phil
-emily
-chad
+phil*
+emily*
+chad*
 
 animals
 =====

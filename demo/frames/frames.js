@@ -170,6 +170,50 @@
 			position: L7.p(45, 37)
 		});
 
+		var phil = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 10,
+				height: 14,
+				direction: 'horizontal',
+				sets: [[0], [1, 2, 3]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 108)
+			},
+			position: L7.p(2, 43)
+		});
+
+		var emily = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 10,
+				height: 14,
+				direction: 'horizontal',
+				sets: [[0], [1, 2, 3]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 123)
+			},
+			position: L7.p(13, 45)
+		});
+
+		var chad = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 10,
+				height: 14,
+				direction: 'horizontal',
+				sets: [[0], [1, 2, 3]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(0, 136)
+			},
+			position: L7.p(33, 45)
+		});
 
 		var board = new L7.Board({
 			width: 60,
@@ -193,9 +237,12 @@
 		board.addActor(mom);
 		board.addActor(boo);
 		board.addActor(bobo);
+		board.addActor(phil);
+		board.addActor(emily);
+		board.addActor(chad);
 
 		m.ani.frame({
-			targets: [m, s, l, lily, or, ted, chris, boo, bobo, mom],
+			targets: [m, s, l, lily, or, ted, chris, boo, bobo, mom, phil, emily, chad],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
