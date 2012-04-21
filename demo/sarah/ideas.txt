@@ -23,7 +23,7 @@ people
 ======
 me*
 sarah*
-mom
+mom*
 dad*
 ted*
 chris
@@ -37,6 +37,9 @@ lucy*
 schoeff*
 ben
 livi
+buddy
 lily*
 ein
+bobo*
+boo*
 
