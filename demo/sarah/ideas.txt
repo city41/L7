@@ -42,3 +42,31 @@ lily*
 bobo*
 boo*
 
+
+
+storyboard
+---------
+[fade in] We're getting married! just below center
+[fade in] me and sarah above text, standing -- regular outfit
+[after a bit] start dancing
+[cut] sipping and painting scene -- regular outfit, but different color shirts
+[cut] lucy dancing on pool, schoeff lump
+	[fade in] schoeff says "whatever..."
+[cut] ted, chris and ben in garden
+[cut] video games on couch -- clown pants outfit
+	lucy, me, sarah dancing
+	schoeff sleeping, says "please..."
+[cut] mom dad, livi buddy next to john deere
+[cut] finish line of race  -- running outfit
+[cut] chad in kitchen with boo and bobo
+[cut] lucy and schoeff dancing on pool
+[cut] hawaii -- regular outfits, different color shirts
+[cut] phil, emily, me, sarah at avs game -- avs outfits
+[cut] all cats together
+[cut] casa bonita -- regular outfit, different colors
+[cut] sarah's family + me
+[cut] my family + sarah
+[cut] wedding scene
+[cut] conclusion -- "Looking forward to a lifetime of getting funky!"
+
+
