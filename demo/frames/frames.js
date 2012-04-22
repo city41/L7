@@ -215,6 +215,37 @@
 			position: L7.p(33, 45)
 		});
 
+		var livi = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 9,
+				height: 8,
+				direction: 'horizontal',
+				sets: [[], [0, 1, 2]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(40, 136)
+			},
+			position: L7.p(23, 50)
+		});
+		
+		var buddy = new L7.Actor({
+			framesConfig: {
+				src: images[0],
+				width: 9,
+				height: 9,
+				direction: 'horizontal',
+				sets: [[], [0, 1, 2]],
+				initialSet: 0,
+				initialFrame: 0,
+				anchor: L7.p(0, 0),
+				offset: L7.p(40, 124)
+			},
+			position: L7.p(43, 48)
+		});
+
+
 		var board = new L7.Board({
 			width: 60,
 			height: 60,
@@ -240,9 +271,11 @@
 		board.addActor(phil);
 		board.addActor(emily);
 		board.addActor(chad);
+		board.addActor(livi);
+		board.addActor(buddy);
 
 		m.ani.frame({
-			targets: [m, s, l, lily, or, ted, chris, boo, bobo, mom, phil, emily, chad],
+			targets: [m, s, l, lily, or, ted, chris, boo, bobo, mom, phil, emily, chad, livi, buddy],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',

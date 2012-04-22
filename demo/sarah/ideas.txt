@@ -36,10 +36,9 @@ animals
 lucy*
 schoeff*
 ben
-livi
-buddy
+livi*
+buddy*
 lily*
-ein
 bobo*
 boo*
 
