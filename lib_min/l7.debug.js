@@ -2853,6 +2853,16 @@ L7.CanvasBoardRenderMixin = {
 
 
 (function() {
+	function _strip(src) {
+		var lastPeriod = src.lastIndexOf('.');
+
+		if(lastPeriod > -1) {
+			src = src.substring(0, lastPeriod);
+		}
+
+		return src.replace(/[^a-zA-Z0-9]/g, '');
+	}
+
 	L7.ImageLoader = function(config) {
 		_.extend(this, config);
 
@@ -2864,14 +2874,13 @@ L7.CanvasBoardRenderMixin = {
 	L7.ImageLoader.prototype = {
 		load: function() {
 			this._pendingCount = this.srcs.length;
-			this._images = [];
+			this._images = {};
 			var me = this;
 
 			this.srcs.forEach(function(src) {
 				var image = new Image();
 				image.onload = function() {
-					var index = me.srcs.indexOf(src);
-					me._images[index] = image;
+					me._images[_strip(src)] = image;
 					--me._pendingCount;
 					if(me._pendingCount === 0) {
 						me.handler(me._images);

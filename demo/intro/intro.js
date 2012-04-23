@@ -58,7 +58,17 @@ function onImagesLoaded(images) {
 	var lightSwitchVolumes = [20, 40, 60, 90];
 	var boardFillers = [i.BackgroundFiller, i.MidBackgroundFiller, i.MidForegroundFiller, i.ForegroundFiller, undefined, i.ChromeFiller, undefined];
 
-	images.forEach(function(image, i) {
+	var imageArray = [
+		images.background,
+		images.midBackground,
+		images.midForeground,
+		images.foreground,
+		images.overlay,
+		images.chrome,
+		images.outro
+	];
+
+	imageArray.forEach(function(image, i) {
 		var tileSize = tileSizes[i];
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, borderWidths[i]);
 
@@ -281,7 +291,7 @@ function onImagesLoaded(images) {
 		ani.sequence(function(ani) {
 			ani.wait(6000);
 
-			var duration = (foreground.tileSize + foreground.borderWidth) * images[3].width;
+			var duration = (foreground.tileSize + foreground.borderWidth) * imageArray[3].width;
 			duration -= game.width;
 			duration -= 85; // arbitrarily choosing where to center the title
 			duration /= foreground.parallaxRatio;
