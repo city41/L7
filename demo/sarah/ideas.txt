@@ -66,6 +66,7 @@ storyboard
 [cut] casa bonita -- regular outfit, different colors
 [cut] sarah's family + me
 [cut] my family + sarah
+[cut] all dogs together (including ein)
 [cut] wedding scene
 [cut] conclusion -- "Looking forward to a lifetime of getting funky!"
 
