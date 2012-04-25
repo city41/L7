@@ -3,7 +3,7 @@
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
 
-		var schoeff = spriteFactory.schoeffLump(L7.p(36, 33));
+		var schoeff = spriteFactory.schoeffLaying(L7.p(36, 33));
 		var please = spriteFactory.please(L7.p(28, 22));
 		var lucy = spriteFactory.lucy(L7.p(18, 29));
 

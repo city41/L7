@@ -89,6 +89,23 @@
 			});
 		},
 
+		schoeffLaying: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 8,
+					height: 5,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(38, 8)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		schoeffDance: function(position) {
 			return new L7.Actor({
 				framesConfig: {
