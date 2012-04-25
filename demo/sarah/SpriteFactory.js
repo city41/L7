@@ -224,7 +224,23 @@
 				},
 				position: position || L7.p(0, 0)
 			});
+		},
 
+		ben: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 24,
+					height: 30,
+					direction: 'horizontal',
+					sets: [[], [0, 1, 2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(57, 50)
+				},
+				position: position || L7.p(0, 0)
+			});
 		}
 	};
 
