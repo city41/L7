@@ -91,6 +91,14 @@
 			{
 				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
 				duration: 1000
+			},
+			{
+				board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),
+				duration: 10000
+			},
+			{
+				board: new SAM.LowerPeninsula(images.lowerPeninsula, tileSize, spriteFactory),
+				duration: 10000
 			}
 		];
 
@@ -119,6 +127,8 @@
 			'resources/images/skydiving.png',
 			'resources/images/hockeyBg.png',
 			'resources/images/hockeyFg.png',
+			'resources/images/lowerPeninsula.png',
+			'resources/images/upperPeninsula.png',
 			'resources/images/dadTractor.png'
 		//'sipping.png',
 		//'pool.png',
