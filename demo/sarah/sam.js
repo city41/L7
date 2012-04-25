@@ -46,7 +46,7 @@
 	function onImagesLoaded(images) {
 		removeNode('loadingContainer');
 
-		//var spriteFactory = new SAM.SpriteFactory(images.dancing);
+		var spriteFactory = new SAM.SpriteFactory(images.dance);
 		//var storyboard = [{
 		//board: new SAM.Intro(images.intro, spriteFactory),
 		//transitionIn: 'fade',
@@ -58,13 +58,25 @@
 		//duration: 3000
 		//}];
 		var b = new L7.Board({
-			width: 30,
-			height: 30,
-			tileSize: 8,
-			borderWidth: 2
+			width: 60,
+			height: 60,
+			tileSize: 8
 		});
 		b.tiles.forEach(function(tile) {
 			tile.color = [100, 100, 100, 1];
+		});
+
+		var matt = spriteFactory.matt();
+		var sarah = spriteFactory.sarah(L7.p(20,20));
+
+		b.addActors(matt, sarah);
+
+		b.ani.frame({
+			targets: [matt, sarah],
+			pieceSetIndex: 1,
+			rate: 150,
+			looping: 'backforth',
+			loops: Infinity
 		});
 
 		addMp3Input('mp3InputContainer', function() {

@@ -1627,6 +1627,12 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				this._addPieces(actor.pieces);
 			}
 		},
+		addActors: function(varargs) {
+			var args = _.toArray(arguments);
+			args.forEach(function(arg) {
+				this.addActor(arg);
+			}, this);
+		},
 		addActor: function(actor) {
 			if (actor.pieces) {
 				this._addPieces(actor.pieces);
