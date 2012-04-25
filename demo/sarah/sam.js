@@ -1,4 +1,9 @@
 (function() {
+	function removeNode(nodeId) {
+		var node = document.getElementById(nodeId);
+		node.parentElement.removeChild(node);
+	}
+
 	function createUrl(file) {
 		var url;
 		if (window.createObjectURL) {
@@ -39,6 +44,7 @@
 	}
 
 	function onImagesLoaded(images) {
+		removeNode('loadingContainer');
 
 		//var spriteFactory = new SAM.SpriteFactory(images.dancing);
 		//var storyboard = [{
@@ -51,10 +57,27 @@
 		//board: new SAM.Race(images.sipping, spriteFactory),
 		//duration: 3000
 		//}];
-		//var game = new L7.Game(new L7.StoryBoard(storyboard));
+		var b = new L7.Board({
+			width: 30,
+			height: 30,
+			tileSize: 8,
+			borderWidth: 2
+		});
+		b.tiles.forEach(function(tile) {
+			tile.color = [100, 100, 100, 1];
+		});
+
 		addMp3Input('mp3InputContainer', function() {
-			//game.go();
-			console.log('id start now');
+			//var game = new L7.Game(new L7.StoryBoard(storyboard));
+			var game = new L7.Game({
+				width: b.width * (b.tileSize + b.borderWidth) + b.borderWidth,
+				height: b.height * (b.tileSize + b.borderWidth) + b.borderWidth,
+				board: b,
+				container: document.getElementById('movieContainer'),
+				clearOutContainer: true
+			});
+
+			game.go();
 		});
 	}
 
