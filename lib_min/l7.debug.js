@@ -3249,7 +3249,7 @@ L7.CanvasBoardRenderMixin = {
 			if(this.fpsContainer) {
 				this.fpsContainer.innerHTML = (fps | 0) + ' fps';
 			} else {
-				console.log('fps: ' + fps);
+				//console.log('fps: ' + fps);
 			}
 		},
 

@@ -34,7 +34,7 @@
 			var audio = document.createElement('audio');
 			audio.addEventListener('playing', callback);
 			document.body.appendChild(audio);
-			audio.volume = 0;
+			//audio.volume = 0;
 			audio.autoplay = true;
 			audio.src = url;
 		},
@@ -54,51 +54,55 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 2000
+				duration: 20000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
-				duration: 1000
+				duration: 10000
 			},
 			{
 				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-				duration: 1000
-			},
-			{
-				board: new SAM.CatLine(tileSize, spriteFactory),
-				duration: 1000
-			},
-			{
-				board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
-				duration: 1000
-			},
-			{
-				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
-				duration: 1000
+				duration: 10000
 			},
 			{
 				board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
-				duration: 1000
+				duration: 10000
 			},
 			{
-				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
-				duration: 1000
+				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
+				duration: 10000
 			},
 			{
 				board: new SAM.Skydiving(images.skydiving, tileSize, spriteFactory),
-				duration: 1000
+				duration: 10000
+			},
+			{
+				board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
+				duration: 10000
+			},
+			{
+				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
+				duration: 10000
+			},
+			{
+				board: new SAM.CatLine(tileSize, spriteFactory),
+				duration: 8000
 			},
 			{
 				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-				duration: 1000
+				duration: 10000
 			},
 			{
 				board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),
-				duration: 10000
+				duration: 15000
 			},
 			{
 				board: new SAM.LowerPeninsula(images.lowerPeninsula, tileSize, spriteFactory),
-				duration: 10000
+				duration: 15000
+			},
+			{
+				board: new SAM.Wedding(images.wedding, tileSize, spriteFactory),
+				duration: 30000
 			}
 		];
 
@@ -129,6 +133,7 @@
 			'resources/images/hockeyFg.png',
 			'resources/images/lowerPeninsula.png',
 			'resources/images/upperPeninsula.png',
+			'resources/images/wedding.png',
 			'resources/images/dadTractor.png'
 		//'sipping.png',
 		//'pool.png',

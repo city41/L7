@@ -21,6 +21,23 @@
 			});
 		},
 
+		mattWedding: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(58, 0)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		sarah: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -33,6 +50,23 @@
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(0, 15)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		sarahWedding: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [2, 1, 2, 4, 5, 4]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(58, 15)
 				},
 				position: position || L7.p(0, 0)
 			});
@@ -374,6 +408,23 @@
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(66, 123)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		troll: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(65, 111)
 				},
 				position: position || L7.p(0, 0)
 			});

@@ -9,11 +9,12 @@
 		var mom = spriteFactory.mom(L7.p(50, 21));
 		var chad = spriteFactory.chad(L7.p(10, 20));
 		var tammy = spriteFactory.tammy(L7.p(0, 21));
+		var troll = spriteFactory.troll(L7.p(3, 43));
 
-		board.addActors(matt, sarah, mom, dad, chad, tammy);
+		board.addActors(matt, sarah, mom, dad, chad, tammy, troll);
 
 		board.ani.frame({
-			targets: [matt, sarah, mom, chad, tammy],
+			targets: [matt, sarah, mom, chad, tammy, troll],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
