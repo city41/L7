@@ -32,11 +32,11 @@
 			var url = createUrl(f);
 
 			var audio = document.createElement('audio');
+			audio.addEventListener('playing', callback);
 			document.body.appendChild(audio);
+			audio.volume = 0;
+			audio.autoplay = true;
 			audio.src = url;
-			audio.play();
-
-			callback();
 		},
 		false);
 
@@ -54,11 +54,15 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 3000
+				duration: 20000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
-				duration: 3000
+				duration: 10000
+			},
+			{
+				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
+				duration: 10000
 			}
 		];
 
@@ -80,7 +84,8 @@
 		srcs: [
 			'resources/images/dance.png',
 			'resources/images/intro.png',
-			'resources/images/race.png'
+			'resources/images/race.png',
+			'resources/images/pool.png'
 		//'sipping.png',
 		//'pool.png',
 		//'garden.png',

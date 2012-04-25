@@ -4,12 +4,12 @@
 		var board = levelLoader.load();
 
 		var matt = spriteFactory.matt(L7.p(20,20));
-		var sarah = spriteFactory.sarah(L7.p(30, 30));
+		var sarah = spriteFactory.sarah(L7.p(30, 21));
 
 		board.addActors(matt, sarah);
 
 		board.ani.sequence(function(ani) {
-			ani.wait(1000);
+			ani.wait(6500);
 			ani.frame({
 				targets: [matt, sarah],
 				pieceSetIndex: 1,
