@@ -106,7 +106,6 @@
 			});
 		},
 
-
 		schoeffLaying: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -191,6 +190,41 @@
 				},
 				position: position || L7.p(0, 0)
 			});
+		},
+
+		ted: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 42)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		chris: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 95)
+				},
+				position: position || L7.p(0, 0)
+			});
+
 		}
 	};
 

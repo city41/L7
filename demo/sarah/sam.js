@@ -74,6 +74,10 @@
 			},
 			{
 				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
+				duration: 1000
+			},
+			{
+				board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
 				duration: 10000
 			}
 		];
@@ -98,7 +102,8 @@
 			'resources/images/intro.png',
 			'resources/images/race.png',
 			'resources/images/pool.png',
-			'resources/images/livingRoom.png'
+			'resources/images/livingRoom.png',
+			'resources/images/tedGarden.png'
 		//'sipping.png',
 		//'pool.png',
 		//'garden.png',
