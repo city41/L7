@@ -309,6 +309,74 @@
 				},
 				position: position || L7.p(0, 0)
 			});
+		},
+
+		chad: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 136)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		phil: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 108)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		emily: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 123)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		tammy: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(66, 123)
+				},
+				position: position || L7.p(0, 0)
+			});
 		}
 	};
 
