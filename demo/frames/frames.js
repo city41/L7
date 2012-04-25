@@ -4,7 +4,7 @@
 	function onImagesLoaded(images) {
 		var m = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 14,
 				direction: 'horizontal',
@@ -19,7 +19,7 @@
 
 		var s = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 13,
 				direction: 'horizontal',
@@ -34,7 +34,7 @@
 
 		var l = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 8,
 				direction: 'horizontal',
@@ -49,7 +49,7 @@
 
 		var lily = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 9,
 				direction: 'horizontal',
@@ -65,7 +65,7 @@
 
 		var or = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 11,
 				direction: 'horizontal',
@@ -80,7 +80,7 @@
 
 		var ted = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 13,
 				direction: 'horizontal',
@@ -95,7 +95,7 @@
 
 		var chris = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 13,
 				direction: 'horizontal',
@@ -111,7 +111,7 @@
 
 		var dad = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 13,
 				direction: 'horizontal',
@@ -126,7 +126,7 @@
 
 		var mom = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 13,
 				direction: 'horizontal',
@@ -142,7 +142,7 @@
 
 		var boo = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 8,
 				direction: 'horizontal',
@@ -157,7 +157,7 @@
 
 		var bobo = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 9,
 				direction: 'horizontal',
@@ -172,7 +172,7 @@
 
 		var phil = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 14,
 				direction: 'horizontal',
@@ -187,7 +187,7 @@
 
 		var emily = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 13,
 				direction: 'horizontal',
@@ -202,7 +202,7 @@
 
 		var chad = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 10,
 				height: 14,
 				direction: 'horizontal',
@@ -217,7 +217,7 @@
 
 		var livi = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 8,
 				direction: 'horizontal',
@@ -232,7 +232,7 @@
 		
 		var buddy = new L7.Actor({
 			framesConfig: {
-				src: images[0],
+				src: images.dance,
 				width: 9,
 				height: 9,
 				direction: 'horizontal',

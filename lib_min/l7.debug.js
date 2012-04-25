@@ -2855,9 +2855,13 @@ L7.CanvasBoardRenderMixin = {
 (function() {
 	function _strip(src) {
 		var lastPeriod = src.lastIndexOf('.');
+		var lastSlash = src.lastIndexOf('/');
 
 		if(lastPeriod > -1) {
 			src = src.substring(0, lastPeriod);
+		}
+		if(lastSlash > -1) {
+			src = src.substring(lastSlash + 1);
 		}
 
 		return src.replace(/[^a-zA-Z0-9]/g, '');

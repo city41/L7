@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YouTube test</title>
+</head>
+<body>
+
+<div id="ytapiplayer">
+	you need Flash 10 or better and JavaScript
+</div>
+
+<script type="text/javascript" src="swfobject.js"></script>    
+<script type="text/javascript">
+	function onYouTubePlayerReady(playerId) {
+		var player = document.getElementById('myytplayer');
+
+		player.seekTo(37);
+		player.playVideo();
+
+		window.ytp = player;
+	}
+
+    var params = { allowScriptAccess: "always" };
+    var atts = { id: "myytplayer" };
+    swfobject.embedSWF("http://www.youtube.com/v/r9Zimpr_8zs?enablejsapi=1&playerapiid=ytplayer&version=3",
+                       "ytapiplayer", "1", "1", "8", null, null, params, atts);
+
+  </script>
+
+</body>
+</html>
+

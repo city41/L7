@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YouTube test</title>
+</head>
+<body>
+<input type="file" id="mp3input" />
+<audio id="audioTag"></audio>
+
+<script type="text/javascript">
+	var input = document.getElementById('mp3input');
+	var audio = document.getElementById('audioTag');
+
+	input.addEventListener('change', function(event) {
+		event.preventDefault();
+		var f = this.files[0];
+
+var url;
+                    if(window.createObjectURL){
+                      url = window.createObjectURL(f)
+                    }else if(window.createBlobURL){
+                      url = window.createBlobURL(f)
+                    }else if(window.URL && window.URL.createObjectURL){
+                      url = window.URL.createObjectURL(f)
+                    }else if(window.webkitURL && window.webkitURL.createObjectURL){
+                      url = window.webkitURL.createObjectURL(f)
+                    }
+
+										audio.src = url;
+										audio.play();
+
+		
+
+
+	});
+</script>
+
+</body>
+</html>
+
+
