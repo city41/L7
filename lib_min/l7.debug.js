@@ -1084,6 +1084,21 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 		},
 
+		_getMaxFrame: function(sets) {
+			var maxFrame = 0;
+			sets = sets || [];
+
+			sets.forEach(function(set) {
+				set.forEach(function(index) {
+					if(index > maxFrame) {
+						maxFrame = index;
+					}
+				});
+			});
+
+			return maxFrame + 1;
+		},
+
 		_createPiecesFromImagehorizontal: function() {
 			var offset = this.framesConfig.offset || L7.p(0,0);
 			var me = this;
@@ -1104,7 +1119,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				return L7.p(x, y);
 			}
 
-			for (var x = 0; x < this.framesConfig.src.width; x += this.framesConfig.width) {
+			var maxFrame = this._getMaxFrame(this.framesConfig.sets);
+			var maxWidth = maxFrame * this.framesConfig.width;
+
+			for (var x = 0; x < maxWidth; x += this.framesConfig.width) {
 				var imageData = context.getImageData(x + offset.x,
 																						 0 + offset.y, 
 																						 this.framesConfig.width, this.framesConfig.height);
