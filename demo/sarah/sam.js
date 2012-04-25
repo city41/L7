@@ -62,7 +62,7 @@
 			},
 			{
 				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-				duration: 10000
+				duration: 1000
 			},
 			{
 				board: new SAM.CatLine(tileSize, spriteFactory),
@@ -70,6 +70,10 @@
 			},
 			{
 				board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
+				duration: 1000
+			},
+			{
+				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
 				duration: 10000
 			}
 		];
@@ -93,7 +97,8 @@
 			'resources/images/dance.png',
 			'resources/images/intro.png',
 			'resources/images/race.png',
-			'resources/images/pool.png'
+			'resources/images/pool.png',
+			'resources/images/livingRoom.png'
 		//'sipping.png',
 		//'pool.png',
 		//'garden.png',

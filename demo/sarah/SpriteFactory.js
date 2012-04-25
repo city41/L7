@@ -118,7 +118,7 @@
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
-					offset: L7.p(38, 8)
+					offset: L7.p(38, 7)
 				},
 				position: position || L7.p(0, 0)
 			});
