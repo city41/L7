@@ -46,45 +46,28 @@
 	function onImagesLoaded(images) {
 		removeNode('loadingContainer');
 
+		var tileSize = 8;
+
 		var spriteFactory = new SAM.SpriteFactory(images.dance);
-		//var storyboard = [{
-		//board: new SAM.Intro(images.intro, spriteFactory),
-		//transitionIn: 'fade',
-		//transitionInDuration: 1000,
-		//duration: 3000
-		//},
-		//{
-		//board: new SAM.Race(images.sipping, spriteFactory),
-		//duration: 3000
-		//}];
-		var b = new L7.Board({
-			width: 60,
-			height: 60,
-			tileSize: 8
-		});
-		b.tiles.forEach(function(tile) {
-			tile.color = [100, 100, 100, 1];
-		});
-
-		var matt = spriteFactory.matt();
-		var sarah = spriteFactory.sarah(L7.p(20,20));
-
-		b.addActors(matt, sarah);
-
-		b.ani.frame({
-			targets: [matt, sarah],
-			pieceSetIndex: 1,
-			rate: 150,
-			looping: 'backforth',
-			loops: Infinity
-		});
+		var storyBoardConfig = [
+			{
+				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
+				transitionIn: 'fade',
+				transitionInDuration: 1000,
+				duration: 3000
+			},
+			{
+				board: new SAM.Race(images.race, tileSize, spriteFactory),
+				duration: 3000
+			}
+		];
 
 		addMp3Input('mp3InputContainer', function() {
-			//var game = new L7.Game(new L7.StoryBoard(storyboard));
+			var storyBoard = new L7.StoryBoard(storyBoardConfig);
 			var game = new L7.Game({
-				width: b.width * (b.tileSize + b.borderWidth) + b.borderWidth,
-				height: b.height * (b.tileSize + b.borderWidth) + b.borderWidth,
-				board: b,
+				width: storyBoard.pixelWidth,
+				height: storyBoard.pixelHeight,
+				board: storyBoard,
 				container: document.getElementById('movieContainer'),
 				clearOutContainer: true
 			});
@@ -94,14 +77,15 @@
 	}
 
 	var imageLoader = new L7.ImageLoader({
-		srcs: ['resources/images/dance.png',
-		//'intro.png',
+		srcs: [
+			'resources/images/dance.png',
+			'resources/images/intro.png',
+			'resources/images/race.png'
 		//'sipping.png',
 		//'pool.png',
 		//'garden.png',
 		//'couch.png',
 		//'tractor.png',
-		//'race.png',
 		//'kitchen.png',
 		//'hawaii.png',
 		//'hockey.png',
