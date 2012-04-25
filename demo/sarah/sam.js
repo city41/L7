@@ -86,7 +86,11 @@
 			},
 			{
 				board: new SAM.Skydiving(images.skydiving, tileSize, spriteFactory),
-				duration: 10000
+				duration: 1000
+			},
+			{
+				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
+				duration: 1000
 			}
 		];
 
@@ -113,6 +117,8 @@
 			'resources/images/livingRoom.png',
 			'resources/images/tedGarden.png',
 			'resources/images/skydiving.png',
+			'resources/images/hockeyBg.png',
+			'resources/images/hockeyFg.png',
 			'resources/images/dadTractor.png'
 		//'sipping.png',
 		//'pool.png',
