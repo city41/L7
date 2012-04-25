@@ -34,7 +34,7 @@
 			var audio = document.createElement('audio');
 			audio.addEventListener('playing', callback);
 			document.body.appendChild(audio);
-			//audio.volume = 0;
+			audio.volume = 0;
 			audio.autoplay = true;
 			audio.src = url;
 		},
@@ -62,10 +62,14 @@
 			},
 			{
 				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-				duration: 1000
+				duration: 10000
 			},
 			{
 				board: new SAM.CatLine(tileSize, spriteFactory),
+				duration: 1000
+			},
+			{
+				board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
 				duration: 10000
 			}
 		];

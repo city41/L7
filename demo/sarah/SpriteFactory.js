@@ -83,11 +83,29 @@
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
-					offset: L7.p(42, 83)
+					offset: L7.p(41, 82)
 				},
 				position: position || L7.p(0, 0)
 			});
 		},
+
+		ellipsis: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 16,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(41, 96)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 
 		schoeffLaying: function(position) {
 			return new L7.Actor({
