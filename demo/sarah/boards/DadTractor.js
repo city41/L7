@@ -8,7 +8,10 @@
 		var livi = spriteFactory.livi(L7.p(2, 43));
 		var buddy = spriteFactory.buddy(L7.p(52, 28));
 
+		var smoke = this._createSmokeSystem(L7.p(36, 28));
+
 		board.addActors(dad, mom, livi, buddy);
+		board.addDaemon(smoke);
 
 		board.ani.frame({
 			targets: [mom, livi, buddy],
@@ -29,7 +32,32 @@
 		return board;
 	};
 
+	SAM.DadTractor.prototype._createSmokeSystem = function(position) {
+		return fireSystem = new L7.ParticleSystem({
+			totalParticles: 200,
+			duration: Infinity,
+			gravity: L7.p(),
+			centerOfGravity: L7.p(),
+			angle: - 90,
+			angleVar: 10,
+			speed: 24,
+			speedVar: 10,
+			radialAccel: 0,
+			radialAccelVar: 0,
+			tangentialAccel: 0,
+			tangentialAccelVar: 0,
+			position: position,
+			posVar: L7.p(1, 1),
+			life: 0.3,
+			lifeVar: 0.05,
+			emissionRate: 200 / 1,
+			startColor: L7.Color.fromFloats(0.2, 0.2, 0.2, 1),
+			startColorVar: [0, 0, 0, 0],
+			endColor: [0, 0, 0, 0],
+			endColorVar: [0, 0, 0, 0],
+			active: true
+		});
+	}
+
 })();
-
-
 

@@ -1,22 +1,9 @@
--- improve welcome screen
-	-- align text
-	-- maybe a subtle gradient?
-
--- living room scene
-	-- more detail in general
-	-- books and stuff on shelves
-	-- dvds
-	-- wii remotes?
-	-- neo geo cab
-
 -- skydiving
 	-- clouds going by (parallax)
 	-- better looking parachutes
 
 -- iowa
-	-- corn in background
-	-- parent's house in background?
-	-- more detail in tractor
+	-- smoke coming out of tractor
 
 -- hockey
 	-- players
@@ -46,3 +33,10 @@
 -- closing scene
 
 -- outfits for sarah and matt throughout
+
+-- website itself
+	-- center animation
+	-- background
+	-- etc
+	-- minimize JS
+	-- only support firefox and chrome
