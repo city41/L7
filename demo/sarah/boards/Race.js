@@ -3,8 +3,8 @@
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
 
-		var matt = spriteFactory.matt(L7.p(20, 20));
-		var sarah = spriteFactory.sarah(L7.p(30, 21));
+		var matt = spriteFactory.mattRace(L7.p(20, 20));
+		var sarah = spriteFactory.sarahRace(L7.p(30, 21));
 
 		board.addActors(matt, sarah);
 
