@@ -1,0 +1,48 @@
+-- improve welcome screen
+	-- align text
+	-- maybe a subtle gradient?
+
+-- living room scene
+	-- more detail in general
+	-- books and stuff on shelves
+	-- dvds
+	-- wii remotes?
+	-- neo geo cab
+
+-- skydiving
+	-- clouds going by (parallax)
+	-- better looking parachutes
+
+-- iowa
+	-- corn in background
+	-- parent's house in background?
+	-- more detail in tractor
+
+-- hockey
+	-- players
+	-- people in the stands
+	-- ref
+
+-- remove lump from second pool scene
+
+-- wedding scene
+	-- colored lights bouncing around
+	-- disco ball?
+	-- chik fil a
+
+-- lower peninsula
+	-- dad says "Go Tigers!"
+	-- we say "Red Wings!"
+
+-- sync to the music, at least a little bit
+
+-- race
+	-- more stuff
+	-- more detail
+
+-- dog only scene
+	-- with Ein
+
+-- closing scene
+
+-- outfits for sarah and matt throughout
