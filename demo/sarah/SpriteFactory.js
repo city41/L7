@@ -4,6 +4,23 @@
 	};
 
 	SAM.SpriteFactory.prototype = {
+		raceClock: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 8,
+					height: 4,
+					direction: 'horizontal',
+					sets: [[0], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(40, 43)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		matt: function(position) {
 			return new L7.Actor({
 				framesConfig: {

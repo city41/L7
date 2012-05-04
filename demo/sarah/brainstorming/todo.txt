@@ -2,15 +2,10 @@
 	-- clouds going by (parallax)
 	-- better looking parachutes
 
--- iowa
-	-- smoke coming out of tractor
-
 -- hockey
 	-- players
 	-- people in the stands
 	-- ref
-
--- remove lump from second pool scene
 
 -- wedding scene
 	-- colored lights bouncing around
@@ -31,8 +26,6 @@
 	-- with Ein
 
 -- closing scene
-
--- outfits for sarah and matt throughout
 
 -- website itself
 	-- center animation
