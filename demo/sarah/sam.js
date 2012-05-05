@@ -54,7 +54,11 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 20000
+				duration: 2000
+			},
+			{
+				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
+				duration: 10000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -87,10 +91,6 @@
 			{
 				board: new SAM.CatLine(tileSize, spriteFactory),
 				duration: 8000
-			},
-			{
-				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-				duration: 10000
 			},
 			{
 				board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),

@@ -513,7 +513,77 @@
 				},
 				position: position || L7.p(0, 0)
 			});
+		},
+
+		avPlayer: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(104, 111)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		redwingPlayer: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(104, 123)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		hockeyRef: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(144, 111)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		chipotleBlimp: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 19,
+					height: 9,
+					direction: 'horizontal',
+					sets: [[0], [0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(153, 113)
+				},
+				position: position || L7.p(0, 0)
+			});
 		}
+
+
 	};
 
 })();
