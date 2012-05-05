@@ -73,7 +73,7 @@
 				duration: 10000
 			},
 			{
-				board: new SAM.Skydiving(images.skydiving, tileSize, spriteFactory),
+				board: new SAM.Skydiving(images.skydiving, images.clouds, tileSize, spriteFactory),
 				duration: 10000
 			},
 			{
@@ -129,6 +129,7 @@
 			'resources/images/livingRoom.png',
 			'resources/images/tedGarden.png',
 			'resources/images/skydiving.png',
+			'resources/images/clouds.png',
 			'resources/images/hockeyBg.png',
 			'resources/images/hockeyFg.png',
 			'resources/images/lowerPeninsula.png',
