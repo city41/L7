@@ -34,7 +34,7 @@
 			var audio = document.createElement('audio');
 			audio.addEventListener('playing', callback);
 			document.body.appendChild(audio);
-			//audio.volume = 0;
+			audio.volume = 0;
 			audio.autoplay = true;
 			audio.src = url;
 		},
@@ -57,8 +57,8 @@
 				duration: 2000
 			},
 			{
-				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-				duration: 10000
+				board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
+				duration: 100000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -86,6 +86,10 @@
 			},
 			{
 				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
+				duration: 10000
+			},
+			{
+				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
 				duration: 10000
 			},
 			{
@@ -135,7 +139,8 @@
 			'resources/images/lowerPeninsula.png',
 			'resources/images/upperPeninsula.png',
 			'resources/images/wedding.png',
-			'resources/images/dadTractor.png'
+			'resources/images/dadTractor.png',
+			'resources/images/casabonita.png'
 		//'sipping.png',
 		//'pool.png',
 		//'garden.png',

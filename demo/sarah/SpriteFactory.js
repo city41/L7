@@ -4,6 +4,41 @@
 	};
 
 	SAM.SpriteFactory.prototype = {
+		casaTrumpeter: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 15,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [0, 1, 2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(110, 93)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		casaGuitarist: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 19,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0], [0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(156, 93)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+
 		raceClock: function(position) {
 			return new L7.Actor({
 				framesConfig: {
