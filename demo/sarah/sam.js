@@ -86,9 +86,25 @@
 			},			
 			{
 				board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-				duration: 13000 + 33000
+				duration: 13000
 			},
 			// dogs ooooooooooo woo hoo, total of 33 seconds
+			{
+				board: new SAM.DogLine(tileSize, spriteFactory),
+				duration: 33000 / 4
+			},
+			{
+				board: new SAM.DogLine(tileSize, spriteFactory),
+				duration: 33000 / 4
+			},
+			{
+				board: new SAM.DogLine(tileSize, spriteFactory),
+				duration: 33000 / 4
+			},
+			{
+				board: new SAM.DogLine(tileSize, spriteFactory),
+				duration: 33000 / 4
+			},
 			{
 				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
 				duration: 31000

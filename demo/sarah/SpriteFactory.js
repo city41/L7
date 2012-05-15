@@ -616,9 +616,75 @@
 				},
 				position: position || L7.p(0, 0)
 			});
+		},
+
+		woohooBubble: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 55,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(130, 51)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		ooo: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 3,
+					height: 4,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(133, 70)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		woo: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 13,
+					height: 4,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(140, 70)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		hoo: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 11,
+					height: 6,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(157, 68)
+				},
+				position: position || L7.p(0, 0)
+			});
 		}
-
-
 	};
 
 })();
