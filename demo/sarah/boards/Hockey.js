@@ -22,7 +22,7 @@
 			loops: Infinity
 		});
 
-		blimp.ani.repeat(50, function(ani) {
+		blimp.ani.repeat(70, function(ani) {
 			ani.invoke(function() {
 				blimp.right(1);
 			});

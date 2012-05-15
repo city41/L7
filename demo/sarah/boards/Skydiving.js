@@ -35,8 +35,8 @@
 			targets: [clouds],
 			property: 'offsetY',
 			from: 0,
-			to: 90,
-			duration: 6500
+			to: 180,
+			duration: 13000
 		});
 
 

@@ -34,7 +34,7 @@
 			var audio = document.createElement('audio');
 			audio.addEventListener('playing', callback);
 			document.body.appendChild(audio);
-			audio.volume = 0;
+			//audio.volume = 0;
 			audio.autoplay = true;
 			audio.src = url;
 		},
@@ -54,47 +54,56 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 2000
-			},
-			{
-				board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
-				duration: 100000
+				duration: 20000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
-				duration: 10000
+				duration: 12000
 			},
 			{
 				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-				duration: 10000
+				duration: 15000
+			},
+			{
+				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
+				duration: 13000
+			},
+			{
+				board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
+				duration: 12000
 			},
 			{
 				board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
-				duration: 10000
+				duration: 16000
 			},
 			{
+				board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+				duration: 13000
+			},
+			{
+				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
+				duration: 12000
+			},			
+			{
+				board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+				duration: 13000 + 33000
+			},
+			// dogs ooooooooooo woo hoo, total of 33 seconds
+			{
 				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
-				duration: 10000
+				duration: 31000
 			},
 			{
 				board: new SAM.Skydiving(images.skydiving, images.clouds, tileSize, spriteFactory),
-				duration: 10000
+				duration: 13000
 			},
 			{
 				board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
 				duration: 10000
 			},
 			{
-				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
-				duration: 10000
-			},
-			{
-				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-				duration: 10000
-			},
-			{
 				board: new SAM.CatLine(tileSize, spriteFactory),
-				duration: 8000
+				duration: 13000
 			},
 			{
 				board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),
