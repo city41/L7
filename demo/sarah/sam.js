@@ -1,4 +1,6 @@
 (function() {
+	L7.useWebGL = true;
+
 	function removeNode(nodeId) {
 		var node = document.getElementById(nodeId);
 		node.parentElement.removeChild(node);
@@ -166,17 +168,6 @@
 			'resources/images/wedding.png',
 			'resources/images/dadTractor.png',
 			'resources/images/casabonita.png'
-		//'sipping.png',
-		//'pool.png',
-		//'garden.png',
-		//'couch.png',
-		//'tractor.png',
-		//'kitchen.png',
-		//'hawaii.png',
-		//'hockey.png',
-		//'casabonita.png',
-		//'wedding.png',
-		//'conclusion.png'
 		],
 		loadNow: true,
 		handler: onImagesLoaded
