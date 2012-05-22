@@ -9,10 +9,12 @@
 		var phil = spriteFactory.phil(L7.p(40, 21));
 		var emily = spriteFactory.emily(L7.p(7, 21));
 		var blimp = spriteFactory.chipotleBlimp(L7.p(-10, 2));
+		var tickets = this._createTickets(L7.p(0, 11));
 		blimp.smoothMovement = true;
 		blimp.rate = 200;
 
 		bgBoard.addActors(matt, sarah, phil, emily, blimp);
+		bgBoard.addDaemon(tickets);
 
 		bgBoard.ani.frame({
 			targets: [matt, sarah, phil, emily],
@@ -25,6 +27,7 @@
 		blimp.ani.repeat(70, function(ani) {
 			ani.invoke(function() {
 				blimp.right(1);
+				tickets.position = tickets.position.add(L7.p(1, 0));
 			});
 			ani.wait(200);
 		});
@@ -48,12 +51,38 @@
 			loops: Infinity
 		});
 
-
 		return new L7.ParallaxBoard({
 			boards: [bgBoard, fgBoard]
 		});
 	};
 
-})();
+	SAM.Hockey.prototype._createTickets = function(position) {
+		return new L7.ParticleSystem({
+			totalParticles: 1,
+			duration: Infinity,
+			gravity: L7.p(0, 1),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 10,
+			speed: 3,
+			speedVar: 1,
+			radialAccel: 3,
+			radialAccelVar: 2,
+			tangentialAccel: 2,
+			tangentialAccelVar: 2,
+			position: position,
+			posVar: L7.p(0,0),
+			life: 4,
+			lifeVar: 1,
+			emissionRate: 1,
+			startColor: L7.Color.fromFloats(1, 1, 1, 1),
+			startColorVar: [0, 0, 0, 0],
+			endColor: L7.Color.fromFloats(1, 1, 1, 0),
+			endColorVar: [0, 0, 0, 0],
+			active: true
+		});
 
+	};
+
+})();
 
