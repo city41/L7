@@ -6,8 +6,6 @@ body, html {
 
 body {
 	background-color: black;
-	background-image: url(bgTiles.png);
-	background-repeat: repeat-x;
 	font-family: sans-serif;
 	color: white;
 }

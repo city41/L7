@@ -1023,27 +1023,32 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		});
 	}
 
-	var imageLoader = new L7.ImageLoader({
-		srcs: [
-			'resources/images/dance.png',
-			'resources/images/intro.png',
-			'resources/images/race.png',
-			'resources/images/pool.png',
-			'resources/images/livingRoom.png',
-			'resources/images/tedGarden.png',
-			'resources/images/skydiving.png',
-			'resources/images/clouds.png',
-			'resources/images/hockeyBg.png',
-			'resources/images/hockeyFg.png',
-			'resources/images/lowerPeninsula.png',
-			'resources/images/upperPeninsula.png',
-			'resources/images/wedding.png',
-			'resources/images/dadTractor.png',
-			'resources/images/casabonita.png'
-		],
-		loadNow: true,
-		handler: onImagesLoaded
-	});
+	if(L7.isSupportedBrowser) {
+		var imageLoader = new L7.ImageLoader({
+			srcs: [
+				'resources/images/dance.png',
+				'resources/images/intro.png',
+				'resources/images/race.png',
+				'resources/images/pool.png',
+				'resources/images/livingRoom.png',
+				'resources/images/tedGarden.png',
+				'resources/images/skydiving.png',
+				'resources/images/clouds.png',
+				'resources/images/hockeyBg.png',
+				'resources/images/hockeyFg.png',
+				'resources/images/lowerPeninsula.png',
+				'resources/images/upperPeninsula.png',
+				'resources/images/wedding.png',
+				'resources/images/dadTractor.png',
+				'resources/images/casabonita.png'
+			],
+			loadNow: true,
+			handler: onImagesLoaded
+		});
+	} else {
+	var container = document.getElementById('introContainer');
+	container.innerHTML = '<img id="browserSupportImg" src="browserSupportBigG.gif" alt="supported browsers" /><div>Sorry, the animation only works in Chrome or the latest Firefox</div>';
+	}
 
 })();
 
