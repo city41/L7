@@ -878,9 +878,10 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 (function() {
 	L7.useWebGL = true;
 
-	function removeNode(nodeId) {
-		var node = document.getElementById(nodeId);
-		node.parentElement.removeChild(node);
+	function clearContainer(container) {
+		while(container.hasChildNodes()) {
+			container.removeChild(container.firstChild);
+		}
 	}
 
 	function createUrl(file) {
@@ -900,6 +901,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 
 	function addMp3Input(containerId, callback) {
 		var container = document.getElementById(containerId);
+		clearContainer(container);
 
 		var input = document.createElement('input');
 		input.type = 'file';
@@ -923,8 +925,6 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 	}
 
 	function onImagesLoaded(images) {
-		removeNode('loadingContainer');
-
 		var tileSize = 8;
 
 		var spriteFactory = new SAM.SpriteFactory(images.dance);
@@ -1014,13 +1014,13 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			}
 		];
 
-		addMp3Input('mp3InputContainer', function() {
+		addMp3Input('loadingContainer', function() {
 			var storyBoard = new L7.StoryBoard(storyBoardConfig);
 			var game = new L7.Game({
 				width: storyBoard.pixelWidth,
 				height: storyBoard.pixelHeight,
 				board: storyBoard,
-				container: document.getElementById('movieContainer'),
+				container: document.getElementById('introContainer'),
 				clearOutContainer: true
 			});
 

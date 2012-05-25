@@ -1,0 +1,41 @@
+body, html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+body {
+	background-color: black;
+	background-image: url(bgTiles.png);
+	background-repeat: repeat-x;
+	font-family: sans-serif;
+	color: white;
+}
+
+a {
+	color: #ff5a00;
+}
+
+#loadingContainer, #schoeffContainer img {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#loadingText {
+	text-align: center;
+	width: 400px;
+	height: 40px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 100px;
+}
+
+#introContainer {
+	margin-top: 90px;
+	width: 480px; 
+	margin-left: auto; 
+	margin-right: auto; 
+	background-color: black;
+	padding: 0;
+}
+
