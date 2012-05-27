@@ -1380,9 +1380,22 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	Object.defineProperty(L7.Actor, 'ANCHOR', {
 		get: function() {
-			return 5
+			return 5;
 		},
 		enumerable: false
+	});
+
+	Object.defineProperty(L7.Actor.prototype, 'board', {
+		get: function() {
+			return this._board;
+		},
+		set: function(board) {
+			this._board = board;
+			if(this.onBoardSet) {
+				this.onBoardSet();
+			}
+		},
+		enumerable: true
 	});
 
 })();

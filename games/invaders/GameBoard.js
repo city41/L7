@@ -13,6 +13,9 @@
 		});
 
 		board.addActor(player);
+
+		var alien = new SI.Alien(spriteFactory.stingray(), L7.p(20,20));
+		board.addActor(alien);
 		
 		return board;
 	};

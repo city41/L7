@@ -18,6 +18,22 @@
 					offset: L7.p(0, 0)
 				}
 			};
+		},
+
+		stingray: function() {
+			return {
+				framesConfig: {
+					src: this.image,
+					width: 11,
+					height: 7,
+					direction: 'horizontal',
+					sets: [[0,1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 41)
+				}
+			};
 		}
 	};
 
