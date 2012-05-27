@@ -18,16 +18,34 @@
 				handler: function() {
 					this.right(1);
 				}
+			},
+			' ': {
+				repeat: false,
+				handler: function() {
+					this.fire();
+				}
 			}
 		},
 		onOutOfBounds: L7.Actor.prototype.goBack,
 		team: 'player',
+		fire: function() {
+			if(!this.bullet.board) {
+				this.board.addActor(this.bullet);
+			}
+
+			if(!this.bullet.alive) {
+				this.bullet.launchFrom(this.position.add(6,0));
+			}
+		}
 	};
 
 	SI.Player = function(spriteConfig) {
 		var config = _.extend(_playerConfig, spriteConfig);
 
-		return new L7.Actor(config);
+		var player = new L7.Actor(config);
+		player.bullet = new SI.PlayerBullet();
+
+		return player;
 	};
 
 })();
