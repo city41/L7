@@ -1,10 +1,11 @@
 (function() {
+	var _interval = 500;
 	var _alienConfig = {
 		onBoardSet: function() {
 			this.ani.frame({
 				targets: [this],
 				pieceSetIndex: 0,
-				rate: 1000,
+				rate: _interval,
 				looping: 'circular',
 				loops: Infinity
 			});
@@ -12,7 +13,7 @@
 
 		timers: {
 			move: {
-				interval: 200,
+				interval: _interval,
 				handler: function() {
 					this.right(1);
 				}
