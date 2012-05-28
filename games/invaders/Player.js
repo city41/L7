@@ -30,7 +30,7 @@
 		team: 'player',
 		fire: function() {
 			if (this.bullet.dead) {
-				if (!this.bullet.board) {
+				if (!this.board.hasActor(this.bullet)) {
 					this.board.addActor(this.bullet);
 				}
 
