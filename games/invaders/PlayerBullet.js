@@ -2,24 +2,25 @@
 	var _bulletConfig = {
 		shape: [[1], [1], [1], [5]],
 		color: [255, 255, 255, 1],
+		team: 'playerBullet',
 		timers: {
 			move: {
 				enabled: function() {
-					return this.alive;
+					return !this.dead;
 				},
 				handler: function() {
 					this.up(2);
 					if(this.position.y < 0) {
-						this.alive = false;
+						this.die();
 					}
 				},
 				interval: 1
 			}
 		},
-		alive: false,
+		dead: true,
 		launchFrom: function(position) {
+			this.dead = false;
 			this.goTo(position);
-			this.alive = true;
 		}
 	};
 

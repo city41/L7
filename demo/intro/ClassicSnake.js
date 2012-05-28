@@ -205,7 +205,7 @@
 				ani.invoke(function() {
 					me.addPiece();
 				});
-				ani.die();
+				ani.end();
 			});
 		},
 

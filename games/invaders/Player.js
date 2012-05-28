@@ -2,7 +2,7 @@
 	var _moveRepeatRate = 10;
 
 	var _playerConfig = {
-		anchor: L7.p(0,0),
+		anchor: L7.p(0, 0),
 		position: L7.p(1, 216),
 		keyInputs: {
 			left: {
@@ -29,12 +29,12 @@
 		onOutOfBounds: L7.Actor.prototype.goBack,
 		team: 'player',
 		fire: function() {
-			if(!this.bullet.board) {
-				this.board.addActor(this.bullet);
-			}
+			if (this.bullet.dead) {
+				if (!this.bullet.board) {
+					this.board.addActor(this.bullet);
+				}
 
-			if(!this.bullet.alive) {
-				this.bullet.launchFrom(this.position.add(6,0));
+				this.bullet.launchFrom(this.position.add(6, 0));
 			}
 		}
 	};

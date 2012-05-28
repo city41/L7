@@ -31,6 +31,7 @@
 		this._board = board;
 		this._buildStack = [];
 		this._targetStack = [];
+		this._addedAnis = [];
 	};
 
 	L7.AnimationFactory.prototype = {
@@ -43,6 +44,10 @@
 			} else {
 				return this._owner.getAnimationTargets(targetOptions.filter);
 			}
+		},
+		_addAnimationToBoard: function(ani) {
+			this._addedAnis.push(ani);
+			this._getBoard().addDaemon(ani);
 		},
 		_addParentAnimation: function(builder, targetOptions, AniConstructor, consArg) {
 			var ani = new AniConstructor(consArg);
@@ -60,7 +65,7 @@
 			}
 
 			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(ani);
+				this._addAnimationToBoard(ani);
 			} else {
 				this._buildStack.last.children.add(ani);
 			}
@@ -80,7 +85,7 @@
 			var ani = new AniConstructor(config);
 
 			if (this._buildStack.length === 0) {
-				this._getBoard().addDaemon(ani);
+				this._addAnimationToBoard(ani);
 			} else {
 				this._buildStack.last.children.add(ani);
 			}
@@ -162,7 +167,7 @@
 			L7.Invoke);
 		},
 
-		die: function() {
+		end: function() {
 			var rootAni = this._buildStack.first;
 
 			if(rootAni) {
@@ -171,6 +176,13 @@
 					me._getBoard().removeDaemon(rootAni);
 				});
 			}
+		},
+
+		die: function() {
+			var board = this._getBoard();
+			this._addedAnis.forEach(function(ani) {
+				board.removeDaemon(ani);
+			});
 		}
 	};
 
@@ -1074,10 +1086,12 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 	L7.Actor.prototype = {
 		setFrame: function(setIndex, frameIndex) {
-			if(this.board) {
-				this.board.removeActor(this);
+			var board = this.board;
+			
+			if(board) {
+				board.removeActor(this);
 				this.pieces = this.pieceSets[setIndex][frameIndex];
-				this.board.addActor(this);
+				board.addActor(this);
 			} else {
 				this.pieces = this.pieceSets[setIndex][frameIndex];
 			}
@@ -1275,6 +1289,15 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				});
 			}
 		},
+	
+		die: function() {
+			if(this.board) {
+				this.ani.die();
+				this.board.removeActor(this);
+			}
+			this.dead = true;
+		},
+
 		update: function(delta, timestamp) {
 			this._updateKeyInputs(delta, timestamp);
 			this._updateTimers(delta);
@@ -1680,7 +1703,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				this._removePieces(actor.pieces);
 			}
 			this.actors.remove(actor);
-			delete actor.board;
+			actor.board = null;
 		},
 
 		addDaemon: function(daemon) {
