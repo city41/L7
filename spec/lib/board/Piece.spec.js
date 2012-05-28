@@ -15,56 +15,20 @@ describe("Piece", function() {
 		});
 	});
 
-	describe("rendering", function() {
-		it("should render with the sprite if present", function() {
-			var sprite = {
-				render: function() {}
-			};
-
-			spyOn(sprite, "render");
-
-			var piece = new L7.Piece({
-				sprite: sprite
+	describe("properties", function() {
+		it("should report its position correctly", function() {
+			var ownerPosition = L7.p(2,5);
+			var owner = {
+				position: ownePosition
 			});
 
-			piece.render();
-
-			expect(sprite.render).toHaveBeenCalled();
-		});
-
-		it("should pass the arguments to render onto sprite", function() {
-			var passedArgs;
-			var sprite = {
-				render: function() {
-					passedArgs = _.toArray(arguments);
-				}
-			};
+			var pieceDelta = L7.p(-1, 4);
 
 			var piece = new L7.Piece({
-				sprite: sprite
+				owner: owner
 			});
 
-			var args = [1, 2, 3];
-			piece.render.apply(piece, args);
-
-			expect(_.isEqual(args, passedArgs)).toBe(true);
+			expect(piece.position).toEqual(ownerPosition.add(pieceDelta));
 		});
-
-		it("should set the overlay on the sprite", function() {
-				var sprite = {
-					render: function() {}
-				};
-
-				var overlay = 'dummyOverlay';
-
-				var piece = new L7.Piece({
-					sprite: sprite
-				});
-				piece.overlay = overlay;
-
-				piece.render();
-				expect(sprite.overlay).toEqual(overlay);
-		});
-	});
 
 });

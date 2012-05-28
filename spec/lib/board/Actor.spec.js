@@ -42,18 +42,18 @@ describe("Actor", function() {
 
 			expect(a.pieces.length).toEqual(4);
 
-			expect(a.pieces[0].position.x).toEqual(1);
-			expect(a.pieces[0].position.y).toEqual(1);
+			expect(a.pieces[0].anchorDelta.x).toEqual(-1);
+			expect(a.pieces[0].anchorDelta.y).toEqual(-1);
 
-			expect(a.pieces[1].position.x).toEqual(2);
-			expect(a.pieces[1].position.y).toEqual(1);
+			expect(a.pieces[1].anchorDelta.x).toEqual(0);
+			expect(a.pieces[1].anchorDelta.y).toEqual(-1);
 
-			expect(a.pieces[2].position.x).toEqual(1);
-			expect(a.pieces[2].position.y).toEqual(2);
+			expect(a.pieces[2].anchorDelta.x).toEqual(-1);
+			expect(a.pieces[2].anchorDelta.y).toEqual(0);
 
-			expect(a.pieces[3].position.x).toEqual(2);
-			expect(a.pieces[3].position.y).toEqual(2);
-			expect(a.pieces[3].isAnchor).toBe(true);
+			expect(a.pieces[3].anchorDelta.x).toEqual(0);
+			expect(a.pieces[3].anchorDelta.y).toEqual(0);
+			expect(a.pieces[3].isAnchor).toBeUndefined();
 
 			a.pieces.forEach(function(piece) {
 				expect(piece.color).toEqual(color);
@@ -70,20 +70,18 @@ describe("Actor", function() {
 				position: initialPosition
 			});
 
-			var board = {
-				moveActor: function() {}
-			};
+			var board = new L7.Board({
+				width: 4,
+				height: 4
+			});
 
 			a.board = board;
-
-			spyOn(board, 'moveActor');
 
 			var newPosition = L7.p(3,3);
 			a.goTo(newPosition);
 
 			expect(a.position.equals(newPosition)).toBe(true);
 			expect(a._lastPosition.equals(initialPosition)).toBe(true);
-			expect(board.moveActor).toHaveBeenCalled();
 		});
 
 		it("should invoke onGoTo and proceed if true is returned", function() {
@@ -99,6 +97,12 @@ describe("Actor", function() {
 				}
 			});
 
+			var board = new L7.Board({
+				width: 5,
+				height: 5
+			});
+			board.addActor(a);
+
 			var newPosition = L7.p(3,3);
 			a.goTo(newPosition);
 
@@ -108,7 +112,7 @@ describe("Actor", function() {
 			expect(passedProposedPiecePos[0].x).toEqual(newPosition.x);
 			expect(passedProposedPiecePos[0].y).toEqual(newPosition.y);
 
-			expect(a.position).toEqual(newPosition);
+			expect(a.position.equals(newPosition)).toBe(true);
 		});
 
 		it("should not move if onGoTo returns false", function() {
@@ -133,6 +137,12 @@ describe("Actor", function() {
 				position: initialPosition
 			});
 
+			var board = new L7.Board({
+				width: 30,
+				height: 40
+			});
+			board.addActor(a);
+
 			a.left(3);
 
 			expect(a.position.x).toEqual(initialPosition.x - 3);
@@ -144,6 +154,13 @@ describe("Actor", function() {
 			var a = new L7.Actor({
 				position: initialPosition
 			});
+
+			var board = new L7.Board({
+				width: 30,
+				height: 40
+			});
+			board.addActor(a);
+
 
 			a.right(3);
 
@@ -157,6 +174,12 @@ describe("Actor", function() {
 				position: initialPosition
 			});
 
+			var board = new L7.Board({
+				width: 30,
+				height: 40
+			});
+			board.addActor(a);
+
 			a.up(3);
 
 			expect(a.position.x).toEqual(initialPosition.x);
@@ -169,6 +192,12 @@ describe("Actor", function() {
 				position: initialPosition
 			});
 
+			var board = new L7.Board({
+				width: 30,
+				height: 40
+			});
+			board.addActor(a);
+
 			a.down(3);
 
 			expect(a.position.x).toEqual(initialPosition.x);
@@ -180,6 +209,12 @@ describe("Actor", function() {
 			var a = new L7.Actor({
 				position: initialPosition
 			});
+
+			var board = new L7.Board({
+				width: 30,
+				height: 40
+			});
+			board.addActor(a);
 
 			a.down(3);
 
@@ -281,7 +316,7 @@ describe("Actor", function() {
 			var piece1 = actor.pieceAt(2,2);
 			expect(piece1.position.x).toBe(2);
 			expect(piece1.position.y).toBe(2);
-			expect(piece1.isAnchor).toBe(true);
+			expect(piece1.isAnchor).toBeUndefined();
 
 			var piece2 = actor.pieceAt(3,2);
 			expect(piece2.position.x).toBe(3);

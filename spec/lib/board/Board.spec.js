@@ -432,19 +432,21 @@ describe("Board", function() {
 				height: 3
 			});
 
-			var actor = {
-				pieces: [{
-					position: L7.p(1, 1)
-				}]
-			};
+			var actor = new L7.Actor({
+				position: L7.p(1,1),
+				shape: [[5]]
+			});
+
+			board.addActor(actor);
+
+			expect(board.tileAt(1,1).inhabitants[0]).toEqual(actor.pieces[0]);
 
 			board.moveActor({
 				actor: actor,
 				delta: L7.p(1, 1)
 			});
 
-			expect(actor.pieces[0].position.x).toEqual(2);
-			expect(actor.pieces[0].position.y).toEqual(2);
+			expect(board.tileAt(2,2).inhabitants[0]).toEqual(actor.pieces[0]);
 		});
 
 		it("should invoke onOutOfBounds if it went out of bounds", function() {

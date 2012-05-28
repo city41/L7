@@ -1075,10 +1075,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	L7.Actor.prototype = {
 		setFrame: function(setIndex, frameIndex) {
 			if(this.board) {
-				var board = this.board;
-				board.removeActor(this);
+				this.board.removeActor(this);
 				this.pieces = this.pieceSets[setIndex][frameIndex];
-				board.addActor(this);
+				this.board.addActor(this);
 			} else {
 				this.pieces = this.pieceSets[setIndex][frameIndex];
 			}
@@ -1134,11 +1133,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 					if (alpha) {
 						var relPos = getRelPos(i);
 						var anchorDelta = relPos.delta(anchorOffset);
-						var piecePosition = anchorPosition.add(anchorDelta);
 						var piece = new L7.Piece({
-							position: piecePosition,
+							anchorDelta: anchorDelta,
 							color: [imageData.data[i], imageData.data[i+1], imageData.data[i+2], alpha],
-							isAnchor: anchorDelta.x === 0 && anchorDelta.y === 0,
 							owner: this,
 							scale: _.isNumber(this.scale) ? this.scale: 1
 						});
@@ -1217,18 +1214,13 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				for (var x = 0; x < srow.length; ++x) {
 					if (this.shape[y][x]) {
 						var anchorDelta = L7.p(x, y).delta(anchorOffset);
-						var piecePosition = anchorPosition.add(anchorDelta);
 						var color = this._getColor(x, y);
 						var piece = new L7.Piece({
-							position: piecePosition,
+							anchorDelta: anchorDelta,
 							color: color,
-							isAnchor: this.shape[y][x] === L7.Actor.ANCHOR,
 							owner: this,
 							scale: _.isNumber(this.scale) ? this.scale: 1
 						});
-						if (piece.isAnchor) {
-							this.anchorPiece = piece;
-						}
 						pieces.push(piece);
 					}
 				}
@@ -1242,8 +1234,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var positions = [];
 
 			_.each(this.pieces, function(piece) {
-				positions.push(piece.position.add(delta));
-			});
+				positions.push(this.position.add(delta).add(piece.anchorDelta));
+			}, this);
 
 			return positions;
 		},
@@ -1268,22 +1260,18 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.goTo(this._lastPosition.clone());
 		},
 
-		goTo: function(pos) {
+		goTo: function(newPosition) {
 			if (this.onGoTo) {
-				if (!this.onGoTo(this._getPiecePositionsAnchoredAt(this.position), this._getPiecePositionsAnchoredAt(pos), this.board)) {
+				if (!this.onGoTo(this._getPiecePositionsAnchoredAt(this.position), this._getPiecePositionsAnchoredAt(newPosition), this.board)) {
 					return;
 				}
 			}
 
-			this._lastPosition = this.position;
-
-			this.position = pos;
-
 			if (!this.smoothMovement && this.board) {
 				this.board.moveActor({
 					actor: this,
-					from: this._lastPosition,
-					to: this.position
+					from: this.position,
+					to: newPosition
 				});
 			}
 		},
@@ -1371,7 +1359,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			while (l--) {
 				p = this.pieces[l];
-				if (p.position.x === x && p.position.y === y) {
+				var position = this.position.add(p.anchorDelta);
+				if (position.x === x && position.y === y) {
 					return p;
 				}
 			}
@@ -1390,8 +1379,10 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			return this._board;
 		},
 		set: function(board) {
+			var origBoard = this._board;
 			this._board = board;
-			if(this.onBoardSet) {
+
+			if(board && board != origBoard && this.onBoardSet) {
 				this.onBoardSet();
 			}
 		},
@@ -1404,7 +1395,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	L7.Board = function(config) {
 		_.extend(this, config || {});
 
-		if(L7.useWebGL) {
+		if (L7.useWebGL) {
 			_.extend(L7.Board.prototype, L7.WebGLBoardRenderMixin);
 		} else {
 			_.extend(L7.Board.prototype, L7.CanvasBoardRenderMixin);
@@ -1449,7 +1440,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		clicked: function(position) {
 			var tile = this.tileAtPixels(position);
 
-			if(tile && tile.inhabitants.length > 0) {
+			if (tile && tile.inhabitants.length > 0) {
 				tile.inhabitants.last.owner.clicked();
 				return true;
 			} else {
@@ -1498,7 +1489,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			if (filter === 'tiles') {
 				return this.tiles;
 			}
-			if(filter === 'actors') {
+			if (filter === 'actors') {
 				return this.actors;
 			}
 			if (filter === 'board') {
@@ -1665,7 +1656,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var args = _.toArray(arguments);
 			args.forEach(function(arg) {
 				this.addActor(arg);
-			}, this);
+			},
+			this);
 		},
 		addActor: function(actor) {
 			if (actor.pieces) {
@@ -1725,17 +1717,22 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			if (toTile) {
 				toTile.add(piece);
 			}
-			piece.position = to;
-
 		},
+
 		movePiece: function(options) {
 			this._movePiece(options.piece, options.delta || options.to.delta(options.from));
 		},
+
 		moveActor: function(options) {
+			var delta = options.delta || options.to.delta(options.from);
+
 			options.actor.pieces.forEach(function(piece) {
-				this._movePiece(piece, options.delta || options.to.delta(options.from));
+				this._movePiece(piece, delta);
 			},
 			this);
+
+			options.actor._lastPosition = options.actor.position;
+			options.actor.position = options.actor.position.add(delta);
 
 			if (options.actor.onOutOfBounds && this.isOutOfBounds(options.actor)) {
 				options.actor.onOutOfBounds.call(options.actor);
@@ -1756,7 +1753,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			},
 			this);
 
-			if(!this.disableHitDetection) {
+			if (!this.disableHitDetection) {
 				this._hitManager.detectHits(this.tiles);
 			}
 		}
@@ -2022,21 +2019,11 @@ L7.CanvasBoardRenderMixin = {
 		_.extend(this, config || {});
 	};
 
-	L7.Piece.prototype = {
-		render: function() {
-			if(this.sprite) {
-				this.sprite.overlay = this._overlay;
-				this.sprite.render.apply(this.sprite, arguments);
-			}
-		}
-	};
-
-	Object.defineProperty(L7.Piece.prototype, 'overlay', {
+	Object.defineProperty(L7.Piece.prototype, "position", {
 		get: function() {
-			return this._overlay;
-		},
-		set: function(overlay) {
-			this._overlay = overlay;
+			if(this.owner) {
+				return this.owner.position.add(this.anchorDelta);
+			}
 		},
 		enumerable: true
 	});
