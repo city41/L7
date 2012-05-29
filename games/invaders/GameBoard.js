@@ -7,7 +7,7 @@
 		var board = new L7.Board({
 			width: 224,
 			height: 260,
-			tileSize: 3,
+			tileSize: 2,
 			defaultTileColor: [0,0,0,1],
 			disableHitDetection: true
 		});
@@ -25,6 +25,8 @@
 		
 		var alien3 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, L7.p(20,50));
 		board.addActor(alien3);
+
+		board.addActor(new SI.Floor(L7.p(0, 226), 224));
 		
 		return board;
 	};
