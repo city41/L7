@@ -31,7 +31,19 @@
 					handler: function() {
 						this.right(1);
 					}
+				},
+				fire: {
+					interval: L7.rand(8000, 15000),
+					handler: function() {
+						this.fire();
+						this.timers.fire.interval = L7.rand(8000, 15000);
+						this.timers.fire.elapsed = 0;
+					}
 				}
+			},
+			fire: function() {
+				var bulletPosition = this.position.add(L7.pr(this.framesConfig.width / 2, 0));
+				this.board.addActor(new SI.AlienBullet(this.bulletConfig, bulletPosition));
 			},
 			die: function() {
 				L7.Actor.prototype.die.apply(this, arguments);
@@ -44,10 +56,11 @@
 		};
 	}
 
-	SI.Alien = function(spriteConfig, explosionConfig, position) {
+	SI.Alien = function(spriteConfig, explosionConfig, bulletConfig, position) {
 		var config = _.extend(getAlienConfig(), spriteConfig);
 		config.position = position;
 		config.explosionConfig = explosionConfig;
+		config.bulletConfig = bulletConfig;
 
 		return new L7.Actor(config);
 	};

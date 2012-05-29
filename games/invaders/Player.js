@@ -1,9 +1,16 @@
 (function() {
 	var _moveRepeatRate = 10;
+	var _hitManager = new L7.HitManager();
 
 	var _playerConfig = {
 		anchor: L7.p(0, 0),
 		position: L7.p(1, 216),
+		hitDetection: {
+			alienBullet: function(tile, bullet) {
+				bullet.die();
+				this.die();
+			}
+		},
 		keyInputs: {
 			left: {
 				repeat: true,
@@ -26,6 +33,14 @@
 				}
 			}
 		},
+		die: function() {
+			L7.Actor.prototype.die.apply(this, arguments);
+			this.board.addActor(new SI.AlienExplosion(this.explosionConfig, this.position));
+		},
+		update: function() {
+			L7.Actor.prototype.update.apply(this, arguments);
+			_hitManager.detectHitsForActor(this);
+		},
 		onOutOfBounds: L7.Actor.prototype.goBack,
 		team: 'player',
 		fire: function() {
@@ -39,11 +54,12 @@
 		}
 	};
 
-	SI.Player = function(spriteConfig) {
+	SI.Player = function(spriteConfig, explosionConfig) {
 		var config = _.extend(_playerConfig, spriteConfig);
 
 		var player = new L7.Actor(config);
 		player.bullet = new SI.PlayerBullet();
+		player.explosionConfig = explosionConfig;
 
 		return player;
 	};

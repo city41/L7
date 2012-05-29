@@ -2,7 +2,7 @@
 
 
 	SI.GameBoard = function(spriteFactory) {
-		var player = new SI.Player(spriteFactory.player());
+		var player = new SI.Player(spriteFactory.player(), spriteFactory.playerExplosion());
 
 		var board = new L7.Board({
 			width: 224,
@@ -15,14 +15,15 @@
 		board.addActor(player);
 
 		var explosion = spriteFactory.alienExplosion();
+		var alienBullet = spriteFactory.alienSquiggleBullet();
 
-		var alien1 = new SI.Alien(spriteFactory.stingray(), explosion, L7.p(20,20));
+		var alien1 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, L7.p(20,20));
 		board.addActor(alien1);
 
-		var alien2 = new SI.Alien(spriteFactory.octopus(), explosion, L7.p(20,30));
+		var alien2 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, L7.p(20,30));
 		board.addActor(alien2);
 		
-		var alien3 = new SI.Alien(spriteFactory.skull(), explosion, L7.p(20,50));
+		var alien3 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, L7.p(20,50));
 		board.addActor(alien3);
 		
 		return board;

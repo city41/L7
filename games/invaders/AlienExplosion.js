@@ -4,10 +4,19 @@
 		return {
 			onBoardSet: function() {
 				var me = this;
-				this.ani.sequence(function(ani) {
-					ani.wait(_delay);
-					ani.invoke(function() {
-						me.board.removeActor(me);
+				this.ani.together(function(ani) {
+					ani.frame({
+						targets: [me],
+						pieceSetIndex: 0,
+						rate: 100,
+						looping: 'circular',
+						loops: Infinity
+					});
+					ani.sequence(function(ani) {
+						ani.wait(_delay);
+						ani.invoke(function() {
+							me.die();
+						});
 					});
 				});
 			}

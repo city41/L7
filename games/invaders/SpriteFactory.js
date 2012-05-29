@@ -20,6 +20,38 @@
 			};
 		},
 
+		playerExplosion: function() {
+			return {
+				framesConfig: {
+					src: this.image,
+					width: 15,
+					height: 8,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0,0),
+					offset: L7.p(0, 64)
+				}
+			};
+		},
+
+		alienSquiggleBullet: function() {
+			return {
+				framesConfig: {
+					src: this.image,
+					width: 3,
+					height: 7,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(1, 0),
+					offset: L7.p(8, 48)
+				}
+			};
+		},
+
 		alienExplosion: function() {
 			return {
 				framesConfig: {
