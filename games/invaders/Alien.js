@@ -47,7 +47,7 @@
 			},
 			die: function() {
 				L7.Actor.prototype.die.apply(this, arguments);
-				this.board.addActor(new SI.AlienExplosion(this.explosionConfig, this.position));
+				this.board.addActor(new SI.Explosion(this.explosionConfig, this.position));
 			},
 			update: function() {
 				L7.Actor.prototype.update.apply(this, arguments);

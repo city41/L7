@@ -23,7 +23,7 @@
 		};
 	}
 
-	SI.AlienExplosion = function(spriteConfig, position) {
+	SI.Explosion = function(spriteConfig, position) {
 		var config = _.extend(getExplosionConfig(), spriteConfig);
 		config.position = position;
 
