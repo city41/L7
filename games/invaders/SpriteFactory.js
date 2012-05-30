@@ -20,6 +20,38 @@
 			};
 		},
 
+		barrier: function() {
+			return {
+				framesConfig: {
+					src: this.image,
+					width: 22,
+					height: 16,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(0, 8)
+				}
+			};
+		},
+
+		barrierDamage: function() {
+			return {
+				framesConfig: {
+					src: this.image,
+					width: 6,
+					height: 7,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(13, 0)
+				}
+			};
+		},
+
 		playerExplosion: function() {
 			return {
 				framesConfig: {
@@ -32,6 +64,22 @@
 					initialFrame: 0,
 					anchor: L7.p(0,0),
 					offset: L7.p(0, 64)
+				}
+			};
+		},
+
+		playerBulletExplosion: function() {
+			return {
+				framesConfig: {
+					src: this.image,
+					width: 8,
+					height: 8,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0,0),
+					offset: L7.p(0, 48)
 				}
 			};
 		},

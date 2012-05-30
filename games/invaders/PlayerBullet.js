@@ -10,8 +10,8 @@
 				},
 				handler: function() {
 					this.up(2);
-					if(this.position.y < 0) {
-						this.die();
+					if(this.position.y < 17) {
+						this.die(true);
 					}
 				},
 				interval: 1
@@ -21,6 +21,14 @@
 		launchFrom: function(position) {
 			this.dead = false;
 			this.goTo(position);
+		},
+		die: function(shouldExplode) {
+			L7.Actor.prototype.die.apply(this, arguments);
+
+			if(shouldExplode) {
+				var explosionPosition = this.position.add(L7.pr(-this.explosionConfig.framesConfig.width/2, 0));
+				this.board.addActor(new SI.Explosion(this.explosionConfig, explosionPosition));
+			}
 		}
 	};
 

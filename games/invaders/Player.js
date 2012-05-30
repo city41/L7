@@ -3,6 +3,7 @@
 	var _hitManager = new L7.HitManager();
 
 	var _playerConfig = {
+		team: 'player',
 		anchor: L7.p(0, 0),
 		position: L7.p(1, 216),
 		hitDetection: {
@@ -42,7 +43,6 @@
 			_hitManager.detectHitsForActor(this);
 		},
 		onOutOfBounds: L7.Actor.prototype.goBack,
-		team: 'player',
 		fire: function() {
 			if (this.bullet.dead) {
 				if (!this.board.hasActor(this.bullet)) {
@@ -54,11 +54,12 @@
 		}
 	};
 
-	SI.Player = function(spriteConfig, explosionConfig) {
+	SI.Player = function(spriteConfig, explosionConfig, bulletExplosionConfig) {
 		var config = _.extend(_playerConfig, spriteConfig);
 
 		var player = new L7.Actor(config);
 		player.bullet = new SI.PlayerBullet();
+		player.bullet.explosionConfig = bulletExplosionConfig;
 		player.explosionConfig = explosionConfig;
 
 		return player;

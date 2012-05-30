@@ -33,10 +33,10 @@
 					}
 				},
 				fire: {
-					interval: L7.rand(8000, 15000),
+					interval: L7.rand(2000, 4000),
 					handler: function() {
 						this.fire();
-						this.timers.fire.interval = L7.rand(8000, 15000);
+						this.timers.fire.interval = L7.rand(2000, 4000);
 						this.timers.fire.elapsed = 0;
 					}
 				}
