@@ -1,6 +1,4 @@
 (function() {
-	var _hitManager = new L7.HitManager();
-
 	function getBarrierConfig() {
 		return {
 			team: 'barrier',
@@ -13,10 +11,6 @@
 					bullet.die(true);
 					this.takeDamageAt(tile.position);
 				}
-			},
-			update: function() {
-				L7.Actor.prototype.update.apply(this, arguments);
-				_hitManager.detectHitsForActor(this);
 			},
 			takeDamageAt: function(position) {
 				var piecesToRemoveFromBoard = [];

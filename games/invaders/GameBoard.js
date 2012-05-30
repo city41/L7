@@ -14,7 +14,7 @@
 
 		board.addActor(player);
 
-		for(var i = 0; i < 2; ++i) {
+		for(var i = 0; i < 4; ++i) {
 			board.addActor(new SI.Barrier(spriteFactory.barrier(), spriteFactory.barrierDamage(), L7.p(40 + 40 * i, 200)));
 		}
 

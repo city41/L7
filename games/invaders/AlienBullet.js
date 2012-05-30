@@ -1,6 +1,24 @@
 (function() {
+	var _hitManager = new L7.HitManager();
+
 	function getBulletConfig() {
 		return {
+			team: 'alienBullet',
+			hitDetection: {
+				barrier: function(tile, barrier) {
+					this.die();
+					barrier.takeDamageAt(tile.position);
+				},
+				player: function(tile, player) {
+					this.die();
+					player.die();
+				},
+				floor: function(tile, floor) {
+					this.die();
+					floor.takeDamageAt(tile.position);
+				}
+			},
+
 			onBoardSet: function() {
 				this.ani.frame({
 					targets: [this],
@@ -11,7 +29,6 @@
 				});
 			},
 
-			team: 'alienBullet',
 			timers: {
 				move: {
 					enabled: function() {
@@ -26,7 +43,11 @@
 					interval: 1
 				}
 			},
-			dead: false
+			dead: false,
+			update: function() {
+				L7.Actor.prototype.update.apply(this, arguments);
+				_hitManager.detectHitsForActor(this);
+			}
 		};
 	}
 

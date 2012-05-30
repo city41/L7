@@ -1,20 +1,9 @@
 (function() {
 	var _interval = 500;
 
-	var _hitManager = new L7.HitManager();
-
 	function getAlienConfig() {
 		return {
 			team: 'alien',
-			hitDetection: {
-				enabled: function() {
-					return !this.dead;
-				},
-				playerBullet: function(tile, bullet) {
-					bullet.die();
-					this.die();
-				}
-			},
 			onBoardSet: function() {
 				this.ani.frame({
 					targets: [this],
@@ -49,10 +38,6 @@
 				L7.Actor.prototype.die.apply(this, arguments);
 				this.board.addActor(new SI.Explosion(this.explosionConfig, this.position));
 			},
-			update: function() {
-				L7.Actor.prototype.update.apply(this, arguments);
-				_hitManager.detectHitsForActor(this);
-			}
 		};
 	}
 
