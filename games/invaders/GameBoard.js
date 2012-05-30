@@ -21,14 +21,15 @@
 		var explosion = spriteFactory.alienExplosion();
 		var alienBullet = spriteFactory.alienSquiggleBullet();
 
-		var alien1 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, L7.p(20,40));
-		board.addActor(alien1);
-
-		var alien2 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, L7.p(20,50));
-		board.addActor(alien2);
-		
-		var alien3 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, L7.p(20,60));
-		board.addActor(alien3);
+		for(var i = 0; i < 10; ++i) {
+			var alien1 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, L7.p(20 + i*15,40));
+			var alien2 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, L7.p(20 + i * 15,55));
+			var alien3 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, L7.p(20 + i * 15,70));
+			var alien4 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, L7.p(20 + i*15,85));
+			var alien5 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, L7.p(20 + i * 15,100));
+			var alien6 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, L7.p(20 + i * 15,115));
+			board.addActors(alien1, alien2, alien3, alien4, alien5, alien6);
+		}
 
 		board.addActor(new SI.Floor(L7.p(0, 226), 224));
 		
