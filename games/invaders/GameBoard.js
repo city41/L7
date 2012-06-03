@@ -2,7 +2,11 @@
 
 
 	SI.GameBoard = function(spriteFactory, tileSize) {
-		var player = new SI.Player(spriteFactory.player(), spriteFactory.playerExplosion(), spriteFactory.playerBulletExplosion());
+		function getPlayer() {
+			return SI.Player(spriteFactory.player(), spriteFactory.playerExplosion(), spriteFactory.playerBulletExplosion());
+		}
+
+		var player = getPlayer();
 
 		var board = new L7.Board({
 			width: 224,
@@ -11,6 +15,8 @@
 			defaultTileColor: [0,0,0,1],
 			disableHitDetection: true
 		});
+
+		var _numPlayers = 3;
 
 		board.addActor(player);
 
@@ -39,15 +45,27 @@
 
 		board.addActor(new SI.Floor(L7.p(0, 226), 224));
 
-		board.actorsOnTeam('alien').forEach(function(alien) {
+		var allAliens = board.actorsOnTeam('alien');
+
+		allAliens.forEach(function(alien) {
 			alien.on('hitFloor', function() {
 				board.fireEvent('gameover');
 			});
 		});
 
-		player.on('dead', function() {
-			board.fireEvent('gameover');
-		});
+		function onPlayerDead() {
+			--_numPlayers;
+
+			if(_numPlayers === 0) {
+				board.fireEvent('gameover');
+			} else {
+				var newPlayer = getPlayer();
+				newPlayer.on('dead', onPlayerDead);
+				board.addActor(newPlayer);
+			}
+		}
+
+		player.on('dead', onPlayerDead);
 
 		return board;
 	};
