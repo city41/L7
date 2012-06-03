@@ -1780,7 +1780,33 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			}
 		},
 
+		freezeFor: function(freezeMillis, callback) {
+			this.freezeDuration = freezeMillis;
+			this.freezeCallback = callback;
+		},
+
+		_handleFreeze: function(delta) {
+			if(this.freezeDuration >0) {
+				this.freezeDuration -= delta;
+
+				if(this.freezeDuration <= 0) {
+					delete this.freezeDuration;
+					if(this.freezeCallback) {
+						this.freezeCallback();
+					}
+					return true;
+				} else {
+					return false;
+				}
+			}
+			return true;
+		},
+
 		update: function(delta, timestamp) {
+			if(!this._handleFreeze(delta)) {
+				return;
+			}
+
 			this.actors.forEach(function(actor) {
 				actor.update(delta, timestamp);
 			});

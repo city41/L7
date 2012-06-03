@@ -59,9 +59,11 @@
 			if(_numPlayers === 0) {
 				board.fireEvent('gameover');
 			} else {
-				var newPlayer = getPlayer();
-				newPlayer.on('dead', onPlayerDead);
-				board.addActor(newPlayer);
+				board.freezeFor(1000, function() {
+					var newPlayer = getPlayer();
+					newPlayer.on('dead', onPlayerDead);
+					board.addActor(newPlayer);
+				});
 			}
 		}
 
