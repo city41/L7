@@ -12,6 +12,14 @@
 					this.takeDamageAt(tile.position);
 				}
 			},
+			removePieceAt: function(position) {
+				var piece = this.pieceAt(position);
+
+				if(piece) {
+					this.pieces.remove(piece);
+					this.board.removePieces([piece]);
+				}
+			},
 			takeDamageAt: function(position) {
 				var piecesToRemoveFromBoard = [];
 				this.damageConfig.position = position.subtract(L7.pr(this.damageConfig.framesConfig.width / 2, this.damageConfig.framesConfig.height / 3));

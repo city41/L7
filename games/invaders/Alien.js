@@ -1,5 +1,6 @@
 (function() {
 	var _interval = 500;
+	var _hitManager = new L7.HitManager();
 
 	function getAlienConfig() {
 		return {
@@ -41,6 +42,18 @@
 					this.direction = 'left';
 				} else {
 					this.direction = 'right';
+				}
+
+				if(this.position.y >= this.barrierArea && !this.hitDetection) {
+					this.hitDetection = {
+						barrier: function(tile, barrier) {
+							barrier.removePieceAt(tile.position);
+						}
+					};
+					this.update = function() {
+						L7.Actor.prototype.update.apply(this, arguments);
+						_hitManager.detectHitsForActor(this);
+					}
 				}
 			},
 			fire: function() {

@@ -22,7 +22,8 @@
 		var alienBullet = spriteFactory.alienSquiggleBullet();
 		var movementConfig = {
 			horizontalSpan: 10,
-			verticalDrop: 10
+			verticalDrop: 10,
+			barrierArea: 190
 		};
 
 		for(var i = 0; i < 10; ++i) {
