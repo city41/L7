@@ -55,6 +55,10 @@
 						_hitManager.detectHitsForActor(this);
 					}
 				}
+
+				if(this.position.y + this.framesConfig.height >= this.floorY) {
+					this.fireEvent('hitFloor', this);
+				}
 			},
 			fire: function() {
 				var bulletPosition = this.position.add(L7.pr(this.framesConfig.width / 2, 0));

@@ -1,13 +1,13 @@
 (function() {
 
 
-	SI.GameBoard = function(spriteFactory) {
+	SI.GameBoard = function(spriteFactory, tileSize) {
 		var player = new SI.Player(spriteFactory.player(), spriteFactory.playerExplosion(), spriteFactory.playerBulletExplosion());
 
 		var board = new L7.Board({
 			width: 224,
 			height: 260,
-			tileSize: 2,
+			tileSize: tileSize,
 			defaultTileColor: [0,0,0,1],
 			disableHitDetection: true
 		});
@@ -23,7 +23,8 @@
 		var movementConfig = {
 			horizontalSpan: 10,
 			verticalDrop: 10,
-			barrierArea: 190
+			barrierArea: 190,
+			floorY: 226
 		};
 
 		for(var i = 0; i < 10; ++i) {
@@ -37,7 +38,17 @@
 		}
 
 		board.addActor(new SI.Floor(L7.p(0, 226), 224));
-		
+
+		board.actorsOnTeam('alien').forEach(function(alien) {
+			alien.on('hitFloor', function() {
+				board.fireEvent('gameover');
+			});
+		});
+
+		player.on('dead', function() {
+			board.fireEvent('gameover');
+		});
+
 		return board;
 	};
 

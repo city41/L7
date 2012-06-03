@@ -28,8 +28,16 @@
 			}
 		},
 		die: function() {
-			L7.Actor.prototype.die.apply(this, arguments);
-			this.board.addActor(new SI.Explosion(this.explosionConfig, this.position));
+			var me = this;
+			L7.Actor.prototype.die.call(me, true);
+
+			var explosion = new SI.Explosion(this.explosionConfig, this.position);
+
+			explosion.on('dead', function() {
+				me.fireEvent('dead');
+			});
+
+			this.board.addActor(explosion);
 		},
 		onOutOfBounds: L7.Actor.prototype.goBack,
 		fire: function() {

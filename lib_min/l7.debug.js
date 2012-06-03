@@ -1087,13 +1087,15 @@ Math.easeInOutBounce = function (t, b, c, d) {
 	L7.Actor.prototype = {
 		setFrame: function(setIndex, frameIndex) {
 			var board = this.board;
-			
-			if(board) {
-				board.removeActor(this);
-				this.pieces = this.pieceSets[setIndex][frameIndex];
-				board.addActor(this);
-			} else {
-				this.pieces = this.pieceSets[setIndex][frameIndex];
+
+			if (this.pieceSets) {
+				if (board) {
+					board.removeActor(this);
+					this.pieces = this.pieceSets[setIndex][frameIndex];
+					board.addActor(this);
+				} else {
+					this.pieces = this.pieceSets[setIndex][frameIndex];
+				}
 			}
 		},
 
@@ -1103,7 +1105,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			sets.forEach(function(set) {
 				set.forEach(function(index) {
-					if(index > maxFrame) {
+					if (index > maxFrame) {
 						maxFrame = index;
 					}
 				});
@@ -1113,7 +1115,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		_createPiecesFromImagehorizontal: function() {
-			var offset = this.framesConfig.offset || L7.p(0,0);
+			var offset = this.framesConfig.offset || L7.p(0, 0);
 			var me = this;
 			var pieceSources = [];
 
@@ -1136,9 +1138,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var maxWidth = maxFrame * this.framesConfig.width;
 
 			for (var x = 0; x < maxWidth; x += this.framesConfig.width) {
-				var imageData = context.getImageData(x + offset.x,
-																						 0 + offset.y, 
-																						 this.framesConfig.width, this.framesConfig.height);
+				var imageData = context.getImageData(x + offset.x, 0 + offset.y, this.framesConfig.width, this.framesConfig.height);
 				var pieceSource = [];
 
 				for (var i = 0; i < imageData.data.length; i += 4) {
@@ -1149,7 +1149,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 						var anchorDelta = relPos.delta(anchorOffset);
 						var piece = new L7.Piece({
 							anchorDelta: anchorDelta,
-							color: [imageData.data[i], imageData.data[i+1], imageData.data[i+2], alpha],
+							color: [imageData.data[i], imageData.data[i + 1], imageData.data[i + 2], alpha],
 							owner: this,
 							scale: _.isNumber(this.scale) ? this.scale: 1
 						});
@@ -1249,7 +1249,8 @@ Math.easeInOutBounce = function (t, b, c, d) {
 
 			_.each(this.pieces, function(piece) {
 				positions.push(this.position.add(delta).add(piece.anchorDelta));
-			}, this);
+			},
+			this);
 
 			return positions;
 		},
@@ -1289,13 +1290,17 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				});
 			}
 		},
-	
-		die: function() {
-			if(this.board) {
+
+		die: function(suppressEvent) {
+			if (this.board) {
 				this.ani.die();
 				this.board.removeActor(this);
 			}
 			this.dead = true;
+
+			if(!suppressEvent) {
+				this.fireEvent('dead', this);
+			}
 		},
 
 		update: function(delta, timestamp) {
@@ -1376,7 +1381,17 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this);
 		},
 
-		pieceAt: function(x, y) {
+		pieceAt: function(pairOrX, yOrUndefined) {
+			var x, y;
+
+			if(_.isNumber(pairOrX)) {
+				x = pairOrX;
+				y = yOrUndefined;
+			} else {
+				x = pairOrX.x;
+				y = pairOrX.y;
+			}
+
 			var l = this.pieces.length,
 			p;
 
@@ -1405,7 +1420,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var origBoard = this._board;
 			this._board = board;
 
-			if(board && board != origBoard && this.onBoardSet) {
+			if (board && board != origBoard && this.onBoardSet) {
 				this.onBoardSet();
 			}
 		},
@@ -1417,6 +1432,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 (function() {
 	L7.Board = function(config) {
 		_.extend(this, config || {});
+		_.extend(this, L7.Observable);
 
 		if (L7.useWebGL) {
 			_.extend(L7.Board.prototype, L7.WebGLBoardRenderMixin);
@@ -1660,7 +1676,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			},
 			this);
 		},
-		_removePieces: function(pieces) {
+		removePieces: function(pieces) {
 			pieces.forEach(function(piece) {
 				var tile = this.tileAt(piece.position);
 				if (tile) {
@@ -1671,7 +1687,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 		promote: function(actor) {
 			if (actor.pieces) {
-				this._removePieces(actor.pieces);
+				this.removePieces(actor.pieces);
 				this._addPieces(actor.pieces);
 			}
 		},
@@ -1690,6 +1706,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			this.actors.push(actor);
 			actor.board = this;
 		},
+		hasActor: function(actor) {
+			return this.actors.indexOf(actor) > -1;
+		},
 		addFreeActor: function(freeActor) {
 			this.freeActors.push(freeActor);
 			freeActor.board = this;
@@ -1700,10 +1719,9 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 		removeActor: function(actor) {
 			if (actor.pieces) {
-				this._removePieces(actor.pieces);
+				this.removePieces(actor.pieces);
 			}
 			this.actors.remove(actor);
-			actor.board = null;
 		},
 
 		addDaemon: function(daemon) {
