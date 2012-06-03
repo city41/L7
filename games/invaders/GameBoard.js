@@ -33,23 +33,29 @@
 			floorY: 226
 		};
 
-		for(var i = 0; i < 10; ++i) {
-			var alien1 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, movementConfig, L7.p(20 + i*15,40));
-			var alien2 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,55));
-			var alien3 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,70));
-			var alien4 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, movementConfig, L7.p(20 + i*15,85));
-			var alien5 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,100));
-			var alien6 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,115));
-			board.addActors(alien1, alien2, alien3, alien4, alien5, alien6);
+		for(var i = 0; i < 11; ++i) {
+			var alien1 = new SI.Alien(spriteFactory.octopus(), explosion, alienBullet, movementConfig, L7.p(20 + i*15,40));
+			var alien2 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,55));
+			var alien3 = new SI.Alien(spriteFactory.stingray(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,70));
+			var alien4 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, movementConfig, L7.p(20 + i*15,85));
+			var alien5 = new SI.Alien(spriteFactory.skull(), explosion, alienBullet, movementConfig, L7.p(20 + i * 15,100));
+			board.addActors(alien1, alien2, alien3, alien4, alien5);
 		}
 
 		board.addActor(new SI.Floor(L7.p(0, 226), 224));
 
 		var allAliens = board.actorsOnTeam('alien');
+		var _alienCount = allAliens.length;
 
 		allAliens.forEach(function(alien) {
 			alien.on('hitFloor', function() {
 				board.fireEvent('gameover');
+			});
+			alien.on('dead', function() {
+				--_alienCount;
+				if(_alienCount === 0) {
+					board.fireEvent('levelComplete');
+				}
 			});
 		});
 
@@ -60,6 +66,7 @@
 				board.fireEvent('gameover');
 			} else {
 				board.freezeFor(1000, function() {
+					console.log('whats this?');
 					var newPlayer = getPlayer();
 					newPlayer.on('dead', onPlayerDead);
 					board.addActor(newPlayer);

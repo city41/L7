@@ -2,6 +2,7 @@
 	SI.IntroBoard = function(image, tileSize) {
 		var levelLoader = new L7.ColorLevelLoader(image, tileSize, 0);
 		var board = levelLoader.load();
+		board.disableHitDetection = true;
 
 		board.addActor(new L7.Actor({
 			keyInputs: {

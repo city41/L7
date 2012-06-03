@@ -1444,6 +1444,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		this.size = new L7.Pair(this.width || 0, this.height || 0);
 		this.borderWidth = this.borderWidth || 0;
 		this.tileSize = this.tileSize || 0;
+		this.freezeDuration = 0;
 
 		this._rows = [];
 		this.tiles = [];
@@ -1786,11 +1787,11 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		_handleFreeze: function(delta) {
-			if(this.freezeDuration >0) {
+			if(this.freezeDuration > 0) {
 				this.freezeDuration -= delta;
 
 				if(this.freezeDuration <= 0) {
-					delete this.freezeDuration;
+					this.freezeDuration = 0;
 					if(this.freezeCallback) {
 						this.freezeCallback();
 					}
@@ -1803,7 +1804,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 		},
 
 		update: function(delta, timestamp) {
-			if(!this._handleFreeze(delta)) {
+			if(this.freezeDuration && !this._handleFreeze(delta)) {
 				return;
 			}
 
@@ -2270,6 +2271,10 @@ L7.CanvasBoardRenderMixin = {
 
 			if(this.overlayColor) {
 				this.colors[c++] = this.overlayColor;
+			}
+
+			if(this.colors[c-1] && this.colors[c-1][3] === 1) {
+				return this.colors[c-1];
 			}
 
 			if(c > 0) {
