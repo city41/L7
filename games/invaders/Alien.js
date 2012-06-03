@@ -18,7 +18,11 @@
 				move: {
 					interval: _interval,
 					handler: function() {
-						this.right(1);
+						this[this.direction](1);
+						--this.horizontalSpanCount;
+						if(this.horizontalSpanCount === 0) {
+							this.drop();
+						}
 					}
 				},
 				fire: {
@@ -28,6 +32,15 @@
 						this.timers.fire.interval = L7.rand(5000, 15000);
 						this.timers.fire.elapsed = 0;
 					}
+				}
+			},
+			drop: function() {
+				this.goTo(this.position.add(0, this.verticalDrop));
+				this.horizontalSpanCount = this.horizontalSpan;
+				if(this.direction === 'right') {
+					this.direction = 'left';
+				} else {
+					this.direction = 'right';
 				}
 			},
 			fire: function() {
@@ -41,11 +54,14 @@
 		};
 	}
 
-	SI.Alien = function(spriteConfig, explosionConfig, bulletConfig, position) {
+	SI.Alien = function(spriteConfig, explosionConfig, bulletConfig, movementConfig, position) {
 		var config = _.extend(getAlienConfig(), spriteConfig);
 		config.position = position;
 		config.explosionConfig = explosionConfig;
 		config.bulletConfig = bulletConfig;
+		_.extend(config, movementConfig);
+		config.horizontalSpanCount = movementConfig.horizontalSpan;
+		config.direction = 'right';
 
 		return new L7.Actor(config);
 	};
