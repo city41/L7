@@ -50,8 +50,6 @@
 		var storyBoardConfig = [
 			{
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-				transitionIn: 'fade',
-				transitionInDuration: 1000,
 				duration: 20000
 			},
 			{
