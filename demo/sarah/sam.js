@@ -63,7 +63,7 @@
 				duration: 15000
 			},
 			{
-				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
+				board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
 				duration: 13000
 			},
 			{
@@ -167,6 +167,7 @@
 				'resources/images/upperPeninsula.png',
 				'resources/images/wedding.png',
 				'resources/images/dadTractor.png',
+				'resources/images/iowaClouds.png',
 				'resources/images/casabonita.png'
 			],
 			loadNow: true,

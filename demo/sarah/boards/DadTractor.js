@@ -1,7 +1,12 @@
 (function() {
-	SAM.DadTractor = function(bgImage, tileSize, spriteFactory) {
+	SAM.DadTractor = function(bgImage, clouds, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
+		board.parallaxRatio = 0;
+
+		levelLoader = new L7.ColorLevelLoader(clouds, tileSize, 0);
+		clouds = levelLoader.load();
+		clouds.parallaxRatio = 0.2;
 
 		var dad = spriteFactory.dad(L7.p(10, 38));
 		var mom = spriteFactory.mom(L7.p(20, 39));
@@ -29,7 +34,25 @@
 			loops: Infinity
 		});
 
-		return board;
+		var parallax = new L7.ParallaxBoard({
+			boards: [board, clouds],
+			tileSize: tileSize,
+			width: board.width,
+			height: board.height
+		});
+
+		clouds.ani.repeat(Infinity, function(ani) {
+			ani.invoke(function() {
+				SAM.game.viewport.scrollX(1);
+			});
+			ani.wait(10);
+		});
+
+		parallax.destroy = function() {
+			SAM.game.viewport.reset();
+		};
+
+		return parallax;
 	};
 
 	SAM.DadTractor.prototype._createSmokeSystem = function(position) {
