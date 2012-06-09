@@ -41,11 +41,16 @@
 
 		var avPlayer1 = spriteFactory.avPlayer(L7.p(7, 40));
 		var avPlayer2 = spriteFactory.avPlayer(L7.p(18, 38));
-		var rwPlayer1 = spriteFactory.redwingPlayer(L7.p(33, 36));
+		var rwPlayer1 = spriteFactory.redwingPlayer(L7.p(35, 36));
 		var rwPlayer2 = spriteFactory.redwingPlayer(L7.p(43, 41));
 		var ref = spriteFactory.hockeyRef(L7.p(25, 45));
 
 		fgBoard.addActors(avPlayer1, avPlayer2, rwPlayer1, rwPlayer2, ref);
+
+		fgBoard.tiles.forEach(function(tile) {
+			tile.opaque = tile.position.y > 30;
+		});
+
 		fgBoard.ani.frame({
 			targets: [avPlayer1, avPlayer2, rwPlayer1, rwPlayer2],
 			pieceSetIndex: 1,

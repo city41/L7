@@ -555,7 +555,7 @@
 				framesConfig: {
 					src: this.image,
 					width: 10,
-					height: 13,
+					height: 26,
 					direction: 'horizontal',
 					sets: [[0], [1, 2, 3]],
 					initialSet: 0,
@@ -572,13 +572,13 @@
 				framesConfig: {
 					src: this.image,
 					width: 10,
-					height: 13,
+					height: 26,
 					direction: 'horizontal',
 					sets: [[0], [1, 2, 3]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
-					offset: L7.p(104, 123)
+					offset: L7.p(132, 2)
 				},
 				position: position || L7.p(0, 0)
 			});
@@ -588,8 +588,8 @@
 			return new L7.Actor({
 				framesConfig: {
 					src: this.image,
-					width: 10,
-					height: 13,
+					width: 9,
+					height: 26,
 					direction: 'horizontal',
 					sets: [[0], [0]],
 					initialSet: 0,

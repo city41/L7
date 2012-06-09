@@ -52,11 +52,7 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 200
-			},
-			{
-				board: new SAM.Skydiving(images.skydiving, images.clouds, tileSize, spriteFactory),
-				duration: 13000
+				duration: 20000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
