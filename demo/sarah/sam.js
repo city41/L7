@@ -52,7 +52,11 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 20000
+				duration: 200
+			},
+			{
+				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
+				duration: 33000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -108,7 +112,7 @@
 				duration: 31000
 			},
 			{
-				board: new SAM.Skydiving(images.skydiving, images.clouds, tileSize, spriteFactory),
+				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
 				duration: 13000
 			},
 			{
@@ -157,6 +161,7 @@
 				'resources/images/livingRoom.png',
 				'resources/images/tedGarden.png',
 				'resources/images/skydiving.png',
+				'resources/images/landscape.png',
 				'resources/images/clouds.png',
 				'resources/images/hockeyBg.png',
 				'resources/images/hockeyFg.png',
