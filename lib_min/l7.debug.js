@@ -2127,6 +2127,9 @@ L7.CanvasBoardRenderMixin = {
 		},
 
 		_setNextBoard: function() {
+			if(this._currentBoardConfig.board && this._currentBoardConfig.board.destroy) {
+				this._currentBoardConfig.board.destroy();
+			}
 			this._setCurrentBoard(this._currentBoardIndex + 1);
 		},
 

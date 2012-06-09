@@ -52,11 +52,7 @@
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 				transitionIn: 'fade',
 				transitionInDuration: 1000,
-				duration: 200
-			},
-			{
-				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
-				duration: 33000
+				duration: 20000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -146,6 +142,8 @@
 				container: document.getElementById('introContainer'),
 				clearOutContainer: true
 			});
+
+			SAM.game = game;
 
 			game.go();
 		});

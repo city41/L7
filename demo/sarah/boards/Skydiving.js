@@ -25,8 +25,8 @@
 		});
 
 		board.parallaxRatio = 0;
-		clouds.parallaxRatio = 0;
-		landscape.parallaxRatio = 0;
+		clouds.parallaxRatio = 0.4;
+		landscape.parallaxRatio = 0.2;
 
 		var parallax = new L7.ParallaxBoard({
 			boards: [landscape, board, clouds],
@@ -35,22 +35,17 @@
 			height: board.height
 		});
 
-		clouds.ani.tween({
-			targets: [clouds],
-			property: 'offsetY',
-			from: 0,
-			to: 180,
-			duration: 13000
+		clouds.ani.repeat(Infinity, function(ani) {
+			ani.invoke(function() {
+				SAM.game.viewport.scrollY(1);
+			});
+			ani.wait(10);
 		});
 
-		landscape.ani.tween({
-			targets: [landscape],
-			property: 'offsetY',
-			from: 0,
-			to: 180,
-			duration: 30000
-		});
-
+		parallax.destroy = function() {
+			SAM.game.viewport.reset();
+		};
+		
 		return parallax;
 	};
 
