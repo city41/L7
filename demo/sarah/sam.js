@@ -31,10 +31,11 @@
 
 		button.addEventListener('click', function(event) {
 			event.preventDefault();
-			var grooveSharkDiv = document.createElement('div');
-			document.body.appendChild(grooveSharkDiv);
+			//var grooveSharkDiv = document.createElement('div');
+			//var groovesharkContainer = document.getElementById('groovesharkContainer');
+			//groovesharkContainer.appendChild(grooveSharkDiv);
 			
-			grooveSharkDiv.innerHTML = '<object width="250" height="40" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="gsSong3519476177" name="gsSong3519476177"><param name="movie" value="http://grooveshark.com/songWidget.swf" /><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=cowbell.grooveshark.com&songIDs=35194761&style=metal&p=1" /><object type="application/x-shockwave-flash" data="http://grooveshark.com/songWidget.swf" width="250" height="40"><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=cowbell.grooveshark.com&songIDs=35194761&style=metal&p=1" /><span>Funky Tonight by <a href="http://grooveshark.com/artist/The+John+Butler+Trio/20926" title="The John Butler Trio">The John Butler Trio</a> on Grooveshark</span></object></object>';
+			//grooveSharkDiv.innerHTML = '<object width="250" height="40" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="gsSong3519476177" name="gsSong3519476177"><param name="movie" value="http://grooveshark.com/songWidget.swf" /><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=cowbell.grooveshark.com&songIDs=35194761&style=metal&p=1" /><object type="application/x-shockwave-flash" data="http://grooveshark.com/songWidget.swf" width="250" height="40"><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=cowbell.grooveshark.com&songIDs=35194761&style=metal&p=1" /><span>Funky Tonight by <a href="http://grooveshark.com/artist/The+John+Butler+Trio/20926" title="The John Butler Trio">The John Butler Trio</a> on Grooveshark</span></object></object>';
 
 			callback();
 		}, false);
