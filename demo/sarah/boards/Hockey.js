@@ -9,7 +9,7 @@
 		var phil = spriteFactory.phil(L7.p(40, 21));
 		var emily = spriteFactory.emily(L7.p(7, 21));
 		var blimp = spriteFactory.chipotleBlimp(L7.p(-10, 2));
-		var tickets = this._createTickets(L7.p(0, 11));
+		var tickets = this._createTickets(L7.p(0, 12));
 		blimp.smoothMovement = true;
 		blimp.rate = 200;
 
@@ -26,11 +26,14 @@
 
 		blimp.ani.repeat(70, function(ani) {
 			ani.invoke(function() {
-				blimp.right(1);
 				tickets.position = tickets.position.add(L7.p(1, 0));
 			});
 			ani.wait(200);
 		});
+		blimp.onSmoothMovement = function() {
+			blimp.right(1);
+		};
+		blimp.right(1);
 
 		var fgLevelLoader = new L7.ColorLevelLoader(fgImage, tileSize, 0);
 		var fgBoard = fgLevelLoader.load();
