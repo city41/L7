@@ -55,7 +55,6 @@
 			});
 		},
 
-
 		raceClock: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -511,6 +510,57 @@
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(0, 108)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goPackers: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 44,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(114, 29)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goTigers: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 40,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(132, 77)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goRedWings: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 52,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(159, 29)
 				},
 				position: position || L7.p(0, 0)
 			});
