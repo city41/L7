@@ -3,9 +3,9 @@
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
 
-		var ted = spriteFactory.ted(L7.p(34, 35));
-		var chris = spriteFactory.chris(L7.p(49, 36));
-		var ben = spriteFactory.ben(L7.p(2, 20));
+		var ted = spriteFactory.ted(L7.p(34, 40));
+		var chris = spriteFactory.chris(L7.p(49, 41));
+		var ben = spriteFactory.ben(L7.p(2, 23));
 
 		board.addActors(chris, ted, ben);
 
