@@ -6,7 +6,7 @@
 		var matt = spriteFactory.matt(L7.p(20, 20));
 		var sarah = spriteFactory.sarah(L7.p(30, 21));
 		var dad = spriteFactory.dad(L7.p(40, 21));
-		var mom = spriteFactory.mom(L7.p(50, 21));
+		var mom = spriteFactory.mom(L7.p(50, 22));
 		var chad = spriteFactory.chad(L7.p(10, 20));
 		var tammy = spriteFactory.tammy(L7.p(0, 21));
 		var troll = spriteFactory.troll(L7.p(3, 43));
