@@ -58,10 +58,10 @@ function(c,d){a.tag===d&&c.call(b.owner,a,a);a.each(function(e){e!==b&&e.owner&&
 (function(){L7.ParallaxBoard=function(a){_.extend(this,a);this.boards=this.boards||[];this.boards.forEach(function(a,c){if(!_.isNumber(a.parallaxRatio))throw Error("ParallaxBoard: given a board that lacks a parallax ratio");_.isNumber(a.depth)||(a.depth=c)},this)};L7.ParallaxBoard.prototype={update:function(){var a=_.toArray(arguments);this.boards.forEach(function(b){b.update.apply(b,a)})},render:function(a,b,c,d,e){this.boards.forEach(function(f){!1!==f.visible&&f.render(a,b,c*f.parallaxRatio,d*
 f.parallaxRatio,e)})},clicked:function(a){for(var b=this.boards.length;b--&&!this.boards[b].clicked(a););}};Object.defineProperty(L7.ParallaxBoard.prototype,"viewport",{get:function(){return this.viewport},set:function(a){this.boards.forEach(function(b){b.viewport=a})},enumerable:!0});Object.defineProperty(L7.ParallaxBoard.prototype,"game",{get:function(){return this.game},set:function(a){this.boards.forEach(function(b){b.game=a})},enumerable:!0})})();
 (function(){L7.Piece=function(a){_.extend(this,a||{})};Object.defineProperty(L7.Piece.prototype,"position",{get:function(){if(this.owner)return this.owner.position.add(this.anchorDelta)},enumerable:!0})})();
-(function(){L7.StoryBoard=function(a){this.boardConfigs=a;this._setCurrentBoard(0)};L7.StoryBoard.prototype={_setCurrentBoard:function(a){this._currentBoardIndex=a;if(a=this.boardConfigs[a]){this._currentBoardConfig=a;var b=this._currentBoardConfig.board;this.width=b.width;this.height=b.height;this.tileSize=b.tileSize;this.borderWidth=b.borderWidth;this._currentDuration=a.duration;b.viewport=this.viewport;b.game=this.game}},_setNextBoard:function(){this._setCurrentBoard(this._currentBoardIndex+1)},
-update:function(a,b){this._currentBoardConfig&&(this._currentBoardConfig.board.update(a,b),this._currentDuration-=a,0>=this._currentDuration&&this._setNextBoard())},render:function(){this._currentBoardConfig&&this._currentBoardConfig.board.render.apply(this._currentBoardConfig.board,arguments)},clicked:function(){this._currentBoardConfig&&this._currentBoardConfig.board.clicked.apply(this._currentBoardConfig.board,arguments)}};Object.defineProperty(L7.StoryBoard.prototype,"pixelHeight",{get:function(){return this.height*
-(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"pixelWidth",{get:function(){return this.width*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"viewport",{get:function(){return this._viewport},set:function(a){this._viewport=a;this._currentBoardConfig&&(this._currentBoardConfig.board.viewport=a)}});Object.defineProperty(L7.StoryBoard.prototype,"game",{get:function(){return this._game},
-set:function(a){this._game=a;this._currentBoardConfig&&(this._currentBoardConfig.board.game=a)}})})();
+(function(){L7.StoryBoard=function(a){this.boardConfigs=a;this._setCurrentBoard(0)};L7.StoryBoard.prototype={_setCurrentBoard:function(a){this._currentBoardIndex=a;if(a=this.boardConfigs[a]){this._currentBoardConfig=a;var b=this._currentBoardConfig.board;this.width=b.width;this.height=b.height;this.tileSize=b.tileSize;this.borderWidth=b.borderWidth;this._currentDuration=a.duration;b.viewport=this.viewport;b.game=this.game}},_setNextBoard:function(){this._currentBoardConfig.board&&this._currentBoardConfig.board.destroy&&
+this._currentBoardConfig.board.destroy();this._setCurrentBoard(this._currentBoardIndex+1)},update:function(a,b){this._currentBoardConfig&&(this._currentBoardConfig.board.update(a,b),this._currentDuration-=a,0>=this._currentDuration&&this._setNextBoard())},render:function(){this._currentBoardConfig&&this._currentBoardConfig.board.render.apply(this._currentBoardConfig.board,arguments)},clicked:function(){this._currentBoardConfig&&this._currentBoardConfig.board.clicked.apply(this._currentBoardConfig.board,
+arguments)}};Object.defineProperty(L7.StoryBoard.prototype,"pixelHeight",{get:function(){return this.height*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"pixelWidth",{get:function(){return this.width*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"viewport",{get:function(){return this._viewport},set:function(a){this._viewport=a;this._currentBoardConfig&&(this._currentBoardConfig.board.viewport=
+a)}});Object.defineProperty(L7.StoryBoard.prototype,"game",{get:function(){return this._game},set:function(a){this._game=a;this._currentBoardConfig&&(this._currentBoardConfig.board.game=a)}})})();
 (function(){L7.Tile=function(a){a=a||{};if(!_.isNumber(a.x))throw Error("Tile: x is required");if(!_.isNumber(a.y))throw Error("Tile: y is required");this.x=a.x;this.y=a.y;this.color=a.color;this.scale=a.scale;_.isNumber(this.scale)||(this.scale=1);this.board=a.board;this.inhabitants=_.clone(a.inhabitants||[]);this.position=L7.p(this.x,this.y);this.colors=[];this.composite=[]};L7.Tile.prototype={at:function(a){return this.inhabitants[a]},each:function(a,b){this.inhabitants.forEach(a,b)},add:function(a){this.inhabitants.push(a)},
 remove:function(a){this.inhabitants.remove(a)},has:function(a){return this.tag===a?!0:this.inhabitants.some(function(b){return b.team===a||b.owner&&b.owner.team===a})},hasOther:function(a,b){return this.tag===a?!0:this.inhabitants.some(function(c){return c.team===a||c.owner&&c.owner.team===a&&c.owner!==b})},getColor:function(a){var b=0;this.color&&(this.colors[b++]=this.color);if(!1!==a)for(var a=0,c=this.inhabitants.length;a<c;++a){var d=this.inhabitants[a].color;d&&(this.colors[b++]=d)}this.overlayColor&&
 (this.colors[b++]=this.overlayColor);if(this.colors[b-1]&&1===this.colors[b-1][3])return this.colors[b-1];if(0<b)return L7.Color.composite(this.colors,b,this.composite),this.opaque&&(this.composite[3]=1),this.composite},getScale:function(){return 0===this.inhabitants.length||!this.inhabitants.last.color?this.scale:this.inhabitants.last.scale},getOffset:function(){return 0!==this.inhabitants.length&&this.inhabitants.last.offset},up:function(){return this.board&&this.board.tileAt(this.position.up())},
@@ -171,22 +171,34 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var sarah = spriteFactory.sarah(L7.p(48, 47));
 		var trumpeter = spriteFactory.casaTrumpeter(L7.p(35, 19));
 		var guitarist = spriteFactory.casaGuitarist(L7.p(46, 19));
+		var mmmm = spriteFactory.mmmm(L7.p(10, 33));
 
 		board.addActors(matt, sarah, trumpeter, guitarist);
 
-		board.ani.frame({
-			targets: [matt, sarah, trumpeter, guitarist],
-			pieceSetIndex: 1,
-			rate: 150,
-			looping: 'backforth',
-			loops: Infinity
+		board.ani.together(function(ani) {
+			ani.frame({
+				targets: [matt, sarah, trumpeter, guitarist],
+				pieceSetIndex: 1,
+				rate: 150,
+				looping: 'backforth',
+				loops: Infinity
+			});
+			ani.sequence(function(ani) {
+				ani.wait(2000);
+				ani.invoke(function() {
+					board.addActor(mmmm);
+				});
+				ani.wait(3500);
+				ani.invoke(function() {
+					board.removeActor(mmmm);
+				});
+			});
 		});
 
 		return board;
 	};
 
 })();
-
 
 (function() {
 	SAM.CatLine = function(tileSize, spriteFactory) {
@@ -303,9 +315,14 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 
 
 (function() {
-	SAM.DadTractor = function(bgImage, tileSize, spriteFactory) {
+	SAM.DadTractor = function(bgImage, clouds, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
+		board.parallaxRatio = 0;
+
+		levelLoader = new L7.ColorLevelLoader(clouds, tileSize, 0);
+		clouds = levelLoader.load();
+		clouds.parallaxRatio = 0.2;
 
 		var dad = spriteFactory.dad(L7.p(10, 38));
 		var mom = spriteFactory.mom(L7.p(20, 39));
@@ -333,7 +350,25 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			loops: Infinity
 		});
 
-		return board;
+		var parallax = new L7.ParallaxBoard({
+			boards: [board, clouds],
+			tileSize: tileSize,
+			width: board.width,
+			height: board.height
+		});
+
+		clouds.ani.repeat(Infinity, function(ani) {
+			ani.invoke(function() {
+				SAM.game.viewport.scrollX(1);
+			});
+			ani.wait(10);
+		});
+
+		parallax.destroy = function() {
+			SAM.game.viewport.reset();
+		};
+
+		return parallax;
 	};
 
 	SAM.DadTractor.prototype._createSmokeSystem = function(position) {
@@ -489,11 +524,16 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 
 		var avPlayer1 = spriteFactory.avPlayer(L7.p(7, 40));
 		var avPlayer2 = spriteFactory.avPlayer(L7.p(18, 38));
-		var rwPlayer1 = spriteFactory.redwingPlayer(L7.p(33, 36));
+		var rwPlayer1 = spriteFactory.redwingPlayer(L7.p(35, 36));
 		var rwPlayer2 = spriteFactory.redwingPlayer(L7.p(43, 41));
 		var ref = spriteFactory.hockeyRef(L7.p(25, 45));
 
 		fgBoard.addActors(avPlayer1, avPlayer2, rwPlayer1, rwPlayer2, ref);
+
+		fgBoard.tiles.forEach(function(tile) {
+			tile.opaque = tile.position.y > 30;
+		});
+
 		fgBoard.ani.frame({
 			targets: [avPlayer1, avPlayer2, rwPlayer1, rwPlayer2],
 			pieceSetIndex: 1,
@@ -542,13 +582,19 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
 
-		var matt = spriteFactory.matt(L7.p(20,20));
+		var matt = spriteFactory.matt(L7.p(20, 20));
 		var sarah = spriteFactory.sarah(L7.p(30, 21));
+
+		var confetti = this._createConfettiSystem(board.width);
+		board.addDaemon(confetti);
 
 		board.addActors(matt, sarah);
 
 		board.ani.sequence(function(ani) {
 			ani.wait(6500);
+			ani.invoke(function() {
+				confetti.active = true;
+			});
 			ani.frame({
 				targets: [matt, sarah],
 				pieceSetIndex: 1,
@@ -561,7 +607,35 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		return board;
 	};
 
+	SAM.Intro.prototype._createConfettiSystem = function(width) {
+		return new L7.ParticleSystem({
+			totalParticles: 50,
+			duration: Infinity,
+			gravity: L7.p(0, 1),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 10,
+			speed: 5,
+			speedVar: 1,
+			radialAccel: 0,
+			radialAccelVar: 2,
+			tangentialAccel: 0,
+			tangentialAccelVar: 2,
+			position: L7.p(width / 2, 0),
+			posVar: L7.p(width / 2, 0),
+			life: 6,
+			lifeVar: 2,
+			emissionRate: 10,
+			startColor: L7.Color.fromFloats(1, 1, 1, 1),
+			startColorVar: [255, 255, 255, 0],
+			endColor: L7.Color.fromFloats(1, 1, 1, 0),
+			endColorVar: [255, 255, 255, 0],
+			active: false
+		});
+	};
+
 })();
+
 
 (function() {
 	SAM.LivingRoom = function(bgImage, tileSize, spriteFactory) {
@@ -597,19 +671,38 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var matt = spriteFactory.matt(L7.p(20, 20));
 		var sarah = spriteFactory.sarah(L7.p(30, 21));
 		var dad = spriteFactory.dad(L7.p(40, 21));
-		var mom = spriteFactory.mom(L7.p(50, 21));
+		var mom = spriteFactory.mom(L7.p(50, 22));
 		var chad = spriteFactory.chad(L7.p(10, 20));
 		var tammy = spriteFactory.tammy(L7.p(0, 21));
 		var troll = spriteFactory.troll(L7.p(3, 43));
+		var goTigers = spriteFactory.goTigers(L7.p(11, 5));
+		var goRedWings = spriteFactory.goRedWings(L7.p(3, 5));
 
 		board.addActors(matt, sarah, mom, dad, chad, tammy, troll);
 
-		board.ani.frame({
-			targets: [matt, sarah, mom, chad, tammy, troll],
-			pieceSetIndex: 1,
-			rate: 150,
-			looping: 'backforth',
-			loops: Infinity
+		board.ani.together(function(ani) {
+			ani.frame({
+				targets: [matt, sarah, mom, chad, tammy, troll],
+				pieceSetIndex: 1,
+				rate: 150,
+				looping: 'backforth',
+				loops: Infinity
+			});
+			ani.sequence(function(ani) {
+				ani.wait(1500);
+				ani.invoke(function() {
+					board.addActor(goTigers);
+				});
+				ani.wait(2000);
+				ani.invoke(function() {
+					board.removeActor(goTigers);
+					board.addActor(goRedWings);
+				});
+				ani.wait(2000);
+				ani.invoke(function() {
+					board.removeActor(goRedWings);
+				});
+			});
 		});
 
 		dad.ani.frame({
@@ -723,12 +816,15 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 })();
 
 (function() {
-	SAM.Skydiving = function(bgImage, clouds, tileSize, spriteFactory) {
+	SAM.Skydiving = function(bgImage, clouds, landscape, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
 
 		levelLoader = new L7.ColorLevelLoader(clouds, tileSize, 0);
-		var clouds = levelLoader.load();
+		clouds = levelLoader.load();
+
+		levelLoader = new L7.ColorLevelLoader(landscape, tileSize, 0);
+		landscape = levelLoader.load();
 
 		var chad = spriteFactory.chad(L7.p(33, 29));
 		var tammy = spriteFactory.tammy(L7.p(41, 0));
@@ -746,24 +842,27 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		});
 
 		board.parallaxRatio = 0;
-		clouds.parallaxRatio = 0;
+		clouds.parallaxRatio = 0.4;
+		landscape.parallaxRatio = 0.2;
 
 		var parallax = new L7.ParallaxBoard({
-			boards: [board, clouds],
+			boards: [landscape, board, clouds],
 			tileSize: tileSize,
 			width: board.width,
 			height: board.height
 		});
 
-		clouds.ani.tween({
-			targets: [clouds],
-			property: 'offsetY',
-			from: 0,
-			to: 180,
-			duration: 13000
+		clouds.ani.repeat(Infinity, function(ani) {
+			ani.invoke(function() {
+				SAM.game.viewport.scrollY(1);
+			});
+			ani.wait(10);
 		});
 
-
+		parallax.destroy = function() {
+			SAM.game.viewport.reset();
+		};
+		
 		return parallax;
 	};
 
@@ -775,9 +874,9 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
 
-		var ted = spriteFactory.ted(L7.p(34, 35));
-		var chris = spriteFactory.chris(L7.p(49, 36));
-		var ben = spriteFactory.ben(L7.p(2, 20));
+		var ted = spriteFactory.ted(L7.p(34, 40));
+		var chris = spriteFactory.chris(L7.p(49, 41));
+		var ben = spriteFactory.ben(L7.p(2, 23));
 
 		board.addActors(chris, ted, ben);
 
@@ -806,22 +905,34 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var ted = spriteFactory.ted(L7.p(50, 21));
 		var emily = spriteFactory.emily(L7.p(10, 21));
 		var phil = spriteFactory.phil(L7.p(0, 19));
+		var goPackers = spriteFactory.goPackers(L7.p(3, 5));
 
 		board.addActors(matt, sarah, chris, ted, emily, phil);
 
-		board.ani.frame({
-			targets: [matt, sarah, chris, ted, emily, phil],
-			pieceSetIndex: 1,
-			rate: 150,
-			looping: 'backforth',
-			loops: Infinity
+		board.ani.together(function(ani) {
+			ani.frame({
+				targets: [matt, sarah, chris, ted, emily, phil],
+				pieceSetIndex: 1,
+				rate: 150,
+				looping: 'backforth',
+				loops: Infinity
+			});
+			ani.sequence(function(ani) {
+				ani.wait(2000);
+				ani.invoke(function() {
+					board.addActor(goPackers);
+				});
+				ani.wait(3500);
+				ani.invoke(function() {
+					board.removeActor(goPackers);
+				});
+			});
 		});
 
 		return board;
 	};
 
 })();
-
 
 (function() {
 	SAM.Wedding = function(bgImage, tileSize, spriteFactory) {
@@ -930,8 +1041,6 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var storyBoardConfig = [
 			{
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-				transitionIn: 'fade',
-				transitionInDuration: 1000,
 				duration: 20000
 			},
 			{
@@ -943,7 +1052,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				duration: 15000
 			},
 			{
-				board: new SAM.DadTractor(images.dadTractor, tileSize, spriteFactory),
+				board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
 				duration: 13000
 			},
 			{
@@ -988,7 +1097,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				duration: 31000
 			},
 			{
-				board: new SAM.Skydiving(images.skydiving, images.clouds, tileSize, spriteFactory),
+				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
 				duration: 13000
 			},
 			{
@@ -1023,6 +1132,8 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				clearOutContainer: true
 			});
 
+			SAM.game = game;
+
 			game.go();
 		});
 	}
@@ -1037,6 +1148,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				'resources/images/livingRoom.png',
 				'resources/images/tedGarden.png',
 				'resources/images/skydiving.png',
+				'resources/images/landscape.png',
 				'resources/images/clouds.png',
 				'resources/images/hockeyBg.png',
 				'resources/images/hockeyFg.png',
@@ -1044,6 +1156,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				'resources/images/upperPeninsula.png',
 				'resources/images/wedding.png',
 				'resources/images/dadTractor.png',
+				'resources/images/iowaClouds.png',
 				'resources/images/casabonita.png'
 			],
 			loadNow: true,
@@ -1062,6 +1175,23 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 	};
 
 	SAM.SpriteFactory.prototype = {
+		mmmm: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 36,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(123, 136)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		casaTrumpeter: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -1095,7 +1225,6 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				position: position || L7.p(0, 0)
 			});
 		},
-
 
 		raceClock: function(position) {
 			return new L7.Actor({
@@ -1557,6 +1686,57 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			});
 		},
 
+		goPackers: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 44,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(114, 29)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goTigers: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 40,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(132, 77)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goRedWings: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 52,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(159, 29)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		emily: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -1613,7 +1793,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				framesConfig: {
 					src: this.image,
 					width: 10,
-					height: 13,
+					height: 26,
 					direction: 'horizontal',
 					sets: [[0], [1, 2, 3]],
 					initialSet: 0,
@@ -1630,13 +1810,13 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				framesConfig: {
 					src: this.image,
 					width: 10,
-					height: 13,
+					height: 26,
 					direction: 'horizontal',
 					sets: [[0], [1, 2, 3]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
-					offset: L7.p(104, 123)
+					offset: L7.p(132, 2)
 				},
 				position: position || L7.p(0, 0)
 			});
@@ -1646,8 +1826,8 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			return new L7.Actor({
 				framesConfig: {
 					src: this.image,
-					width: 10,
-					height: 13,
+					width: 9,
+					height: 26,
 					direction: 'horizontal',
 					sets: [[0], [0]],
 					initialSet: 0,
