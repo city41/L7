@@ -751,6 +751,57 @@
 				},
 				position: position || L7.p(0, 0)
 			});
+		},
+
+		john: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 12,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(188, 51)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		byron: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 11,
+					height: 18,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(178, 70)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		nicky: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 15,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(175, 109)
+				},
+				position: position || L7.p(0, 0)
+			});
 		}
 	};
 
