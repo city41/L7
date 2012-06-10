@@ -59,7 +59,7 @@
 			},
 			{
 				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
-				duration: 30000
+				duration: 30000000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
