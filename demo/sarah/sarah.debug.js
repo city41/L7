@@ -1,4 +1,4 @@
-(function(){this.L7=this.L7||{};this.L7.global=this;Object.defineProperty(this.L7,"useWebGL",{get:function(){return this._useWebGL},set:function(a){if(this.hasOwnProperty("_useWebGL"))throw Error("You can only set useWebGL once");this._useWebGL=a}});this.L7.isSupportedBrowser=function(){var a=window.navigator.userAgent.toLowerCase();return-1<a.indexOf("chrome")||-1<a.indexOf("firefox")}()})();
+(function(){this.L7=this.L7||{};this.L7.global=this;Object.defineProperty(this.L7,"useWebGL",{get:function(){return this._useWebGL},set:function(a){if(this.hasOwnProperty("_useWebGL"))throw Error("You can only set useWebGL once");this._useWebGL=a}});this.L7.isSupportedBrowser=function(){var a=window.navigator.userAgent.toLowerCase();return-1<a.indexOf("chrome")||-1<a.indexOf("firefox")}();this.L7.isWebGLAvailable=function(){var a=document.createElement("canvas");if(!a)return!1;try{return!!a.getContext("experimental-webgl")}catch(b){return!1}}()})();
 (function(){L7.AnimationFactory=function(a,b){this._owner=a;this._board=b;this._buildStack=[];this._targetStack=[];this._addedAnis=[]};L7.AnimationFactory.prototype={_getBoard:function(){return this._board||this._owner.board},_determineTargets:function(a){return a.targets?a.targets:this._owner.getAnimationTargets(a.filter)},_addAnimationToBoard:function(a){this._addedAnis.push(a);this._getBoard().addDaemon(a)},_addParentAnimation:function(a,b,c,d){c=new c(d);b&&this._targetStack.push(this._determineTargets(b));
 this._buildStack.push(c);a(this);this._buildStack.pop();b&&this._targetStack.pop();0===this._buildStack.length?this._addAnimationToBoard(c):this._buildStack.last.children.add(c);return c},_addAnimation:function(a,b){a.targets||(a.targets="undefined"!==typeof a.filter?this._owner.getAnimationTargets(a.filter):0<this._targetStack.length?this._targetStack.last:this._owner.getAnimationTargets());var c=new b(a);0===this._buildStack.length?this._addAnimationToBoard(c):this._buildStack.last.children.add(c);
 return c},disco:function(a){return this._addAnimation(a,L7.Disco)},shimmer:function(a){return this._addAnimation(a,L7.Shimmer)},plasma:function(a){return this._addAnimation(a,L7.Plasma)},setProperty:function(a){a.duration=0;a.from=a.to=a.value;return this.tween(a)},copyProperty:function(a){return this._addAnimation(a,L7.CopyProperty)},tween:function(a){return this._addAnimation(a,L7.Tween)},frame:function(a){return this._addAnimation(a,L7.Frame)},fadeIn:function(a){return this._addAnimation(a,L7.FadeIn)},
@@ -992,6 +992,11 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 (function() {
 	L7.useWebGL = true;
 
+	function dumpWarning(image, text) {
+		var container = document.getElementById('introContainer');
+		container.innerHTML = '<img src="' + image + '"/><div>' + text + '</div>';
+	}
+
 	function clearContainer(container) {
 		while(container.hasChildNodes()) {
 			container.removeChild(container.firstChild);
@@ -1139,32 +1144,35 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 	}
 
 	if(L7.isSupportedBrowser) {
-		var imageLoader = new L7.ImageLoader({
-			srcs: [
-				'resources/images/dance.png',
-				'resources/images/intro.png',
-				'resources/images/race.png',
-				'resources/images/pool.png',
-				'resources/images/livingRoom.png',
-				'resources/images/tedGarden.png',
-				'resources/images/skydiving.png',
-				'resources/images/landscape.png',
-				'resources/images/clouds.png',
-				'resources/images/hockeyBg.png',
-				'resources/images/hockeyFg.png',
-				'resources/images/lowerPeninsula.png',
-				'resources/images/upperPeninsula.png',
-				'resources/images/wedding.png',
-				'resources/images/dadTractor.png',
-				'resources/images/iowaClouds.png',
-				'resources/images/casabonita.png'
-			],
-			loadNow: true,
-			handler: onImagesLoaded
-		});
+		if(L7.isWebGLAvailable) {
+			var imageLoader = new L7.ImageLoader({
+				srcs: [
+					'resources/images/dance.png',
+					'resources/images/intro.png',
+					'resources/images/race.png',
+					'resources/images/pool.png',
+					'resources/images/livingRoom.png',
+					'resources/images/tedGarden.png',
+					'resources/images/skydiving.png',
+					'resources/images/landscape.png',
+					'resources/images/clouds.png',
+					'resources/images/hockeyBg.png',
+					'resources/images/hockeyFg.png',
+					'resources/images/lowerPeninsula.png',
+					'resources/images/upperPeninsula.png',
+					'resources/images/wedding.png',
+					'resources/images/dadTractor.png',
+					'resources/images/iowaClouds.png',
+					'resources/images/casabonita.png'
+				],
+				loadNow: true,
+				handler: onImagesLoaded
+			});
+		} else {
+			dumpWarning('noWebGL.png', 'Your browser does not support WebGL, which is required to see the animation');
+		}
 	} else {
-	var container = document.getElementById('introContainer');
-	container.innerHTML = '<img id="browserSupportImg" src="browserSupportBigG.gif" alt="supported browsers" /><div>Sorry, the animation only works in Chrome or the latest Firefox</div>';
+		dumpWarning('browserSupportBigG.gif', 'Sorry, the animation only works in Chrome or the latest Firefox');
 	}
 
 })();

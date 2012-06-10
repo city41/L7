@@ -1,6 +1,11 @@
 (function() {
 	L7.useWebGL = true;
 
+	function dumpWarning(image, text) {
+		var container = document.getElementById('introContainer');
+		container.innerHTML = '<img src="' + image + '"/><div>' + text + '</div>';
+	}
+
 	function clearContainer(container) {
 		while(container.hasChildNodes()) {
 			container.removeChild(container.firstChild);
@@ -148,32 +153,35 @@
 	}
 
 	if(L7.isSupportedBrowser) {
-		var imageLoader = new L7.ImageLoader({
-			srcs: [
-				'resources/images/dance.png',
-				'resources/images/intro.png',
-				'resources/images/race.png',
-				'resources/images/pool.png',
-				'resources/images/livingRoom.png',
-				'resources/images/tedGarden.png',
-				'resources/images/skydiving.png',
-				'resources/images/landscape.png',
-				'resources/images/clouds.png',
-				'resources/images/hockeyBg.png',
-				'resources/images/hockeyFg.png',
-				'resources/images/lowerPeninsula.png',
-				'resources/images/upperPeninsula.png',
-				'resources/images/wedding.png',
-				'resources/images/dadTractor.png',
-				'resources/images/iowaClouds.png',
-				'resources/images/casabonita.png'
-			],
-			loadNow: true,
-			handler: onImagesLoaded
-		});
+		if(L7.isWebGLAvailable) {
+			var imageLoader = new L7.ImageLoader({
+				srcs: [
+					'resources/images/dance.png',
+					'resources/images/intro.png',
+					'resources/images/race.png',
+					'resources/images/pool.png',
+					'resources/images/livingRoom.png',
+					'resources/images/tedGarden.png',
+					'resources/images/skydiving.png',
+					'resources/images/landscape.png',
+					'resources/images/clouds.png',
+					'resources/images/hockeyBg.png',
+					'resources/images/hockeyFg.png',
+					'resources/images/lowerPeninsula.png',
+					'resources/images/upperPeninsula.png',
+					'resources/images/wedding.png',
+					'resources/images/dadTractor.png',
+					'resources/images/iowaClouds.png',
+					'resources/images/casabonita.png'
+				],
+				loadNow: true,
+				handler: onImagesLoaded
+			});
+		} else {
+			dumpWarning('noWebGL.png', 'Your browser does not support WebGL, which is required to see the animation');
+		}
 	} else {
-	var container = document.getElementById('introContainer');
-	container.innerHTML = '<img id="browserSupportImg" src="browserSupportBigG.gif" alt="supported browsers" /><div>Sorry, the animation only works in Chrome or the latest Firefox</div>';
+		dumpWarning('browserSupportBigG.gif', 'Sorry, the animation only works in Chrome or the latest Firefox');
 	}
 
 })();
