@@ -55,7 +55,11 @@
 		var storyBoardConfig = [
 			{
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-				duration: 20000
+				duration: 200
+			},
+			{
+				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
+				duration: 30000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -131,7 +135,7 @@
 				duration: 15000
 			},
 			{
-				board: new SAM.Wedding(images.wedding, tileSize, spriteFactory),
+				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
 				duration: 30000
 			}
 		];
@@ -169,7 +173,7 @@
 					'resources/images/hockeyFg.png',
 					'resources/images/lowerPeninsula.png',
 					'resources/images/upperPeninsula.png',
-					'resources/images/wedding.png',
+					'resources/images/stage.png',
 					'resources/images/dadTractor.png',
 					'resources/images/iowaClouds.png',
 					'resources/images/casabonita.png'
