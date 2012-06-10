@@ -334,7 +334,7 @@
 					width: 9,
 					height: 8,
 					direction: 'horizontal',
-					sets: [[], [0, 1, 2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -352,7 +352,7 @@
 					width: 9,
 					height: 9,
 					direction: 'horizontal',
-					sets: [[], [0, 1, 2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -403,7 +403,7 @@
 					width: 24,
 					height: 30,
 					direction: 'horizontal',
-					sets: [[], [0, 1, 2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -633,6 +633,24 @@
 				position: position || L7.p(0, 0)
 			});
 		},
+
+		avPlayerNoShadow: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 12,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(104, 111)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 
 		redwingPlayer: function(position) {
 			return new L7.Actor({
