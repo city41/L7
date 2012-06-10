@@ -187,7 +187,7 @@
 					targets: [board],
 					property: 'offsetX',
 					from: board.offsetX,
-					to: 0,
+					to: config.offsetTo || 0,
 					duration: config.duration
 				});
 			});

@@ -62,6 +62,10 @@
 				duration: 12000
 			},
 			{
+				board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
+				duration: 13000
+			},
+			{
 				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
 				duration: 15000
 			},
@@ -108,7 +112,7 @@
 			},
 			{
 				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
-				duration: 31000
+				duration: 21000
 			},
 			{
 				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
@@ -177,6 +181,8 @@
 					'resources/images/dadTractor.png',
 					'resources/images/iowaClouds.png',
 					'resources/images/casabonita.png',
+					'resources/images/oceanBg.png',
+					'resources/images/oceanFg.png',
 					'resources/images/outro.png'
 				],
 				loadNow: true,

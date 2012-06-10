@@ -4,6 +4,40 @@
 	};
 
 	SAM.SpriteFactory.prototype = {
+		mantaGoingRight: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 22,
+					height: 21,
+					direction: 'horizontal',
+					sets: [[0], [0,1,2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(205, 93)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		mantaGoingLeft: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 22,
+					height: 21,
+					direction: 'horizontal',
+					sets: [[0], [0,1,2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(205, 70)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		mmmm: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -89,6 +123,23 @@
 			});
 		},
 
+		mattWetsuit: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 11,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(173, 0)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		mattRace: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -152,6 +203,23 @@
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(0, 15)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		sarahWetsuit: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 10,
+					direction: 'horizontal',
+					sets: [[0], [2, 1, 2, 4, 5, 4]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(173, 15)
 				},
 				position: position || L7.p(0, 0)
 			});

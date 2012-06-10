@@ -2035,9 +2035,7 @@ L7.CanvasBoardRenderMixin = {
 		this.boards = this.boards || [];
 
 		this.boards.forEach(function(board, i) {
-			if (!_.isNumber(board.parallaxRatio)) {
-				throw new Error("ParallaxBoard: given a board that lacks a parallax ratio");
-			}
+			board.parallaxRatio = board.parallaxRatio || 0;
 			if (!_.isNumber(board.depth)) {
 				board.depth = i;
 			}
