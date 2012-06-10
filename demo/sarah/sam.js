@@ -133,6 +133,10 @@
 			{
 				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
 				duration: 40000
+			},
+			{
+				board: new SAM.Outro(images.outro, tileSize, spriteFactory),
+				duration: 100000
 			}
 		];
 
@@ -172,7 +176,8 @@
 					'resources/images/stage.png',
 					'resources/images/dadTractor.png',
 					'resources/images/iowaClouds.png',
-					'resources/images/casabonita.png'
+					'resources/images/casabonita.png',
+					'resources/images/outro.png'
 				],
 				loadNow: true,
 				handler: onImagesLoaded
