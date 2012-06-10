@@ -669,6 +669,24 @@
 			});
 		},
 
+		redwingPlayerNoShadow: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 12,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(132, 2)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+
 		hockeyRef: function(position) {
 			return new L7.Actor({
 				framesConfig: {

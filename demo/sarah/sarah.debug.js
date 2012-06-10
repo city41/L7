@@ -935,59 +935,210 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 })();
 
 (function() {
+
+	var row1 = {
+		tileSizeRatio: 1,
+		from: 'right',
+		positionTweak: 0,
+		actors: [{
+			n: 'boo',
+			y: 17
+		},
+		{
+			n: 'chad',
+			y: 11
+		},
+		{
+			n: 'tammy',
+			y: 12
+		},
+		{
+			n: 'schoeffDance',
+			y: 13
+		},
+		{
+			n: 'bobo',
+			y: 16
+		},
+		{
+			n: 'ben',
+			y: - 4,
+			x: 1
+		}],
+		duration: 8000
+	};
+
+	var row2 = {
+		tileSizeRatio: 1.2,
+		from: 'left',
+		positionTweak: 0,
+		actors: [{
+			n: 'ted',
+			y: 17
+		},
+		{
+			n: 'chris',
+			y: 17
+		},
+		{
+			n: 'buddy',
+			y: 20
+		},
+		{
+			n: 'dad',
+			y: 15
+		},
+		{
+			n: 'mom',
+			y: 16
+		},
+		{
+			n: 'livi',
+			y: 21
+		}],
+		duration: 9000,
+		delay: 1200
+	};
+
+	var row3 = {
+		tileSizeRatio: 1.4,
+		from: 'right',
+		positionTweak: 0,
+		actors: [{
+			n: 'phil',
+			y: 20
+		},
+		{
+			n: 'emily',
+			y: 22
+		},
+		{
+			n: 'lily',
+			y: 24
+		},
+		{
+			n: 'lucy',
+			y: 23
+		}],
+		duration: 10000,
+		delay: 2000
+	};
+
+	var row4 = {
+		tileSizeRatio: 1.8,
+		from: 'left',
+		positionTweak: 10,
+		actors: [{
+			n: 'mattWedding',
+			y: 21
+		}],
+		duration: 10000,
+		delay: 4000
+	};
+
+	var row5 = {
+		tileSizeRatio: 1.8,
+		from: 'right',
+		positionTweak: 18,
+		actors: [{
+			n: 'sarahWedding',
+			y: 21
+		}],
+		duration: 10000,
+		delay: 4000
+	};
+
+
 	SAM.Wedding = function(bgImage, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
+		board.parallaxRatio = 0;
 
-		var matt = spriteFactory.mattWedding(L7.p(20, 20));
-		var sarah = spriteFactory.sarahWedding(L7.p(30, 21));
-		var lucy = spriteFactory.lucy(L7.p(30, 35));
-		var schoeff = spriteFactory.schoeffDance(L7.p(20, 33));
+		var john = spriteFactory.john(L7.p(10, 0));
+		var byron = spriteFactory.byron(L7.p(40, - 4));
+		var nicky = spriteFactory.nicky(L7.p(22, 0));
 
- 		var dad = spriteFactory.dad(L7.p(10, 19));
- 		var mom = spriteFactory.mom(L7.p(00, 21));
-
- 		var chris = spriteFactory.chris(L7.p(50, 5));
- 		var ted = spriteFactory.ted(L7.p(40, 18));
-		var ben = spriteFactory.ben(L7.p(1, 33));
-
-		var bobo = spriteFactory.bobo(L7.p(25, 45));
-		var boo = spriteFactory.boo(L7.p(2,2));
-
-		var buddy = spriteFactory.buddy(L7.p(12,4));
-		var livi = spriteFactory.livi(L7.p(50,30));
-
-		var lily = spriteFactory.lily(L7.p(50, 21));
-
-		var emily = spriteFactory.emily(L7.p(35, 44));
-		var phil = spriteFactory.phil(L7.p(48, 44));
-
-		var chad = spriteFactory.chad(L7.p(20, 5));
-		var tammy = spriteFactory.tammy(L7.p(30, 1));
-
-		board.addActors(boo, buddy, mom, chad, tammy, lily, livi, chris, ted, emily, phil, dad, sarah, matt, schoeff, lucy, ben, bobo);
+		board.addActors(john, byron, nicky);
 
 		board.ani.frame({
-			targets: [boo, matt, buddy, sarah, mom, chad, tammy, livi, chris, ted, lily, emily, phil, schoeff, lucy, ben, bobo],
-			pieceSetIndex: 1,
+			targets: [john, byron, nicky],
+			pieceSetIndex: 0,
 			rate: 150,
 			looping: 'backforth',
 			loops: Infinity
 		});
 
-		dad.ani.frame({
-			targets: [dad],
-			pieceSetIndex: 1,
-			rate: 400,
-			looping: 'backforth',
-			loops: Infinity
+		this.baseWidth = board.width;
+		this.baseHeight = board.height;
+		this.tileSize = tileSize;
+		this.spriteFactory = spriteFactory;
+
+		var firstRow = this._getRow(row1);
+		var secondRow = this._getRow(row2);
+		var thirdRow = this._getRow(row3);
+		var fourthRow = this._getRow(row4);
+		var fifthRow = this._getRow(row5);
+
+		var parallax = new L7.ParallaxBoard({
+			boards: [board, firstRow, secondRow, thirdRow, fourthRow, fifthRow],
+			width: board.width,
+			height: board.height
+		});
+
+		parallax.destroy = function() {
+			SAM.game.viewport.reset();
+		};
+
+		return parallax;
+	};
+
+	SAM.Wedding.prototype._getRow = function(config) {
+		var board = new L7.Board({
+			width: this.baseWidth,
+			height: this.baseHeight,
+			tileSize: this.tileSize * config.tileSizeRatio,
+			parallaxRatio: 0
+		});
+
+		board.offsetX = board.pixelWidth;
+		if (config.from === 'right') {
+			board.offsetX *= - 1;
+		}
+
+		var tweak = config.positionTweak || 0;
+		var actors = [];
+
+		for (var i = 0; i < config.actors.length; ++i) {
+			var actorConfig = config.actors[i];
+			var xOffset = actorConfig.x || 0;
+			var actor = this.spriteFactory[actorConfig.n](L7.p(i * 9 + tweak + xOffset, actorConfig.y));
+			board.addActor(actor);
+			actors.push(actor);
+		}
+
+		board.ani.together(function(ani) {
+			ani.sequence(function(ani) {
+				ani.wait(config.delay || 0);
+				ani.tween({
+					targets: [board],
+					property: 'offsetX',
+					from: board.offsetX,
+					to: 0,
+					duration: config.duration
+				});
+			});
+			ani.frame({
+				targets: actors,
+				pieceSetIndex: 1,
+				rate: 150,
+				looping: 'backforth',
+				loops: Infinity
+			});
 		});
 
 		return board;
 	};
-
 })();
-
 
 (function() {
 	L7.useWebGL = true;
@@ -1122,8 +1273,8 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				duration: 15000
 			},
 			{
-				board: new SAM.Wedding(images.wedding, tileSize, spriteFactory),
-				duration: 30000
+				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
+				duration: 40000
 			}
 		];
 
@@ -1160,7 +1311,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					'resources/images/hockeyFg.png',
 					'resources/images/lowerPeninsula.png',
 					'resources/images/upperPeninsula.png',
-					'resources/images/wedding.png',
+					'resources/images/stage.png',
 					'resources/images/dadTractor.png',
 					'resources/images/iowaClouds.png',
 					'resources/images/casabonita.png'
@@ -1513,7 +1664,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					width: 9,
 					height: 8,
 					direction: 'horizontal',
-					sets: [[], [0, 1, 2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -1531,7 +1682,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					width: 9,
 					height: 9,
 					direction: 'horizontal',
-					sets: [[], [0, 1, 2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -1582,7 +1733,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					width: 24,
 					height: 30,
 					direction: 'horizontal',
-					sets: [[], [0, 1, 2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -1813,6 +1964,24 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			});
 		},
 
+		avPlayerNoShadow: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 12,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(104, 111)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+
 		redwingPlayer: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -1829,6 +1998,24 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				position: position || L7.p(0, 0)
 			});
 		},
+
+		redwingPlayerNoShadow: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 10,
+					height: 12,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(132, 2)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 
 		hockeyRef: function(position) {
 			return new L7.Actor({
@@ -1927,6 +2114,57 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(157, 68)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		john: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 12,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(188, 51)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		byron: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 11,
+					height: 18,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(178, 70)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		nicky: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 15,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(175, 109)
 				},
 				position: position || L7.p(0, 0)
 			});

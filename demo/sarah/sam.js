@@ -55,11 +55,7 @@
 		var storyBoardConfig = [
 			{
 				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-				duration: 200
-			},
-			{
-				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
-				duration: 30000000
+				duration: 20000
 			},
 			{
 				board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -136,7 +132,7 @@
 			},
 			{
 				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
-				duration: 30000
+				duration: 40000
 			}
 		];
 

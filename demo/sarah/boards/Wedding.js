@@ -17,12 +17,12 @@
 			y: 12
 		},
 		{
-			n: 'bobo',
-			y: 16
+			n: 'schoeffDance',
+			y: 13
 		},
 		{
-			n: 'avPlayerNoShadow',
-			y: 13
+			n: 'bobo',
+			y: 16
 		},
 		{
 			n: 'ben',
@@ -31,6 +31,87 @@
 		}],
 		duration: 8000
 	};
+
+	var row2 = {
+		tileSizeRatio: 1.2,
+		from: 'left',
+		positionTweak: 0,
+		actors: [{
+			n: 'ted',
+			y: 17
+		},
+		{
+			n: 'chris',
+			y: 17
+		},
+		{
+			n: 'buddy',
+			y: 20
+		},
+		{
+			n: 'dad',
+			y: 15
+		},
+		{
+			n: 'mom',
+			y: 16
+		},
+		{
+			n: 'livi',
+			y: 21
+		}],
+		duration: 9000,
+		delay: 1200
+	};
+
+	var row3 = {
+		tileSizeRatio: 1.4,
+		from: 'right',
+		positionTweak: 0,
+		actors: [{
+			n: 'phil',
+			y: 20
+		},
+		{
+			n: 'emily',
+			y: 22
+		},
+		{
+			n: 'lily',
+			y: 24
+		},
+		{
+			n: 'lucy',
+			y: 23
+		}],
+		duration: 10000,
+		delay: 2000
+	};
+
+	var row4 = {
+		tileSizeRatio: 1.8,
+		from: 'left',
+		positionTweak: 10,
+		actors: [{
+			n: 'mattWedding',
+			y: 21
+		}],
+		duration: 10000,
+		delay: 4000
+	};
+
+	var row5 = {
+		tileSizeRatio: 1.8,
+		from: 'right',
+		positionTweak: 18,
+		actors: [{
+			n: 'sarahWedding',
+			y: 21
+		}],
+		duration: 10000,
+		delay: 4000
+	};
+
 
 	SAM.Wedding = function(bgImage, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
@@ -56,17 +137,14 @@
 		this.tileSize = tileSize;
 		this.spriteFactory = spriteFactory;
 
-		//var firstRow = this._getFirstRow(tileSize, spriteFactory, board.width, board.height);
 		var firstRow = this._getRow(row1);
-		var secondRow = this._getSecondRow(tileSize, spriteFactory, board.width, board.height);
-		var thirdRow = this._getThirdRow(tileSize, spriteFactory, board.width, board.height);
-		var fourthRow = this._getFourthRow(tileSize, spriteFactory, board.width, board.height);
-		var fifthRow = this._getFifthRow(tileSize, spriteFactory, board.width, board.height);
-		var sixthRow = this._getSixthRow(tileSize, spriteFactory, board.width, board.height);
+		var secondRow = this._getRow(row2);
+		var thirdRow = this._getRow(row3);
+		var fourthRow = this._getRow(row4);
+		var fifthRow = this._getRow(row5);
 
 		var parallax = new L7.ParallaxBoard({
-			boards: [board, firstRow],
-			//, secondRow, thirdRow, fourthRow, fifthRow, sixthRow],
+			boards: [board, firstRow, secondRow, thirdRow, fourthRow, fifthRow],
 			width: board.width,
 			height: board.height
 		});
@@ -123,176 +201,6 @@
 		});
 
 		return board;
-	},
-
-	SAM.Wedding.prototype._getFirstRow = function(tileSize, spriteFactory, baseWidth, baseHeight) {
-		var board = new L7.Board({
-			width: baseWidth,
-			height: baseHeight,
-			tileSize: tileSize,
-			parallaxRatio: 0
-		});
-
-		board.offsetX = - board.pixelWidth;
-
-		for (var i = 0; i < 6; ++i) {
-			board.addActor(spriteFactory.dad(L7.p(i * 10, 11)));
-		}
-
-		board.ani.tween({
-			targets: [board],
-			property: 'offsetX',
-			from: - board.pixelWidth,
-			to: 0,
-			duration: 8000
-		});
-
-		return board;
 	};
-
-	SAM.Wedding.prototype._getSecondRow = function(tileSize, spriteFactory, baseWidth, baseHeight) {
-		var board = new L7.Board({
-			width: baseWidth,
-			height: baseHeight,
-			tileSize: tileSize * 1.25,
-			parallaxRatio: 0
-		});
-
-		board.offsetX = board.pixelWidth;
-
-		for (var i = 0; i < 3; ++i) {
-			var actor = spriteFactory.mom(L7.p(i * 8, 14));
-			board.addActor(actor);
-		}
-
-		board.ani.sequence(function(ani) {
-			ani.wait(1000);
-			ani.tween({
-				targets: [board],
-				property: 'offsetX',
-				from: board.pixelWidth,
-				to: 0,
-				duration: 4000
-			});
-		});
-
-		return board;
-	};
-
-	SAM.Wedding.prototype._getThirdRow = function(tileSize, spriteFactory, baseWidth, baseHeight) {
-		var board = new L7.Board({
-			width: baseWidth,
-			height: baseHeight,
-			tileSize: tileSize * 1.25,
-			parallaxRatio: 0
-		});
-
-		board.offsetX = - board.pixelWidth;
-
-		for (var i = 0; i < 3; ++i) {
-			var actor = spriteFactory.mom(L7.p(baseWidth / 2 - 5 + i * 8, 14));
-			board.addActor(actor);
-		}
-
-		board.ani.sequence(function(ani) {
-			ani.wait(1000);
-			ani.tween({
-				targets: [board],
-				property: 'offsetX',
-				from: - board.pixelWidth,
-				to: 0,
-				duration: 6000
-			});
-		});
-
-		return board;
-	};
-
-	SAM.Wedding.prototype._getFourthRow = function(tileSize, spriteFactory, baseWidth, baseHeight) {
-		var board = new L7.Board({
-			width: baseWidth,
-			height: baseHeight,
-			tileSize: tileSize * 1.45,
-			parallaxRatio: 0
-		});
-
-		board.offsetX = board.pixelWidth;
-
-		for (var i = 0; i < 4; ++i) {
-			board.addActor(spriteFactory.phil(L7.p(i * 10, 19)));
-		}
-
-		board.ani.sequence(function(ani) {
-			ani.wait(2000);
-			ani.tween({
-				targets: [board],
-				property: 'offsetX',
-				from: board.pixelWidth,
-				to: 0,
-				duration: 12000
-			});
-		});
-
-		return board;
-	};
-
-	SAM.Wedding.prototype._getFifthRow = function(tileSize, spriteFactory, baseWidth, baseHeight) {
-		var board = new L7.Board({
-			width: baseWidth,
-			height: baseHeight,
-			tileSize: tileSize * 1.75,
-			parallaxRatio: 0
-		});
-
-		board.offsetX = board.pixelWidth;
-
-		for (var i = 0; i < 2; ++i) {
-			var actor = spriteFactory.chad(L7.p(i * 8, 21));
-			board.addActor(actor);
-		}
-
-		board.ani.sequence(function(ani) {
-			ani.wait(4000);
-			ani.tween({
-				targets: [board],
-				property: 'offsetX',
-				from: board.pixelWidth,
-				to: 0,
-				duration: 11000
-			});
-		});
-
-		return board;
-	};
-
-	SAM.Wedding.prototype._getSixthRow = function(tileSize, spriteFactory, baseWidth, baseHeight) {
-		var board = new L7.Board({
-			width: baseWidth,
-			height: baseHeight,
-			tileSize: tileSize * 1.75,
-			parallaxRatio: 0
-		});
-
-		board.offsetX = - board.pixelWidth;
-
-		for (var i = 0; i < 2; ++i) {
-			var actor = spriteFactory.chad(L7.p(baseWidth / 2 - 15 + i * 8, 21));
-			board.addActor(actor);
-		}
-
-		board.ani.sequence(function(ani) {
-			ani.wait(4000);
-			ani.tween({
-				targets: [board],
-				property: 'offsetX',
-				from: - board.pixelWidth,
-				to: 0,
-				duration: 11000
-			});
-		});
-
-		return board;
-	};
-
 })();
 
