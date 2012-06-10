@@ -719,6 +719,48 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 })();
 
 (function() {
+	SAM.Outro = function(bgImage, tileSize, spriteFactory) {
+		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
+		var board = levelLoader.load();
+		board.parallaxRatio = 0;
+
+		var danceBoard = new L7.Board({
+			tileSize: tileSize * 1.8,
+			width: board.width,
+			height: board.height,
+			parallaxRatio: 0
+		});
+
+		var sarahWedding = spriteFactory.sarahWedding(L7.p(18, 21));
+		var mattWedding = spriteFactory.mattWedding(L7.p(10, 21));
+
+		danceBoard.addActors(sarahWedding, mattWedding);
+
+		danceBoard.ani.frame({
+			targets: [sarahWedding, mattWedding],
+			rate: 150,
+			looping: 'backforth',
+			pieceSetIndex: 1,
+			loops: Infinity
+		});
+
+		var parallax = new L7.ParallaxBoard({
+			boards: [board, danceBoard],
+			width: board.width,
+			height: board.height
+		});
+
+		parallax.destroy = function() {
+			SAM.game.viewport.reset();
+		};
+
+		return parallax;
+	};
+})();
+
+
+
+(function() {
 	SAM.PoolSchoeffLump = function(bgImage, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
 		var board = levelLoader.load();
@@ -1275,6 +1317,10 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			{
 				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
 				duration: 40000
+			},
+			{
+				board: new SAM.Outro(images.outro, tileSize, spriteFactory),
+				duration: 100000
 			}
 		];
 
@@ -1314,7 +1360,8 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					'resources/images/stage.png',
 					'resources/images/dadTractor.png',
 					'resources/images/iowaClouds.png',
-					'resources/images/casabonita.png'
+					'resources/images/casabonita.png',
+					'resources/images/outro.png'
 				],
 				loadNow: true,
 				handler: onImagesLoaded
