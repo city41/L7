@@ -55,8 +55,8 @@ L7.CanvasBoardRenderMixin={render:function(a,b,c,d){this.angle&&(b.save(),b.rota
 0;i<r.length;++i)if(n=r[i],s=n.getScale(),_.isNumber(s)||(s=1),m=n.getColor())b.fillStyle=L7.Color.toCssString(m),m=a*s|0,q=n.getOffset(),l=k=0,q&&(k=a*q.x|0,l=a*q.y|0),q=a/2-m/2,b.fillRect((n.x-j)*(a+e)+e+q+h+k,(n.y-f)*(a+e)+e+q+g+l,m,m);for(i=0;i<this.freeActors.length;++i)if(e=this.freeActors[i],m=L7.Color.toCssString(e.color))b.fillStyle=m,b.fillRect(e.position.x-c,e.position.y-d,a,a);this.angle&&b.restore()}};
 (function(){L7.HitManager=function(){};L7.HitManager.prototype={detectHitsForActor:function(a){for(var b=a.pieces.length;b--;){var c=a.board.tileAt(a.pieces[b].position);c&&this._detectTileHits(c)}},detectHits:function(a){a.forEach(function(a){this._detectTileHits(a)},this)},_detectTileHits:function(a){a.each(function(b){_.isObject(b.owner)&&_.isObject(b.owner.hitDetection)&&("undefined"===typeof b.owner.hitDetection.enabled||b.owner.hitDetection.enabled.call(b.owner))&&_.each(b.owner.hitDetection,
 function(c,d){a.tag===d&&c.call(b.owner,a,a);a.each(function(e){e!==b&&e.owner&&e.owner.team===d&&c.call(b.owner,a,e.owner)},this)},this)},this)}}})();
-(function(){L7.ParallaxBoard=function(a){_.extend(this,a);this.boards=this.boards||[];this.boards.forEach(function(a,c){if(!_.isNumber(a.parallaxRatio))throw Error("ParallaxBoard: given a board that lacks a parallax ratio");_.isNumber(a.depth)||(a.depth=c)},this)};L7.ParallaxBoard.prototype={update:function(){var a=_.toArray(arguments);this.boards.forEach(function(b){b.update.apply(b,a)})},render:function(a,b,c,d,e){this.boards.forEach(function(f){!1!==f.visible&&f.render(a,b,c*f.parallaxRatio,d*
-f.parallaxRatio,e)})},clicked:function(a){for(var b=this.boards.length;b--&&!this.boards[b].clicked(a););}};Object.defineProperty(L7.ParallaxBoard.prototype,"viewport",{get:function(){return this.viewport},set:function(a){this.boards.forEach(function(b){b.viewport=a})},enumerable:!0});Object.defineProperty(L7.ParallaxBoard.prototype,"game",{get:function(){return this.game},set:function(a){this.boards.forEach(function(b){b.game=a})},enumerable:!0})})();
+(function(){L7.ParallaxBoard=function(a){_.extend(this,a);this.boards=this.boards||[];this.boards.forEach(function(a,c){a.parallaxRatio=a.parallaxRatio||0;_.isNumber(a.depth)||(a.depth=c)},this)};L7.ParallaxBoard.prototype={update:function(){var a=_.toArray(arguments);this.boards.forEach(function(b){b.update.apply(b,a)})},render:function(a,b,c,d,e){this.boards.forEach(function(f){!1!==f.visible&&f.render(a,b,c*f.parallaxRatio,d*f.parallaxRatio,e)})},clicked:function(a){for(var b=this.boards.length;b--&&
+!this.boards[b].clicked(a););}};Object.defineProperty(L7.ParallaxBoard.prototype,"viewport",{get:function(){return this.viewport},set:function(a){this.boards.forEach(function(b){b.viewport=a})},enumerable:!0});Object.defineProperty(L7.ParallaxBoard.prototype,"game",{get:function(){return this.game},set:function(a){this.boards.forEach(function(b){b.game=a})},enumerable:!0})})();
 (function(){L7.Piece=function(a){_.extend(this,a||{})};Object.defineProperty(L7.Piece.prototype,"position",{get:function(){if(this.owner)return this.owner.position.add(this.anchorDelta)},enumerable:!0})})();
 (function(){L7.StoryBoard=function(a){this.boardConfigs=a;this._setCurrentBoard(0)};L7.StoryBoard.prototype={_setCurrentBoard:function(a){this._currentBoardIndex=a;if(a=this.boardConfigs[a]){this._currentBoardConfig=a;var b=this._currentBoardConfig.board;this.width=b.width;this.height=b.height;this.tileSize=b.tileSize;this.borderWidth=b.borderWidth;this._currentDuration=a.duration;b.viewport=this.viewport;b.game=this.game}},_setNextBoard:function(){this._currentBoardConfig.board&&this._currentBoardConfig.board.destroy&&
 this._currentBoardConfig.board.destroy();this._setCurrentBoard(this._currentBoardIndex+1)},update:function(a,b){this._currentBoardConfig&&(this._currentBoardConfig.board.update(a,b),this._currentDuration-=a,0>=this._currentDuration&&this._setNextBoard())},render:function(){this._currentBoardConfig&&this._currentBoardConfig.board.render.apply(this._currentBoardConfig.board,arguments)},clicked:function(){this._currentBoardConfig&&this._currentBoardConfig.board.clicked.apply(this._currentBoardConfig.board,
@@ -479,6 +479,93 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		});
 	};
 
+})();
+
+(function() {
+	SAM.Hawaii = function(bgImage, fgImage, tileSize, spriteFactory) {
+		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
+		var bgBoard = levelLoader.load();
+
+		levelLoader = new L7.ColorLevelLoader(fgImage, tileSize, 0);
+		var fgBoard = levelLoader.load();
+
+		var matt = spriteFactory.mattWetsuit(L7.p(29, 7));
+		var sarah = spriteFactory.sarahWetsuit(L7.p(38, 8));
+
+		fgBoard.addActors(matt, sarah);
+
+		var mantaLeftBoard = this._getMantaBoard({
+			from: 'right',
+			actors: [{ n: 'mantaGoingLeft', y: 30 }],
+			duration: 8000,
+			delay: 1800,
+			offsetTo: fgBoard.pixelWidth
+		}, spriteFactory, tileSize);
+
+		var mantaRightBoard = this._getMantaBoard({
+			from: 'left',
+			actors: [{ n: 'mantaGoingRight', y: 40 }],
+			duration: 7000,
+			delay: 2000,
+			offsetTo: -fgBoard.pixelWidth
+		}, spriteFactory, tileSize);
+
+		var parallax = new L7.ParallaxBoard({
+			boards: [bgBoard, fgBoard, mantaLeftBoard, mantaRightBoard],
+			width: 60,
+			height: 60
+		});
+
+		fgBoard.ani.together(Infinity, function(ani) {
+			ani.frame({
+				targets: [matt, sarah],
+				pieceSetIndex: 1,
+				rate: 150,
+				looping: 'backforth',
+				loops: Infinity
+			});
+			ani.repeat(Infinity, function(ani) {
+				ani.sequence(function(ani) {
+					ani.tween({
+						targets: [fgBoard],
+						property: 'offsetY',
+						from: 0,
+						to: 12,
+						easing: 'easeInOutQuad',
+						duration: 3000
+					});
+					ani.waitBetween(400, 1000);
+					ani.tween({
+						targets: [fgBoard],
+						property: 'offsetY',
+						from: 12,
+						to: 0,
+						easing: 'easeInOutQuad',
+						duration: 2000
+					});
+				});
+			});
+		});
+
+		return parallax;
+	};
+
+	SAM.Hawaii.prototype._getMantaBoard = function(config, spriteFactory, tileSize) {
+		_.extend(config, {
+			tileSizeRatio: 1,
+			positionTweak: 0
+		});
+
+		var context = {
+			spriteFactory: spriteFactory,
+			tileSize: tileSize,
+			baseWidth: 60,
+			baseHeight: 60
+		};
+
+
+		return SAM.Wedding.prototype._getRow.call(context, config);
+	};
 })();
 
 (function() {
@@ -1165,7 +1252,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					targets: [board],
 					property: 'offsetX',
 					from: board.offsetX,
-					to: 0,
+					to: config.offsetTo || 0,
 					duration: config.duration
 				});
 			});
@@ -1246,6 +1333,10 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				duration: 12000
 			},
 			{
+				board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
+				duration: 13000
+			},
+			{
 				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
 				duration: 15000
 			},
@@ -1292,7 +1383,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			},
 			{
 				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
-				duration: 31000
+				duration: 21000
 			},
 			{
 				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
@@ -1361,6 +1452,8 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					'resources/images/dadTractor.png',
 					'resources/images/iowaClouds.png',
 					'resources/images/casabonita.png',
+					'resources/images/oceanBg.png',
+					'resources/images/oceanFg.png',
 					'resources/images/outro.png'
 				],
 				loadNow: true,
@@ -1381,6 +1474,40 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 	};
 
 	SAM.SpriteFactory.prototype = {
+		mantaGoingRight: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 22,
+					height: 21,
+					direction: 'horizontal',
+					sets: [[0], [0,1,2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(205, 93)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		mantaGoingLeft: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 22,
+					height: 21,
+					direction: 'horizontal',
+					sets: [[0], [0,1,2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(205, 70)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		mmmm: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -1466,6 +1593,23 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			});
 		},
 
+		mattWetsuit: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 11,
+					direction: 'horizontal',
+					sets: [[0], [1, 2, 3]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(173, 0)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		mattRace: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -1529,6 +1673,23 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(0, 15)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		sarahWetsuit: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 10,
+					direction: 'horizontal',
+					sets: [[0], [2, 1, 2, 4, 5, 4]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(173, 15)
 				},
 				position: position || L7.p(0, 0)
 			});

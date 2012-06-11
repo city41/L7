@@ -11,7 +11,7 @@
 					width: 22,
 					height: 21,
 					direction: 'horizontal',
-					sets: [[0], [0,1,2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -28,7 +28,7 @@
 					width: 22,
 					height: 21,
 					direction: 'horizontal',
-					sets: [[0], [0,1,2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -378,6 +378,40 @@
 			});
 		},
 
+		schoeffPoke: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 3,
+					height: 8,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(160, 138)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goBears: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 39,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(165, 135)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		lily: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -604,7 +638,7 @@
 			return new L7.Actor({
 				framesConfig: {
 					src: this.image,
-					width: 40,
+					width: 41,
 					height: 14,
 					direction: 'horizontal',
 					sets: [[0]],
@@ -621,7 +655,7 @@
 			return new L7.Actor({
 				framesConfig: {
 					src: this.image,
-					width: 52,
+					width: 53,
 					height: 14,
 					direction: 'horizontal',
 					sets: [[0]],
@@ -719,7 +753,6 @@
 			});
 		},
 
-
 		redwingPlayer: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -753,7 +786,6 @@
 				position: position || L7.p(0, 0)
 			});
 		},
-
 
 		hockeyRef: function(position) {
 			return new L7.Actor({

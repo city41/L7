@@ -13,6 +13,7 @@
 		var goTigers = spriteFactory.goTigers(L7.p(11, 5));
 		var goRedWings = spriteFactory.goRedWings(L7.p(3, 5));
 
+
 		board.addActors(matt, sarah, mom, dad, chad, tammy, troll);
 
 		board.ani.together(function(ani) {
@@ -28,9 +29,12 @@
 				ani.invoke(function() {
 					board.addActor(goTigers);
 				});
-				ani.wait(2000);
+				ani.wait(3000);
 				ani.invoke(function() {
 					board.removeActor(goTigers);
+				});
+				ani.wait(1300);
+				ani.invoke(function() {
 					board.addActor(goRedWings);
 				});
 				ani.wait(2000);
@@ -48,7 +52,44 @@
 			loops: Infinity
 		});
 
-		return board;
+		var schoeff = spriteFactory.schoeffPoke(L7.p(32, 52));
+		var goBears = spriteFactory.goBears(L7.p(14, 37));
+
+		var schoeffBoard = new L7.Board({
+			width: board.width,
+			height: board.height,
+			tileSize: tileSize
+		});
+		schoeffBoard.offsetY = -schoeff.framesConfig.height * schoeffBoard.tileSize;
+
+		schoeffBoard.addActor(schoeff);
+
+		schoeffBoard.ani.sequence(function(ani) {
+			ani.wait(9000);
+			ani.tween({
+				targets: [schoeffBoard],
+				property: 'offsetY',
+				from: schoeffBoard.offsetY,
+				to: 0,
+				duration: 500
+			});
+			ani.wait(500);
+			ani.invoke(function() {
+				schoeffBoard.addActor(goBears);
+			});
+			ani.wait(2000);
+			ani.invoke(function() {
+				schoeffBoard.removeActor(goBears);
+			});
+		});
+
+		var parallax = new L7.ParallaxBoard({
+			boards: [board, schoeffBoard],
+			width: board.width,
+			height: board.height
+		});
+
+		return parallax;
 	};
 
 })();
