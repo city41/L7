@@ -765,6 +765,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var goTigers = spriteFactory.goTigers(L7.p(11, 5));
 		var goRedWings = spriteFactory.goRedWings(L7.p(3, 5));
 
+
 		board.addActors(matt, sarah, mom, dad, chad, tammy, troll);
 
 		board.ani.together(function(ani) {
@@ -780,9 +781,12 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				ani.invoke(function() {
 					board.addActor(goTigers);
 				});
-				ani.wait(2000);
+				ani.wait(3000);
 				ani.invoke(function() {
 					board.removeActor(goTigers);
+				});
+				ani.wait(1300);
+				ani.invoke(function() {
 					board.addActor(goRedWings);
 				});
 				ani.wait(2000);
@@ -800,7 +804,44 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			loops: Infinity
 		});
 
-		return board;
+		var schoeff = spriteFactory.schoeffPoke(L7.p(32, 52));
+		var goBears = spriteFactory.goBears(L7.p(14, 37));
+
+		var schoeffBoard = new L7.Board({
+			width: board.width,
+			height: board.height,
+			tileSize: tileSize
+		});
+		schoeffBoard.offsetY = -schoeff.framesConfig.height * schoeffBoard.tileSize;
+
+		schoeffBoard.addActor(schoeff);
+
+		schoeffBoard.ani.sequence(function(ani) {
+			ani.wait(9000);
+			ani.tween({
+				targets: [schoeffBoard],
+				property: 'offsetY',
+				from: schoeffBoard.offsetY,
+				to: 0,
+				duration: 500
+			});
+			ani.wait(500);
+			ani.invoke(function() {
+				schoeffBoard.addActor(goBears);
+			});
+			ani.wait(2000);
+			ani.invoke(function() {
+				schoeffBoard.removeActor(goBears);
+			});
+		});
+
+		var parallax = new L7.ParallaxBoard({
+			boards: [board, schoeffBoard],
+			width: board.width,
+			height: board.height
+		});
+
+		return parallax;
 	};
 
 })();
@@ -1481,7 +1522,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					width: 22,
 					height: 21,
 					direction: 'horizontal',
-					sets: [[0], [0,1,2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -1498,7 +1539,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					width: 22,
 					height: 21,
 					direction: 'horizontal',
-					sets: [[0], [0,1,2]],
+					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
@@ -1848,6 +1889,40 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			});
 		},
 
+		schoeffPoke: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 3,
+					height: 8,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(160, 138)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		goBears: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 39,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(165, 135)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		lily: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -2074,7 +2149,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			return new L7.Actor({
 				framesConfig: {
 					src: this.image,
-					width: 40,
+					width: 41,
 					height: 14,
 					direction: 'horizontal',
 					sets: [[0]],
@@ -2091,7 +2166,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			return new L7.Actor({
 				framesConfig: {
 					src: this.image,
-					width: 52,
+					width: 53,
 					height: 14,
 					direction: 'horizontal',
 					sets: [[0]],
@@ -2189,7 +2264,6 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			});
 		},
 
-
 		redwingPlayer: function(position) {
 			return new L7.Actor({
 				framesConfig: {
@@ -2223,7 +2297,6 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				position: position || L7.p(0, 0)
 			});
 		},
-
 
 		hockeyRef: function(position) {
 			return new L7.Actor({
