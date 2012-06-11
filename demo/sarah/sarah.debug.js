@@ -1076,6 +1076,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var emily = spriteFactory.emily(L7.p(10, 21));
 		var phil = spriteFactory.phil(L7.p(0, 19));
 		var goPackers = spriteFactory.goPackers(L7.p(3, 5));
+		var yeahPackers = spriteFactory.yeahPackers(L7.p(2, 5));
 
 		board.addActors(matt, sarah, chris, ted, emily, phil);
 
@@ -1095,6 +1096,14 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				ani.wait(3500);
 				ani.invoke(function() {
 					board.removeActor(goPackers);
+				});
+				ani.wait(500);
+				ani.invoke(function() {
+					board.addActor(yeahPackers);
+				});
+				ani.wait(3000);
+				ani.invoke(function() {
+					board.removeActor(yeahPackers);
 				});
 			});
 		});
@@ -2140,6 +2149,23 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(114, 29)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		yeahPackers: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 54,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(78,80)
 				},
 				position: position || L7.p(0, 0)
 			});

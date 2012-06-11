@@ -10,6 +10,7 @@
 		var emily = spriteFactory.emily(L7.p(10, 21));
 		var phil = spriteFactory.phil(L7.p(0, 19));
 		var goPackers = spriteFactory.goPackers(L7.p(3, 5));
+		var yeahPackers = spriteFactory.yeahPackers(L7.p(2, 5));
 
 		board.addActors(matt, sarah, chris, ted, emily, phil);
 
@@ -29,6 +30,14 @@
 				ani.wait(3500);
 				ani.invoke(function() {
 					board.removeActor(goPackers);
+				});
+				ani.wait(500);
+				ani.invoke(function() {
+					board.addActor(yeahPackers);
+				});
+				ani.wait(3000);
+				ani.invoke(function() {
+					board.removeActor(yeahPackers);
 				});
 			});
 		});
