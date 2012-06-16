@@ -2,7 +2,7 @@
 	L7.useWebGL = true;
 
 	if(L7.isFirefox) {
-		L7.Tile = L7.SingleInhabitantTile;
+		//L7.Tile = L7.SingleInhabitantTile;
 	}
 
 	function dumpWarning(image, text) {

@@ -1834,7 +1834,7 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			},
 			this);
 
-			if (!this.disableHitDetection) {
+			if (this.detectHits) {
 				this._hitManager.detectHits(this.tiles);
 			}
 		}
