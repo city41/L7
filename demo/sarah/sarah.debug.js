@@ -63,10 +63,11 @@ function(c,d){a.tag===d&&c.call(b.owner,a,a);a.each(function(e){e!==b&&e.owner&&
 b){this.inhabitant&&a.call(b,this.inhabitant)},add:function(a){this.inhabitant=a},remove:function(a){this.inhabitant===a&&(this.inhabitant=null)},has:function(a){return this.tag===a?!0:this.inhabitant&&this.inhabitant.team===a},hasOther:function(){throw Error("not implemented");},getColor:function(a){var b=0;this.color&&(this.colors[b++]=this.color);!1!==a&&this.inhabitant&&this.inhabitant.color&&(this.colors[b++]=this.inhabitant.color);this.overlayColor&&(this.colors[b++]=this.overlayColor);if(this.colors[b-
 1]&&1===this.colors[b-1][3])return this.colors[b-1];if(0<b)return L7.Color.composite(this.colors,b,this.composite),this.opaque&&(this.composite[3]=1),this.composite},getScale:function(){return this.inhabitant&&this.inhabitant.color&&this.inhabitant.scale||this.scale},getOffset:function(){return this.inhabitant&&this.inhabitant.offset},up:function(){return this.board&&this.board.tileAt(this.position.up())},down:function(){return this.board&&this.board.tileAt(this.position.down())},left:function(){return this.board&&
 this.board.tileAt(this.position.left())},right:function(){return this.board&&this.board.tileAt(this.position.right())}};Object.defineProperty(L7.SingleInhabitantTile.prototype,"count",{get:function(){return this.inhabitant?1:0},enumerable:!0})})();
-(function(){L7.StoryBoard=function(a){this.boardConfigs=a;this._setCurrentBoard(0)};L7.StoryBoard.prototype={_setCurrentBoard:function(a){this._currentBoardIndex=a;if(a=this.boardConfigs[a]){this._currentBoardConfig=a;var b=this._currentBoardConfig.board;this.width=b.width;this.height=b.height;this.tileSize=b.tileSize;this.borderWidth=b.borderWidth;this._currentDuration=a.duration;b.viewport=this.viewport;b.game=this.game}},_setNextBoard:function(){this._currentBoardConfig.board&&this._currentBoardConfig.board.destroy&&
-this._currentBoardConfig.board.destroy();this._setCurrentBoard(this._currentBoardIndex+1)},update:function(a,b){this._currentBoardConfig&&(this._currentBoardConfig.board.update(a,b),this._currentDuration-=a,0>=this._currentDuration&&this._setNextBoard())},render:function(){this._currentBoardConfig&&this._currentBoardConfig.board.render.apply(this._currentBoardConfig.board,arguments)},clicked:function(){this._currentBoardConfig&&this._currentBoardConfig.board.clicked.apply(this._currentBoardConfig.board,
-arguments)}};Object.defineProperty(L7.StoryBoard.prototype,"pixelHeight",{get:function(){return this.height*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"pixelWidth",{get:function(){return this.width*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"viewport",{get:function(){return this._viewport},set:function(a){this._viewport=a;this._currentBoardConfig&&(this._currentBoardConfig.board.viewport=
-a)}});Object.defineProperty(L7.StoryBoard.prototype,"game",{get:function(){return this._game},set:function(a){this._game=a;this._currentBoardConfig&&(this._currentBoardConfig.board.game=a)}})})();
+(function(){L7.StoryBoard=function(a){this.boardConfigs=a;this._setCurrentBoard(0);if(L7.global.location&&L7.global.location.hostname&&-1<L7.global.location.hostname.indexOf("localhost")){var b=this;window.nb=function(){b._setNextBoard()};window.pb=function(){b._setPreviousBoard()}}};L7.StoryBoard.prototype={_setCurrentBoard:function(a){this._currentBoardConfig&&this._currentBoardConfig.board&&this._currentBoardConfig.board.destroy&&this._currentBoardConfig.board.destroy();this._currentBoardIndex=
+a;if(a=this.boardConfigs[a]){this._currentBoardConfig=a;var b=this._currentBoardConfig.board;this.width=b.width;this.height=b.height;this.tileSize=b.tileSize;this.borderWidth=b.borderWidth;this._currentDuration=a.duration;b.viewport=this.viewport;b.game=this.game}},_setNextBoard:function(){this._setCurrentBoard(this._currentBoardIndex+1)},_setPreviousBoard:function(){this._setCurrentBoard(this._currentBoardIndex-1)},update:function(a,b){this._currentBoardConfig&&(this._currentBoardConfig.board.update(a,
+b),this._currentDuration-=a,0>=this._currentDuration&&this._setNextBoard())},render:function(){this._currentBoardConfig&&this._currentBoardConfig.board.render.apply(this._currentBoardConfig.board,arguments)},clicked:function(){this._currentBoardConfig&&this._currentBoardConfig.board.clicked.apply(this._currentBoardConfig.board,arguments)}};Object.defineProperty(L7.StoryBoard.prototype,"pixelHeight",{get:function(){return this.height*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});
+Object.defineProperty(L7.StoryBoard.prototype,"pixelWidth",{get:function(){return this.width*(this.tileSize+this.borderWidth)+this.borderWidth},enumerable:!0});Object.defineProperty(L7.StoryBoard.prototype,"viewport",{get:function(){return this._viewport},set:function(a){this._viewport=a;this._currentBoardConfig&&(this._currentBoardConfig.board.viewport=a)}});Object.defineProperty(L7.StoryBoard.prototype,"game",{get:function(){return this._game},set:function(a){this._game=a;this._currentBoardConfig&&
+(this._currentBoardConfig.board.game=a)}})})();
 (function(){L7.Tile=function(a){a=a||{};if(!_.isNumber(a.x))throw Error("Tile: x is required");if(!_.isNumber(a.y))throw Error("Tile: y is required");this.x=a.x;this.y=a.y;this.color=a.color;this.scale=a.scale;_.isNumber(this.scale)||(this.scale=1);this.board=a.board;this.inhabitants=_.clone(a.inhabitants||[]);this.position=L7.p(this.x,this.y);this.colors=[];this.composite=[]};L7.Tile.prototype={at:function(a){return this.inhabitants[a]},each:function(a,b){this.inhabitants.forEach(a,b)},add:function(a){this.inhabitants.push(a)},
 remove:function(a){this.inhabitants.remove(a)},has:function(a){return this.tag===a?!0:this.inhabitants.some(function(b){return b.team===a||b.owner&&b.owner.team===a})},hasOther:function(a,b){return this.tag===a?!0:this.inhabitants.some(function(c){return c.team===a||c.owner&&c.owner.team===a&&c.owner!==b})},getColor:function(a){var b=0;this.color&&(this.colors[b++]=this.color);if(!1!==a)for(var a=0,c=this.inhabitants.length;a<c;++a){var d=this.inhabitants[a].color;d&&(this.colors[b++]=d)}this.overlayColor&&
 (this.colors[b++]=this.overlayColor);if(this.colors[b-1]&&1===this.colors[b-1][3])return this.colors[b-1];if(0<b)return L7.Color.composite(this.colors,b,this.composite),this.opaque&&(this.composite[3]=1),this.composite},getScale:function(){return 0===this.inhabitants.length||!this.inhabitants.last.color?this.scale:this.inhabitants.last.scale},getOffset:function(){return 0!==this.inhabitants.length&&this.inhabitants.last.offset},up:function(){return this.board&&this.board.tileAt(this.position.up())},
@@ -167,6 +168,55 @@ quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
 else this.game&&this.game.replaceBoard(this.toBoard)},update:function(){this.delegate.update.apply(this.delegate,arguments)},render:function(){this.delegate.render.apply(this.delegate,arguments)}};Object.defineProperty(L7.FadeOutIn.prototype,"viewport",{set:function(a){this._viewport=a;this.delegate&&(this.delegate.viewport=a)},get:function(){return this._viewport},enumerable:!0})})();
 (function(){"undefined"===typeof Array.prototype.add&&(Array.prototype.add=function(a){this.push(a);return this});"undefined"===typeof Array.prototype.remove&&(Array.prototype.remove=function(a){a=this.indexOf(a);a>=0&&this.splice(a,1);return this});"undefined"===typeof Array.prototype.last&&Object.defineProperty(Array.prototype,"last",{get:function(){return this[this.length-1]},enumerable:!1});"undefined"===typeof Array.prototype.first&&Object.defineProperty(Array.prototype,"first",{get:function(){return this[0]},
 enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1);var d=_.isNumber(b)?a:0,a=_.isNumber(b)?b:a,b=Math.random()*(a-d)+d;return d===(d|0)&&a===(a|0)&&!c?Math.floor(b):b};L7.coin=function(){return 0===L7.rand(0,2)};L7.degreesToRadians=function(a){return(a||0)*Math.PI/180};L7.radiansToDegrees=function(a){return 180*(a||0)/Math.PI}})();
+(function() {
+	SAM.Bacon = function(tileSize, spriteFactory) {
+		var board = new L7.Board({
+			tileSize: tileSize,
+			width: 60,
+			height: 60,
+			borderWidth: 0,
+			borderColor: [200, 180, 100, 1]
+		});
+
+		board.tiles.forEach(function(tile) {
+			tile.color = board.borderColor;
+		});
+
+		var schoeff = spriteFactory.schoeffDance(L7.p(20, 30));
+
+		for(var i = 0; i < 4; ++i) {
+			this._addBacon(board, spriteFactory);
+		}
+
+		board.addActor(schoeff);
+
+		board.ani.frame({
+			targets: [schoeff],
+			pieceSetIndex: 1,
+			rate: 150,
+			looping: 'backforth',
+			loops: Infinity
+		});
+
+		return board;
+	};
+
+	SAM.Bacon.prototype._addBacon = function(board, spriteFactory) {
+		var i = L7.rand(0,3);
+		var bacon = spriteFactory['bacon' + i](L7.p(L7.rand(1, 50), 4));
+		bacon.smoothMovement = true;
+		bacon.rate = L7.rand(100, 300);
+		board.addActor(bacon);
+
+		bacon.ani.repeat(Infinity, function(ani) {
+			ani.invoke(function() {
+				bacon.down(1);
+			});
+			ani.wait(bacon.rate);
+		});
+	};
+})();
+
 (function() {
 	SAM.CasaBonita = function(bgImage, tileSize, spriteFactory) {
 		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
@@ -1327,17 +1377,13 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 (function() {
 	L7.useWebGL = true;
 
-	if(L7.isFirefox) {
-		//L7.Tile = L7.SingleInhabitantTile;
-	}
-
 	function dumpWarning(image, text) {
 		var container = document.getElementById('introContainer');
 		container.innerHTML = '<img src="' + image + '"/><div>' + text + '</div>';
 	}
 
 	function clearContainer(container) {
-		while(container.hasChildNodes()) {
+		while (container.hasChildNodes()) {
 			container.removeChild(container.firstChild);
 		}
 	}
@@ -1357,122 +1403,177 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		return url;
 	}
 
+	function loadMusic(file, callback) {
+		var url = createUrl(file);
+
+		var audio = document.createElement('audio');
+		document.body.appendChild(audio);
+
+		audio.addEventListener('canplaythrough', function() {
+			audio.play();
+		}, false);
+
+		audio.addEventListener('play', callback, false);
+
+		audio.src = url;
+	}
+
 	function addMp3Input(containerId, callback) {
 		var container = document.getElementById(containerId);
 		clearContainer(container);
 
-		var button = document.createElement('button');
-		button.innerHTML = "start!";
+		var div = document.createElement('div');
+		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div>";
 
-		button.addEventListener('click', function(event) {
-			event.preventDefault();
-			//var grooveSharkDiv = document.createElement('div');
-			//var groovesharkContainer = document.getElementById('groovesharkContainer');
-			//groovesharkContainer.appendChild(grooveSharkDiv);
-			
-			//grooveSharkDiv.innerHTML = '<object width="250" height="40" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" id="gsSong3519476177" name="gsSong3519476177"><param name="movie" value="http://grooveshark.com/songWidget.swf" /><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=cowbell.grooveshark.com&songIDs=35194761&style=metal&p=1" /><object type="application/x-shockwave-flash" data="http://grooveshark.com/songWidget.swf" width="250" height="40"><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=cowbell.grooveshark.com&songIDs=35194761&style=metal&p=1" /><span>Funky Tonight by <a href="http://grooveshark.com/artist/The+John+Butler+Trio/20926" title="The John Butler Trio">The John Butler Trio</a> on Grooveshark</span></object></object>';
+		container.appendChild(div);
+		var image = document.getElementById('dragImg');
+		var baseOpacity = 0.7;
+		image.style.opacity = baseOpacity;
 
+
+		function clearBg(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			image.style.opacity = baseOpacity;
+		}
+
+		image.addEventListener('dragenter', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			image.style.opacity = 1;
+		}, true);
+
+		image.addEventListener('dragleave', function(e) {
+			clearBg(e);	
+		}, true);
+		
+		image.addEventListener('dragover', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		}, true);
+
+		image.addEventListener('drop', function(e) {
+			clearBg(e);
+
+			var file = e.dataTransfer.files[0];
+
+			if (file) {
+				loadMusic(file, callback);
+			}
+
+			return false;
+		},
+		true);
+
+		var skipLink = document.getElementById('skipLink');
+		skipLink.addEventListener('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
 			callback();
-		}, false);
+			return false;
+		},
+		false);
 
-		container.appendChild(button);
+		//button.addEventListener('click', function(event) {
+		//event.preventDefault();
+		//callback();
+		//}, false);
 	}
 
 	function onImagesLoaded(images) {
 		var tileSize = 8;
 
 		var spriteFactory = new SAM.SpriteFactory(images.dance);
-		var storyBoardConfig = [
-			{
-				board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-				duration: 20000
-			},
-			{
-				board: new SAM.Race(images.race, tileSize, spriteFactory),
-				duration: 12000
-			},
-			{
-				board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
-				duration: 13000
-			},
-			{
-				board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-				duration: 15000
-			},
-			{
-				board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
-				duration: 13000
-			},
-			{
-				board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
-				duration: 12000
-			},
-			{
-				board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
-				duration: 16000
-			},
-			{
-				board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-				duration: 13000
-			},
-			{
-				board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-				duration: 12000
-			},			
-			{
-				board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-				duration: 13000
-			},
-			// dogs ooooooooooo woo hoo, total of 33 seconds
-			{
-				board: new SAM.DogLine(tileSize, spriteFactory),
-				duration: 33000 / 4
-			},
-			{
-				board: new SAM.DogLine(tileSize, spriteFactory),
-				duration: 33000 / 4
-			},
-			{
-				board: new SAM.DogLine(tileSize, spriteFactory),
-				duration: 33000 / 4
-			},
-			{
-				board: new SAM.DogLine(tileSize, spriteFactory),
-				duration: 33000 / 4
-			},
-			{
-				board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
-				duration: 21000
-			},
-			{
-				board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
-				duration: 13000
-			},
-			{
-				board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
-				duration: 10000
-			},
-			{
-				board: new SAM.CatLine(tileSize, spriteFactory),
-				duration: 13000
-			},
-			{
-				board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),
-				duration: 15000
-			},
-			{
-				board: new SAM.LowerPeninsula(images.lowerPeninsula, tileSize, spriteFactory),
-				duration: 15000
-			},
-			{
-				board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
-				duration: 40000
-			},
-			{
-				board: new SAM.Outro(images.outro, tileSize, spriteFactory),
-				duration: 100000
-			}
-		];
+		var storyBoardConfig = [{
+			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
+			duration: 20000
+		},
+		{
+			board: new SAM.Race(images.race, tileSize, spriteFactory),
+			duration: 12000
+		},
+		{
+			board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
+			duration: 13000
+		},
+		{
+			board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
+			duration: 15000
+		},
+		{
+			board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
+			duration: 13000
+		},
+		{
+			board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
+			duration: 12000
+		},
+		{
+			board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
+			duration: 16000
+		},
+		{
+			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+			duration: 13000
+		},
+		{
+			board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
+			duration: 12000
+		},
+		{
+			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+			duration: 13000
+		},
+		// dogs ooooooooooo woo hoo, total of 33 seconds
+		{
+			board: new SAM.DogLine(tileSize, spriteFactory),
+			duration: 33000 / 4
+		},
+		{
+			board: new SAM.DogLine(tileSize, spriteFactory),
+			duration: 33000 / 4
+		},
+		{
+			board: new SAM.DogLine(tileSize, spriteFactory),
+			duration: 33000 / 4
+		},
+		{
+			board: new SAM.DogLine(tileSize, spriteFactory),
+			duration: 33000 / 4
+		},
+		{
+			board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
+			duration: 21000
+		},
+		{
+			board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
+			duration: 13000
+		},
+		{
+			board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
+			duration: 10000
+		},
+		{
+			board: new SAM.CatLine(tileSize, spriteFactory),
+			duration: 13000
+		},
+		{
+			board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),
+			duration: 15000
+		},
+		{
+			board: new SAM.LowerPeninsula(images.lowerPeninsula, tileSize, spriteFactory),
+			duration: 15000
+		},
+		{
+			board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
+			duration: 40000
+		},
+		{
+			board: new SAM.Outro(images.outro, tileSize, spriteFactory),
+			duration: 100000
+		}];
 
 		addMp3Input('loadingContainer', function() {
 			var storyBoard = new L7.StoryBoard(storyBoardConfig);
@@ -1490,31 +1591,10 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		});
 	}
 
-	if(L7.isSupportedBrowser) {
-		if(L7.isWebGLAvailable) {
+	if (L7.isSupportedBrowser) {
+		if (L7.isWebGLAvailable) {
 			var imageLoader = new L7.ImageLoader({
-				srcs: [
-					'resources/images/dance.png',
-					'resources/images/intro.png',
-					'resources/images/race.png',
-					'resources/images/pool.png',
-					'resources/images/livingRoom.png',
-					'resources/images/tedGarden.png',
-					'resources/images/skydiving.png',
-					'resources/images/landscape.png',
-					'resources/images/clouds.png',
-					'resources/images/hockeyBg.png',
-					'resources/images/hockeyFg.png',
-					'resources/images/lowerPeninsula.png',
-					'resources/images/upperPeninsula.png',
-					'resources/images/stage.png',
-					'resources/images/dadTractor.png',
-					'resources/images/iowaClouds.png',
-					'resources/images/casabonita.png',
-					'resources/images/oceanBg.png',
-					'resources/images/oceanFg.png',
-					'resources/images/outro.png'
-				],
+				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png'],
 				loadNow: true,
 				handler: onImagesLoaded
 			});

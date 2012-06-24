@@ -14,25 +14,13 @@ a {
 	color: #ff5a00;
 }
 
-#groovesharkContainer {
-	width: 252px;
-	margin-top: 20px;
-	margin-left: auto;
-	margin-right: auto;
+#dragContainer {
+	margin-top: 10px;
+	margin-bottom: 20px
+}
+
+#skipContainer {
 	text-align: center;
-}
-
-#groovesharkNote {
-	margin-top: 20px;
-	margin-bottom: 4px;
-	text-align: left;
-	font-style: italic;
-}
-
-#heyGrooveshark {
-	font-weight: bold;
-	color: red;
-	font-size: 1.25em;
 }
 
 #loadingContainer, #schoeffContainer img {
