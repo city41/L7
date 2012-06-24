@@ -2238,10 +2238,23 @@ L7.CanvasBoardRenderMixin = {
 
 		this._setCurrentBoard(0);
 
+		if(L7.global.location && L7.global.location.hostname && L7.global.location.hostname.indexOf('localhost') > -1) {
+			var me = this;
+			window.nb = function() {
+				me._setNextBoard();
+			};
+			window.pb = function() {
+				me._setPreviousBoard();
+			}
+		}
 	};
 
 	L7.StoryBoard.prototype = {
 		_setCurrentBoard: function(index) {
+			if(this._currentBoardConfig && this._currentBoardConfig.board && this._currentBoardConfig.board.destroy) {
+				this._currentBoardConfig.board.destroy();
+			}
+
 			this._currentBoardIndex = index;
 			var boardConfig = this.boardConfigs[index];
 
@@ -2261,10 +2274,11 @@ L7.CanvasBoardRenderMixin = {
 		},
 
 		_setNextBoard: function() {
-			if(this._currentBoardConfig.board && this._currentBoardConfig.board.destroy) {
-				this._currentBoardConfig.board.destroy();
-			}
 			this._setCurrentBoard(this._currentBoardIndex + 1);
+		},
+
+		_setPreviousBoard: function() {
+			this._setCurrentBoard(this._currentBoardIndex - 1);
 		},
 
 		update: function(delta, timestamp) {
