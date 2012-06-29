@@ -64,7 +64,7 @@ end
 desc "deploy the intro"
 task :deploy => :minify do
 	deploy_dir = "../sarahDeploy/"
-	if Dir.exists?(deploy_dir)
+	if File.exists?(deploy_dir)
 		rm_r deploy_dir
 	end
 

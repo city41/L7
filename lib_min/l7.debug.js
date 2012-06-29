@@ -1131,10 +1131,22 @@ Math.easeInOutBounce = function (t, b, c, d) {
 			var offset = this.framesConfig.offset || L7.p(0, 0);
 			var me = this;
 			var pieceSources = [];
+			var imgWidth = this.framesConfig.src.width;
+			var maxFrame = this._getMaxFrame(this.framesConfig.sets);
 
 			var canvas = document.createElement('canvas');
 			var context = canvas.getContext('2d');
+
+			if(this.framesConfig.flip === 'horizontal') {
+				context.translate(imgWidth, 0);
+				context.scale(-1, 1);
+				offset = L7.p(imgWidth - offset.x - (this.framesConfig.width * maxFrame), offset.y);
+			} else if(this.framesConfig.flip) {
+				throw new Error("can only flip horizontally so far");
+			}
+
 			context.drawImage(this.framesConfig.src, 0, 0);
+			context.restore();
 
 			var anchorOffset = this.framesConfig.anchor;
 			var anchorPosition = this.position;
@@ -1147,7 +1159,6 @@ Math.easeInOutBounce = function (t, b, c, d) {
 				return L7.p(x, y);
 			}
 
-			var maxFrame = this._getMaxFrame(this.framesConfig.sets);
 			var maxWidth = maxFrame * this.framesConfig.width;
 
 			for (var x = 0; x < maxWidth; x += this.framesConfig.width) {
