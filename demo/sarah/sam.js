@@ -98,11 +98,6 @@
 			return false;
 		},
 		false);
-
-		//button.addEventListener('click', function(event) {
-		//event.preventDefault();
-		//callback();
-		//}, false);
 	}
 
 	function onImagesLoaded(images) {
@@ -112,6 +107,10 @@
 		var storyBoardConfig = [{
 			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 			duration: 20000
+		},
+		{
+			board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
+			duration: 18000
 		},
 		{
 			board: new SAM.Race(images.race, tileSize, spriteFactory),
@@ -218,7 +217,7 @@
 	if (L7.isSupportedBrowser) {
 		if (L7.isWebGLAvailable) {
 			var imageLoader = new L7.ImageLoader({
-				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png'],
+				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png'],
 				loadNow: true,
 				handler: onImagesLoaded
 			});
