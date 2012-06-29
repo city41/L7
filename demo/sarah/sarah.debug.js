@@ -1495,7 +1495,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		clearContainer(container);
 
 		var div = document.createElement('div');
-		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div>";
+		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /><span id='asterisk'>*</span></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div><div id='disclaimer'>* best results with John Butler Trio\'s \"Funky Tonight\"</div>";
 
 		container.appendChild(div);
 		var image = document.getElementById('dragImg');

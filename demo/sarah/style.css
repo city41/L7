@@ -14,6 +14,19 @@ a {
 	color: #ff5a00;
 }
 
+#asterisk {
+	font-size: 1.5em;
+	font-weight: bold;
+	color: white
+}
+
+#disclaimer {
+	margin-top: 30px;
+	font-size: 0.8em;
+	font-style: italic;
+	color: #9A9A9A;
+}
+
 #dragContainer {
 	margin-top: 10px;
 	margin-bottom: 20px
