@@ -1,35 +1,15 @@
--- skydiving
-	-- clouds going by (parallax)
-	-- better looking parachutes
-
--- hockey
-	-- players
-	-- people in the stands
-	-- ref
-
--- wedding scene
-	-- colored lights bouncing around
-	-- disco ball?
-	-- chik fil a
-
--- lower peninsula
-	-- dad says "Go Tigers!"
-	-- we say "Red Wings!"
-
--- sync to the music, at least a little bit
-
 -- race
-	-- more stuff
-	-- more detail
+	-- needs *something*
 
--- dog only scene
-	-- with Ein
+-- hawaii
+	-- one more sting ray
 
--- closing scene
+-- casa bonita
+	-- sarah says "ugh!"
 
--- website itself
-	-- center animation
-	-- background
-	-- etc
-	-- minimize JS
-	-- only support firefox and chrome
+-- seattle
+	-- finish it
+
+-- finalize timing
+
+
