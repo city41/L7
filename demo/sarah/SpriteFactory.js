@@ -142,6 +142,40 @@
 			});
 		},
 
+		pr: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 18,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(214, 51)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		yeahBabe: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 45,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(232, 51)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		matt: function(position) {
 			return new L7.Actor({
 				framesConfig: {
