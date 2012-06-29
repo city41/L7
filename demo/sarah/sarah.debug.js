@@ -227,6 +227,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var trumpeter = spriteFactory.casaTrumpeter(L7.p(35, 19));
 		var guitarist = spriteFactory.casaGuitarist(L7.p(46, 19));
 		var mmmm = spriteFactory.mmmm(L7.p(10, 33));
+		var ugh = spriteFactory.ugh(L7.p(36, 33));
 
 		board.addActors(matt, sarah, trumpeter, guitarist);
 
@@ -246,6 +247,14 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				ani.wait(3500);
 				ani.invoke(function() {
 					board.removeActor(mmmm);
+				});
+				ani.wait(500);
+				ani.invoke(function() {
+					board.addActor(ugh);
+				});
+				ani.wait(3500);
+				ani.invoke(function() {
+					board.removeActor(ugh);
 				});
 			});
 		});
@@ -557,6 +566,14 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 			offsetTo: fgBoard.pixelWidth
 		}, spriteFactory, tileSize);
 
+		var mantaLeftBoard2 = this._getMantaBoard({
+			from: 'right',
+			actors: [{ n: 'blackMantaGoingLeft', y: 26 }],
+			duration: 5000,
+			delay: 8800,
+			offsetTo: fgBoard.pixelWidth
+		}, spriteFactory, tileSize);
+
 		var mantaRightBoard = this._getMantaBoard({
 			from: 'left',
 			actors: [{ n: 'mantaGoingRight', y: 40 }],
@@ -590,7 +607,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		},spriteFactory, tileSize);
 
 		var parallax = new L7.ParallaxBoard({
-			boards: [bgBoard, fgBoard, fishRightBoard1, mantaLeftBoard, fishLeftBoard1, mantaRightBoard, fishLeftBoard2],
+			boards: [bgBoard, fgBoard, fishRightBoard1, mantaLeftBoard, mantaLeftBoard2, fishLeftBoard1, mantaRightBoard, fishLeftBoard2],
 			width: 60,
 			height: 60
 		});
@@ -1040,15 +1057,37 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var matt = spriteFactory.mattRace(L7.p(20, 20));
 		var sarah = spriteFactory.sarahRace(L7.p(30, 21));
 		var clock = spriteFactory.raceClock(L7.p(5, 24));
+		var pr = spriteFactory.pr(L7.p(33, 37));
+		var yeahBabe = spriteFactory.yeahBabe(L7.p(7, 37));
 
 		board.addActors(matt, sarah, clock);
 
-		board.ani.frame({
-			targets: [matt, sarah],
-			pieceSetIndex: 1,
-			rate: 150,
-			looping: 'backforth',
-			loops: Infinity
+		board.ani.together(function(ani) {
+			ani.frame({
+				targets: [matt, sarah],
+				pieceSetIndex: 1,
+				rate: 150,
+				looping: 'backforth',
+				loops: Infinity
+			});
+			ani.sequence(function(ani) {
+				ani.wait(2000);
+				ani.invoke(function() {
+					board.addActor(pr);
+				});
+				ani.wait(3500);
+				ani.invoke(function() {
+					board.removeActor(pr);
+				});
+				ani.wait(200);
+				ani.invoke(function() {
+					board.addActor(yeahBabe);
+				});
+				ani.wait(3500);
+				ani.invoke(function() {
+					board.removeActor(yeahBabe);
+				});
+			});
 		});
 
 		clock.ani.frame({
@@ -1736,6 +1775,24 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				position: position || L7.p(0, 0)
 			});
 		},
+	
+		blackMantaGoingLeft: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 22,
+					height: 21,
+					direction: 'horizontal',
+					flip: 'horizontal',
+					sets: [[0], [0, 1, 2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(205, 93)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
 
 		mantaGoingLeft: function(position) {
 			return new L7.Actor({
@@ -1770,6 +1827,24 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				position: position || L7.p(0, 0)
 			});
 		},
+
+		ugh: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 21,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(214, 36)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 
 		casaTrumpeter: function(position) {
 			return new L7.Actor({
@@ -1817,6 +1892,40 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
 					offset: L7.p(40, 43)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		pr: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 18,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(214, 51)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		yeahBabe: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 45,
+					height: 13,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(232, 51)
 				},
 				position: position || L7.p(0, 0)
 			});
