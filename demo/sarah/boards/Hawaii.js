@@ -27,8 +27,32 @@
 			offsetTo: -fgBoard.pixelWidth
 		}, spriteFactory, tileSize);
 
+		var fishLeftBoard1 = this._getMantaBoard({
+			from: 'right',
+			actors: [{ n: 'fishGoingLeft', y: 40 }],
+			duration: 11000,
+			delay: 3000,
+			offsetTo: fgBoard.pixelWidth
+		},spriteFactory, tileSize);
+
+		var fishLeftBoard2 = this._getMantaBoard({
+			from: 'right',
+			actors: [{ n: 'fishGoingLeft', y: 48 }],
+			duration: 9000,
+			delay: 7000,
+			offsetTo: fgBoard.pixelWidth
+		},spriteFactory, tileSize);
+
+		var fishRightBoard1 = this._getMantaBoard({
+			from: 'left',
+			actors: [{ n: 'fishGoingRight', y: 28 }],
+			duration: 9000,
+			delay: 3000,
+			offsetTo: -fgBoard.pixelWidth
+		},spriteFactory, tileSize);
+
 		var parallax = new L7.ParallaxBoard({
-			boards: [bgBoard, fgBoard, mantaLeftBoard, mantaRightBoard],
+			boards: [bgBoard, fgBoard, fishRightBoard1, mantaLeftBoard, fishLeftBoard1, mantaRightBoard, fishLeftBoard2],
 			width: 60,
 			height: 60
 		});

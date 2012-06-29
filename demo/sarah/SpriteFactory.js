@@ -4,6 +4,42 @@
 	};
 
 	SAM.SpriteFactory.prototype = {
+		fishGoingLeft: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 24,
+					height: 26,
+					direction: 'horizontal',
+					sets: [[0], [0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(209, 121)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+		fishGoingRight: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 24,
+					height: 26,
+					flip: 'horizontal',
+					direction: 'horizontal',
+					sets: [[0], [0, 1]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(209, 121)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+
 		mantaGoingRight: function(position) {
 			return new L7.Actor({
 				framesConfig: {
