@@ -1,6 +1,3 @@
--- hawaii
-	-- one more sting ray
-
 -- seattle
 	-- finish it
 
