@@ -91,6 +91,24 @@
 			});
 		},
 
+		ugh: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 21,
+					height: 14,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(214, 36)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
+
 		casaTrumpeter: function(position) {
 			return new L7.Actor({
 				framesConfig: {

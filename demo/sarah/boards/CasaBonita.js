@@ -8,6 +8,7 @@
 		var trumpeter = spriteFactory.casaTrumpeter(L7.p(35, 19));
 		var guitarist = spriteFactory.casaGuitarist(L7.p(46, 19));
 		var mmmm = spriteFactory.mmmm(L7.p(10, 33));
+		var ugh = spriteFactory.ugh(L7.p(36, 33));
 
 		board.addActors(matt, sarah, trumpeter, guitarist);
 
@@ -27,6 +28,14 @@
 				ani.wait(3500);
 				ani.invoke(function() {
 					board.removeActor(mmmm);
+				});
+				ani.wait(500);
+				ani.invoke(function() {
+					board.addActor(ugh);
+				});
+				ani.wait(3500);
+				ani.invoke(function() {
+					board.removeActor(ugh);
 				});
 			});
 		});
