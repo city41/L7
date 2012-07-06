@@ -109,20 +109,20 @@
 			duration: 20000
 		},
 		{
-			board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
-			duration: 18000
+			board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
+			duration: 13000
 		},
 		{
 			board: new SAM.Race(images.race, tileSize, spriteFactory),
 			duration: 12000
 		},
 		{
-			board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
-			duration: 13000
-		},
-		{
 			board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
 			duration: 15000
+		},
+		{
+			board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
+			duration: 18000
 		},
 		{
 			board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
