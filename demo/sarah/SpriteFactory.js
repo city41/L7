@@ -229,6 +229,23 @@
 			});
 		},
 
+		duckWheel: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 9,
+					height: 5,
+					direction: 'horizontal',
+					sets: [[0], [0, 1, 2]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(210, 0)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		mattDuck: function(position) {
 			return new L7.Actor({
 				framesConfig: {

@@ -7,24 +7,37 @@
 		duck = levelLoader.load();
 		duck.parallaxRatio = 0.4;
 
-		var matt = spriteFactory.mattDuck(L7.p(95, 21));
-		var sarah = spriteFactory.sarahDuck(L7.p(109, 22));
-		var lucy = spriteFactory.lucyDuck(L7.p(123, 26));
-		var chad = spriteFactory.chadDuck(L7.p(137, 21));
-		var mom = spriteFactory.momDuck(L7.p(151, 22));
+		var matt = spriteFactory.mattDuck(L7.p(59, 21));
+		var sarah = spriteFactory.sarahDuck(L7.p(73, 22));
+		var lucy = spriteFactory.lucyDuck(L7.p(87, 26));
+		var chad = spriteFactory.chadDuck(L7.p(101, 21));
+		var mom = spriteFactory.momDuck(L7.p(115, 22));
+		var frontWheel = spriteFactory.duckWheel(L7.p(41, 50));
+		var midWheel = spriteFactory.duckWheel(L7.p(102, 50));
+		var backWheel = spriteFactory.duckWheel(L7.p(118, 50));
 
-		duck.addActors(matt, sarah, lucy, chad, mom);
+		duck.addActors(matt, sarah, lucy, chad, mom, frontWheel, midWheel, backWheel);
 
 		duck.ani.frame({
-			targets: [sarah, matt, lucy, chad, mom],
+			targets: [sarah, matt, lucy, chad, mom, frontWheel, midWheel, backWheel],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
 			loops: Infinity
 		});
 
+		var rainBoard = new L7.Board({
+			width: 60,
+			height: 60,
+			tileSize: tileSize,
+			borderWidth: 0
+		});
+
+		var rain = this._createRainSystem(rainBoard);
+		rainBoard.addDaemon(rain);
+
 		var parallax = new L7.ParallaxBoard({
-			boards: [board, duck],
+			boards: [board, duck, rainBoard],
 			tileSize: tileSize,
 			width: board.width,
 			height: board.height
@@ -32,9 +45,9 @@
 
 		duck.ani.repeat(Infinity, function(ani) {
 			ani.invoke(function() {
-				SAM.game.viewport.scrollX(5);
+				SAM.game.viewport.scrollX(2);
 			});
-			ani.wait(1);
+			//ani.wait(1);
 		});
 
 		parallax.destroy = function() {
@@ -43,6 +56,32 @@
 
 		return parallax;
 	};
-})();
 
+	SAM.Seattle.prototype._createRainSystem = function(board) {
+		return new L7.ParticleSystem({
+			totalParticles: 80,
+			duration: Infinity,
+			gravity: L7.p(100, - 10),
+			centerOfGravity: L7.p(),
+			angle: 90,
+			angleVar: 5,
+			speed: 100,
+			speedVar: 30,
+			radialAccel: 0,
+			radialAccelVar: 1,
+			tangentialAccel: 0,
+			tangentialAccelVar: 1,
+			position: L7.p(board.width / 2, -1),
+			posVar: L7.p(board.width / 2, 0),
+			life: 1.8,
+			lifeVar: 0,
+			emissionRate: 40,
+			startColor: L7.Color.fromFloats(0.7, 0.8, 1, 1),
+			startColorVar: [0, 0, 0, 0],
+			endColor: L7.Color.fromFloats(0.7, 0.8, 1, 1),
+			endColorVar: [0, 0, 0, 0],
+			active: true
+		});
+	};
+})();
 
