@@ -29,27 +29,63 @@
 
 		var wordY = 8;
 
+		var woo = spriteFactory.woo(L7.p(29, wordY));
+		var hoo = spriteFactory.hoo(L7.p(44, wordY - 2));
+		var oohs = [];
+
 		dogBoard.ani.sequence(function(ani) {
-			ani.wait(500);
-			ani.invoke(function() {
-				dogBoard.addActor(bubble);
-			});
-			for(var i = 0; i < 6; ++i) {
-				ani.wait(200);
+			ani.wait(5700);
+			var repeats = 6;
+			var split = 2907 / repeats;
+			for(var i = 0; i < repeats; ++i) {
+				if(i === 0) {
+					ani.invoke(function() {
+						dogBoard.addActor(bubble);
+					});
+				}
+				ani.wait(split);
 				(function(xoff) {
 					ani.invoke(function() {
-						dogBoard.addActor(spriteFactory.ooo(L7.p(4 + (4*xoff), wordY)))
+						var ooh = spriteFactory.ooo(L7.p(4 + (4*xoff), wordY));
+						dogBoard.addActor(ooh);
+						oohs.push(ooh);
 					});
 				})(i);
 			}
-			ani.wait(200);
+			ani.wait(300);
 			ani.invoke(function() {
-				dogBoard.addActor(spriteFactory.woo(L7.p(29, wordY)))
+				dogBoard.addActor(woo);
 			});
-			ani.wait(200);
+			ani.wait(300);
 			ani.invoke(function() {
-				dogBoard.addActor(spriteFactory.hoo(L7.p(44, wordY - 2)))
+				dogBoard.addActor(hoo);
 			});
+			ani.wait(2800);
+			ani.invoke(function() {
+				dogBoard.removeActor(woo);
+				dogBoard.removeActor(hoo);
+				oohs.forEach(function(ooh) {
+					dogBoard.removeActor(ooh);
+				});
+			});
+			ani.wait(390);
+			for(var i = 0; i < repeats; ++i) {
+				ani.wait(split);
+				(function(i) {
+					ani.invoke(function() {
+						dogBoard.addActor(oohs[i]);
+					});
+				})(i);
+			}
+			ani.wait(300);
+			ani.invoke(function() {
+				dogBoard.addActor(woo);
+			});
+			ani.wait(300);
+			ani.invoke(function() {
+				dogBoard.addActor(hoo);
+			});
+
 		});
 
 		var bgBoard = new L7.Board({

@@ -106,64 +106,52 @@
 		var spriteFactory = new SAM.SpriteFactory(images.dance);
 		var storyBoardConfig = [{
 			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-			duration: 20000
+			//duration: 20000
+			duration: 127215
 		},
-		{
-			board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
-			duration: 13000
-		},
-		{
-			board: new SAM.Race(images.race, tileSize, spriteFactory),
-			duration: 12000
-		},
-		{
-			board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-			duration: 15000
-		},
-		{
-			board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
-			duration: 18000
-		},
-		{
-			board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
-			duration: 13000
-		},
-		{
-			board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
-			duration: 12000
-		},
-		{
-			board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
-			duration: 16000
-		},
-		{
-			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-			duration: 13000
-		},
-		{
-			board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-			duration: 12000
-		},
-		{
-			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-			duration: 13000
-		},
-		// dogs ooooooooooo woo hoo, total of 33 seconds
-		{
-			board: new SAM.DogLine(tileSize, spriteFactory),
-			duration: 33000 / 4
-		},
+		//{
+			//board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
+			//duration: 13000
+		//},
+		//{
+			//board: new SAM.Race(images.race, tileSize, spriteFactory),
+			//duration: 12000
+		//},
+		//{
+			//board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
+			//duration: 15000
+		//},
+		//{
+			//board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
+			//duration: 18000
+		//},
+		//{
+			//board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
+			//duration: 13000
+		//},
+		//{
+			//board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
+			//duration: 12000
+		//},
+		//{
+			//board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
+			//duration: 16000
+		//},
+		//{
+			//board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+			//duration: 13000
+		//},
+		//{
+			//board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
+			//duration: 12000
+		//},
+		//{
+			//board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+			//duration: 13000
+		//},
 		{
 			board: new SAM.DogLine(tileSize, spriteFactory),
-			duration: 33000 / 4
-		},
-		{
-			board: new SAM.DogLine(tileSize, spriteFactory),
-			duration: 33000 / 4
-		},
-		{
-			board: new SAM.DogLine(tileSize, spriteFactory),
-			duration: 33000 / 4
+			duration: 19589
 		},
 		{
 			board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
