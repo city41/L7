@@ -8,8 +8,8 @@
 		var chris = spriteFactory.chris(L7.p(40, 21));
 		var ted = spriteFactory.ted(L7.p(50, 21));
 		var emily = spriteFactory.emily(L7.p(10, 21));
-		var phil = spriteFactory.phil(L7.p(0, 19));
-		var goPackers = spriteFactory.goPackers(L7.p(3, 5));
+		var phil = spriteFactory.phil(L7.p(2, 19));
+		var goPackers = spriteFactory.goPackers(L7.p(5, 5));
 		var yeahPackers = spriteFactory.yeahPackers(L7.p(2, 5));
 
 		board.addActors(matt, sarah, chris, ted, emily, phil);

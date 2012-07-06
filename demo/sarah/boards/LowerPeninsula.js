@@ -8,7 +8,7 @@
 		var dad = spriteFactory.dad(L7.p(40, 21));
 		var mom = spriteFactory.mom(L7.p(50, 22));
 		var chad = spriteFactory.chad(L7.p(10, 20));
-		var tammy = spriteFactory.tammy(L7.p(0, 21));
+		var tammy = spriteFactory.tammy(L7.p(2, 21));
 		var troll = spriteFactory.troll(L7.p(3, 43));
 		var goTigers = spriteFactory.goTigers(L7.p(11, 5));
 		var goRedWings = spriteFactory.goRedWings(L7.p(3, 5));

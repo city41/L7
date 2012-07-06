@@ -38,8 +38,6 @@
 			callback();
 		}, false);
 
-		//audio.addEventListener('play', callback, false);
-
 		audio.src = url;
 	}
 
@@ -47,11 +45,13 @@
 		var container = document.getElementById(containerId);
 		clearContainer(container);
 
+
 		var div = document.createElement('div');
 		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /><span id='asterisk'>*</span></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div><div id='disclaimer'>* designed for John Butler Trio\'s \"Funky Tonight\"</div>";
 
 		container.appendChild(div);
 		var image = document.getElementById('dragImg');
+		var schoeffContainer = document.getElementById('schoeffContainer');
 		var baseOpacity = 0.7;
 		image.style.opacity = baseOpacity;
 
@@ -59,6 +59,7 @@
 		function clearBg(e) {
 			e.preventDefault();
 			e.stopPropagation();
+			schoeffContainer.className = '';
 			image.style.opacity = baseOpacity;
 		}
 
@@ -66,6 +67,8 @@
 			e.preventDefault();
 			e.stopPropagation();
 			image.style.opacity = 1;
+			schoeffContainer.className = 'hover';
+			console.log(schoeffContainer.className);
 		}, true);
 
 		image.addEventListener('dragleave', function(e) {
@@ -148,7 +151,7 @@
 		},
 		{
 			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-			duration: 10322
+			duration: 10722
 		},
 		{
 			board: new SAM.DogLine(tileSize, spriteFactory),
@@ -206,7 +209,7 @@
 	if (L7.isSupportedBrowser) {
 		if (L7.isWebGLAvailable) {
 			var imageLoader = new L7.ImageLoader({
-				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png'],
+				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png', 'schoeffExcited.png'],
 				loadNow: true,
 				handler: onImagesLoaded
 			});

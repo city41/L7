@@ -36,9 +36,21 @@ a {
 	text-align: center;
 }
 
-#loadingContainer, #schoeffContainer img {
+#loadingContainer {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+#schoeffContainer {
+	margin-left: auto;
+	margin-right: auto;
+	width: 130px;
+	height: 70px;
+	background-image: url(schoeff.png);
+}
+
+#schoeffContainer.hover {
+	background-image: url(schoeffExcited.png);
 }
 
 #loadingText {

@@ -42,7 +42,8 @@
 		},
 		{
 			n: 'chris',
-			y: 17
+			y: 17,
+			x: 1
 		},
 		{
 			n: 'buddy',
@@ -58,7 +59,8 @@
 		},
 		{
 			n: 'livi',
-			y: 21
+			y: 21,
+			x: -1
 		}],
 		duration: 9000,
 		delay: 1200
@@ -70,7 +72,8 @@
 		positionTweak: 0,
 		actors: [{
 			n: 'phil',
-			y: 20
+			y: 20,
+			x: 1
 		},
 		{
 			n: 'emily',

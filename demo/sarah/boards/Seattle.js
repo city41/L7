@@ -11,15 +11,15 @@
 		var sarah = spriteFactory.sarahDuck(L7.p(73, 22));
 		var lucy = spriteFactory.lucyDuck(L7.p(87, 26));
 		var chad = spriteFactory.chadDuck(L7.p(101, 21));
-		var mom = spriteFactory.momDuck(L7.p(115, 22));
+		var tammy = spriteFactory.tammyDuck(L7.p(115, 22));
 		var frontWheel = spriteFactory.duckWheel(L7.p(41, 50));
 		var midWheel = spriteFactory.duckWheel(L7.p(102, 50));
 		var backWheel = spriteFactory.duckWheel(L7.p(118, 50));
 
-		duck.addActors(matt, sarah, lucy, chad, mom, frontWheel, midWheel, backWheel);
+		duck.addActors(matt, sarah, lucy, chad, tammy, frontWheel, midWheel, backWheel);
 
 		duck.ani.frame({
-			targets: [sarah, matt, lucy, chad, mom, frontWheel, midWheel, backWheel],
+			targets: [sarah, matt, lucy, chad, tammy, frontWheel, midWheel, backWheel],
 			pieceSetIndex: 1,
 			rate: 150,
 			looping: 'backforth',
