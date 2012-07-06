@@ -35,9 +35,10 @@
 
 		audio.addEventListener('canplaythrough', function() {
 			audio.play();
+			callback();
 		}, false);
 
-		audio.addEventListener('play', callback, false);
+		//audio.addEventListener('play', callback, false);
 
 		audio.src = url;
 	}
@@ -47,7 +48,7 @@
 		clearContainer(container);
 
 		var div = document.createElement('div');
-		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /><span id='asterisk'>*</span></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div><div id='disclaimer'>* best results with John Butler Trio\'s \"Funky Tonight\"</div>";
+		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /><span id='asterisk'>*</span></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div><div id='disclaimer'>* designed for John Butler Trio\'s \"Funky Tonight\"</div>";
 
 		container.appendChild(div);
 		var image = document.getElementById('dragImg');
@@ -106,84 +107,84 @@
 		var spriteFactory = new SAM.SpriteFactory(images.dance);
 		var storyBoardConfig = [{
 			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
-			//duration: 20000
-			duration: 127215
+			duration: 20000
+			//duration: 127215
 		},
-		//{
-			//board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
-			//duration: 13000
-		//},
-		//{
-			//board: new SAM.Race(images.race, tileSize, spriteFactory),
-			//duration: 12000
-		//},
-		//{
-			//board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
-			//duration: 15000
-		//},
-		//{
-			//board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
-			//duration: 18000
-		//},
-		//{
-			//board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
-			//duration: 13000
-		//},
-		//{
-			//board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
-			//duration: 12000
-		//},
-		//{
-			//board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
-			//duration: 16000
-		//},
-		//{
-			//board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-			//duration: 13000
-		//},
-		//{
-			//board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
-			//duration: 12000
-		//},
-		//{
-			//board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
-			//duration: 13000
-		//},
+		{
+			board: new SAM.Hawaii(images.oceanBg, images.oceanFg, tileSize, spriteFactory),
+			duration: 11621
+		},
+		{
+			board: new SAM.Race(images.race, tileSize, spriteFactory),
+			duration: 10722
+		},
+		{
+			board: new SAM.PoolSchoeffLump(images.pool, tileSize, spriteFactory),
+			duration: 10321
+		},
+		{
+			board: new SAM.Seattle(images.seattle, images.duck, tileSize, spriteFactory),
+			duration: 10722
+		},
+		{
+			board: new SAM.DadTractor(images.dadTractor, images.iowaClouds, tileSize, spriteFactory),
+			duration: 10421
+		},
+		{
+			board: new SAM.CasaBonita(images.casabonita, tileSize, spriteFactory),
+			duration: 10522
+		},
+		{
+			board: new SAM.TedGarden(images.tedGarden, tileSize, spriteFactory),
+			duration: 10721
+		},
+		{
+			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+			duration: 10722
+		},
+		{
+			board: new SAM.Hockey(images.hockeyBg, images.hockeyFg, tileSize, spriteFactory),
+			duration: 10721
+		},
+		{
+			board: new SAM.CatLineSchoeffSits(tileSize, spriteFactory),
+			duration: 10322
+		},
 		{
 			board: new SAM.DogLine(tileSize, spriteFactory),
-			duration: 19589
+			duration: 19989
+		},
+		{
+			board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
+			duration: 17000
 		},
 		{
 			board: new SAM.LivingRoom(images.livingRoom, tileSize, spriteFactory),
 			duration: 21000
 		},
 		{
-			board: new SAM.Skydiving(images.skydiving, images.clouds, images.landscape, tileSize, spriteFactory),
-			duration: 13000
-		},
-		{
 			board: new SAM.PoolSchoeffOutside(images.pool, tileSize, spriteFactory),
-			duration: 10000
+			duration: 13000
 		},
 		{
 			board: new SAM.CatLine(tileSize, spriteFactory),
-			duration: 13000
+			duration: 16000
 		},
 		{
 			board: new SAM.UpperPeninsula(images.upperPeninsula, tileSize, spriteFactory),
-			duration: 15000
+			duration: 19000
 		},
 		{
 			board: new SAM.LowerPeninsula(images.lowerPeninsula, tileSize, spriteFactory),
-			duration: 15000
+			duration: 19000
 		},
 		{
 			board: new SAM.Wedding(images.stage, tileSize, spriteFactory),
-			duration: 40000
+			duration: 50000
 		},
 		{
 			board: new SAM.Outro(images.outro, tileSize, spriteFactory),
-			duration: 100000
+			duration: 1000000
 		}];
 
 		addMp3Input('loadingContainer', function() {
