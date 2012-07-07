@@ -605,7 +605,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		var mantaLeftBoard2 = this._getMantaBoard({
 			from: 'right',
 			actors: [{ n: 'blackMantaGoingLeft', y: 26 }],
-			duration: 5000,
+			duration: 4000,
 			delay: 8800,
 			offsetTo: fgBoard.pixelWidth
 		}, spriteFactory, tileSize);
@@ -1606,13 +1606,24 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		audio.src = url;
 	}
 
+	function canPlayMp3s() {
+		var a = document.createElement('audio');
+		return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+	}
+
 	function addMp3Input(containerId, callback) {
 		var container = document.getElementById(containerId);
 		clearContainer(container);
 
+		var dragImage = 'drag.png';
+
+		if(!canPlayMp3s()) {
+			dragImage = 'dragOgg.png';
+		}
+
 
 		var div = document.createElement('div');
-		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='drag.png' alt='drag an mp3 here to start' /><span id='asterisk'>*</span></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div><div id='disclaimer'>* designed for John Butler Trio\'s \"Funky Tonight\"</div>";
+		div.innerHTML = "<div id='dragContainer'><img id='dragImg' src='" + dragImage + "' alt='drag an audio file here to start' /><span id='asterisk'>*</span></div>" + "<div id='skipContainer'><a id='skipLink' href='#'>or start with no music</a></div><div id='disclaimer'>* designed for John Butler Trio\'s \"Funky Tonight\"</div>";
 
 		container.appendChild(div);
 		var image = document.getElementById('dragImg');

@@ -22,7 +22,7 @@
 		var mantaLeftBoard2 = this._getMantaBoard({
 			from: 'right',
 			actors: [{ n: 'blackMantaGoingLeft', y: 26 }],
-			duration: 5000,
+			duration: 4000,
 			delay: 8800,
 			offsetTo: fgBoard.pixelWidth
 		}, spriteFactory, tileSize);
