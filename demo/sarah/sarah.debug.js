@@ -1683,7 +1683,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 	function onImagesLoaded(images) {
 		var tileSize = 8;
 
-		var spriteFactory = new SAM.SpriteFactory(images.dance);
+		var spriteFactory = new SAM.SpriteFactory(images[SAM.danceImageKey]);
 		var storyBoardConfig = [{
 			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 			duration: 20000
@@ -1782,10 +1782,26 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		});
 	}
 
+	function getDanceImage() {
+		SAM.danceImageKey = 'dance';
+		var danceImage = 'resources/images/dance';
+
+		var loc = location.href.toLowerCase();
+
+		if(loc.indexOf('zombie') > -1) {
+			SAM.danceImageKey += 'Zombie';
+			return danceImage + 'Zombie.png';
+		} else if(loc.indexOf('tf2') > -1) {
+			SAM.danceImageKey += 'Tf2';
+			return danceImage + 'Tf2.png';
+		}
+		return danceImage + '.png';
+	}
+
 	if (L7.isSupportedBrowser) {
 		if (L7.isWebGLAvailable) {
 			var imageLoader = new L7.ImageLoader({
-				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png', 'schoeffExcited.png'],
+				srcs: [getDanceImage(), 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png', 'schoeffExcited.png'],
 				loadNow: true,
 				handler: onImagesLoaded
 			});
@@ -2528,7 +2544,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				framesConfig: {
 					src: this.image,
 					width: 9,
-					height: 8,
+					height: 9,
 					direction: 'horizontal',
 					sets: [[], [0, 1, 2]],
 					initialSet: 0,
