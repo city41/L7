@@ -221,9 +221,14 @@
 		SAM.danceImageKey = 'dance';
 		var danceImage = 'resources/images/dance';
 
-		if(location.href.toLowerCase().indexOf('zombie') > -1) {
+		var loc = location.href.toLowerCase();
+
+		if(loc.indexOf('zombie') > -1) {
 			SAM.danceImageKey += 'Zombie';
 			return danceImage + 'Zombie.png';
+		} else if(loc.indexOf('tf2') > -1) {
+			SAM.danceImageKey += 'Tf2';
+			return danceImage + 'Tf2.png';
 		}
 		return danceImage + '.png';
 	}
