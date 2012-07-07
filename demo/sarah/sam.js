@@ -118,7 +118,7 @@
 	function onImagesLoaded(images) {
 		var tileSize = 8;
 
-		var spriteFactory = new SAM.SpriteFactory(images.dance);
+		var spriteFactory = new SAM.SpriteFactory(images[SAM.danceImageKey]);
 		var storyBoardConfig = [{
 			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
 			duration: 20000
@@ -217,10 +217,21 @@
 		});
 	}
 
+	function getDanceImage() {
+		SAM.danceImageKey = 'dance';
+		var danceImage = 'resources/images/dance';
+
+		if(location.href.toLowerCase().indexOf('zombie') > -1) {
+			SAM.danceImageKey += 'Zombie';
+			return danceImage + 'Zombie.png';
+		}
+		return danceImage + '.png';
+	}
+
 	if (L7.isSupportedBrowser) {
 		if (L7.isWebGLAvailable) {
 			var imageLoader = new L7.ImageLoader({
-				srcs: ['resources/images/dance.png', 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png', 'schoeffExcited.png'],
+				srcs: [getDanceImage(), 'resources/images/intro.png', 'resources/images/race.png', 'resources/images/pool.png', 'resources/images/livingRoom.png', 'resources/images/tedGarden.png', 'resources/images/skydiving.png', 'resources/images/landscape.png', 'resources/images/clouds.png', 'resources/images/hockeyBg.png', 'resources/images/hockeyFg.png', 'resources/images/lowerPeninsula.png', 'resources/images/upperPeninsula.png', 'resources/images/stage.png', 'resources/images/dadTractor.png', 'resources/images/iowaClouds.png', 'resources/images/casabonita.png', 'resources/images/oceanBg.png', 'resources/images/oceanFg.png', 'resources/images/outro.png', 'resources/images/duck.png', 'resources/images/seattle.png', 'schoeffExcited.png'],
 				loadNow: true,
 				handler: onImagesLoaded
 			});
