@@ -728,7 +728,7 @@
 				framesConfig: {
 					src: this.image,
 					width: 9,
-					height: 8,
+					height: 9,
 					direction: 'horizontal',
 					sets: [[], [0, 1, 2]],
 					initialSet: 0,
