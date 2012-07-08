@@ -2254,7 +2254,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				framesConfig: {
 					src: this.image,
 					width: 9,
-					height: 8,
+					height: 9,
 					direction: 'horizontal',
 					sets: [[], [0, 1, 2]],
 					initialSet: 0,
@@ -2424,7 +2424,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				framesConfig: {
 					src: this.image,
 					width: 9,
-					height: 8,
+					height: 9,
 					direction: 'horizontal',
 					sets: [[0], [0, 1, 2]],
 					initialSet: 0,
