@@ -46,7 +46,7 @@
 				ani.wait(split);
 				(function(xoff) {
 					ani.invoke(function() {
-						var ooh = spriteFactory.ooo(L7.p(4 + (4*xoff), wordY));
+						var ooh = spriteFactory.ooo(L7.p(4 + (4*xoff), wordY-2));
 						dogBoard.addActor(ooh);
 						oohs.push(ooh);
 					});

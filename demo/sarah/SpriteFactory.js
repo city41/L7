@@ -1068,13 +1068,13 @@
 				framesConfig: {
 					src: this.image,
 					width: 3,
-					height: 4,
+					height: 6,
 					direction: 'horizontal',
 					sets: [[0]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
-					offset: L7.p(133, 70)
+					offset: L7.p(133, 68)
 				},
 				position: position || L7.p(0, 0)
 			});

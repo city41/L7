@@ -512,7 +512,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				ani.wait(split);
 				(function(xoff) {
 					ani.invoke(function() {
-						var ooh = spriteFactory.ooo(L7.p(4 + (4*xoff), wordY));
+						var ooh = spriteFactory.ooo(L7.p(4 + (4*xoff), wordY-2));
 						dogBoard.addActor(ooh);
 						oohs.push(ooh);
 					});
@@ -2884,13 +2884,13 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 				framesConfig: {
 					src: this.image,
 					width: 3,
-					height: 4,
+					height: 6,
 					direction: 'horizontal',
 					sets: [[0]],
 					initialSet: 0,
 					initialFrame: 0,
 					anchor: L7.p(0, 0),
-					offset: L7.p(133, 70)
+					offset: L7.p(133, 68)
 				},
 				position: position || L7.p(0, 0)
 			});
