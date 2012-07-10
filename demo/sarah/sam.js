@@ -120,7 +120,7 @@
 
 		var spriteFactory = new SAM.SpriteFactory(images[SAM.danceImageKey]);
 		var storyBoardConfig = [{
-			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
+			board: new SAM.Intro(tileSize, spriteFactory),
 			duration: 20000
 			//duration: 127215
 		},

@@ -4,6 +4,23 @@
 	};
 
 	SAM.SpriteFactory.prototype = {
+		title: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 39,
+					height: 16,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(237, 0)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		fishGoingLeft: function(position) {
 			return new L7.Actor({
 				framesConfig: {

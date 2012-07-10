@@ -797,12 +797,18 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 })();
 
 (function() {
-	SAM.Intro = function(bgImage, tileSize, spriteFactory) {
-		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
-		var board = levelLoader.load();
+	SAM.Intro = function(tileSize, spriteFactory) {
+		var board = new L7.Board({
+			width: 60,
+			height: 60,
+			tileSize: tileSize,
+			borderWidth: 0,
+			defaultTileColor: [156, 97, 22, 1]
+		});
 
 		var matt = spriteFactory.matt(L7.p(20, 20));
 		var sarah = spriteFactory.sarah(L7.p(30, 21));
+		var title = spriteFactory.title(L7.p(12, 38));
 
 		var confetti = this._createConfettiSystem(board.width);
 		board.addDaemon(confetti);
@@ -810,9 +816,10 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 		board.addActors(matt, sarah);
 
 		board.ani.sequence(function(ani) {
-			ani.wait(6500);
+			ani.wait(6700);
 			ani.invoke(function() {
 				confetti.active = true;
+				board.addActor(title);
 			});
 			ani.frame({
 				targets: [matt, sarah],
@@ -1685,7 +1692,7 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 
 		var spriteFactory = new SAM.SpriteFactory(images[SAM.danceImageKey]);
 		var storyBoardConfig = [{
-			board: new SAM.Intro(images.intro, tileSize, spriteFactory),
+			board: new SAM.Intro(tileSize, spriteFactory),
 			duration: 20000
 			//duration: 127215
 		},
@@ -1820,6 +1827,23 @@ enumerable:!1})})();(function(){L7.rand=function(a,b,c){_.isUndefined(c)&&(c=!1)
 	};
 
 	SAM.SpriteFactory.prototype = {
+		title: function(position) {
+			return new L7.Actor({
+				framesConfig: {
+					src: this.image,
+					width: 39,
+					height: 16,
+					direction: 'horizontal',
+					sets: [[0]],
+					initialSet: 0,
+					initialFrame: 0,
+					anchor: L7.p(0, 0),
+					offset: L7.p(237, 0)
+				},
+				position: position || L7.p(0, 0)
+			});
+		},
+
 		fishGoingLeft: function(position) {
 			return new L7.Actor({
 				framesConfig: {

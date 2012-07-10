@@ -1,10 +1,16 @@
 (function() {
-	SAM.Intro = function(bgImage, tileSize, spriteFactory) {
-		var levelLoader = new L7.ColorLevelLoader(bgImage, tileSize, 0);
-		var board = levelLoader.load();
+	SAM.Intro = function(tileSize, spriteFactory) {
+		var board = new L7.Board({
+			width: 60,
+			height: 60,
+			tileSize: tileSize,
+			borderWidth: 0,
+			defaultTileColor: [156, 97, 22, 1]
+		});
 
 		var matt = spriteFactory.matt(L7.p(20, 20));
 		var sarah = spriteFactory.sarah(L7.p(30, 21));
+		var title = spriteFactory.title(L7.p(12, 38));
 
 		var confetti = this._createConfettiSystem(board.width);
 		board.addDaemon(confetti);
@@ -12,9 +18,10 @@
 		board.addActors(matt, sarah);
 
 		board.ani.sequence(function(ani) {
-			ani.wait(6500);
+			ani.wait(6700);
 			ani.invoke(function() {
 				confetti.active = true;
+				board.addActor(title);
 			});
 			ani.frame({
 				targets: [matt, sarah],
