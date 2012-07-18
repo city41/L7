@@ -47,7 +47,6 @@
 			ani.invoke(function() {
 				SAM.game.viewport.scrollX(2);
 			});
-			//ani.wait(1);
 		});
 
 		parallax.destroy = function() {

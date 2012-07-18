@@ -40,7 +40,7 @@
 		});
 
 		clock.ani.frame({
-			targets: [clock],
+			targets: clock,
 			pieceSetIndex: 1,
 			rate: 1000,
 			looping: 'backforth',

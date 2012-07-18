@@ -76,7 +76,7 @@
 			ani.repeat(Infinity, function(ani) {
 				ani.sequence(function(ani) {
 					ani.tween({
-						targets: [fgBoard],
+						targets: fgBoard,
 						property: 'offsetY',
 						from: 0,
 						to: 12,

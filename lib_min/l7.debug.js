@@ -95,6 +95,10 @@
 				}
 			}
 
+			if(!_.isArray(config.targets)) {
+				config.targets = [config.targets];
+			}
+
 			var ani = new AniConstructor(config);
 
 			if (this._buildStack.length === 0) {
@@ -971,9 +975,10 @@ L7.Easing.easeInOutBounce = function (t, b, c, d) {
 
 		_initTargets: function() {
 			this.targets.forEach(function(target) {
-				target[this._saveProperty] = target[this.property];
 				if(_.isArray(target[this._saveProperty])) {
 					target[this._saveProperty] = target[this._saveProperty].slice(0);
+				} else {
+					target[this._saveProperty] = target[this.property];
 				}
 
 				var value = this.hasOwnProperty('from') ? this.from : target[this.property];
@@ -4244,135 +4249,6 @@ quat4.toMat3=function(a,b){b||(b=mat3.create());var c=a[0],d=a[1],e=a[2],g=a[3],
 quat4.toMat4=function(a,b){b||(b=mat4.create());var c=a[0],d=a[1],e=a[2],g=a[3],f=c+c,h=d+d,i=e+e,j=c*f,k=c*h,c=c*i,l=d*h,d=d*i,e=e*i,f=g*f,h=g*h,g=g*i;b[0]=1-(l+e);b[1]=k+g;b[2]=c-h;b[3]=0;b[4]=k-g;b[5]=1-(j+e);b[6]=d+f;b[7]=0;b[8]=c+h;b[9]=d-f;b[10]=1-(j+l);b[11]=0;b[12]=0;b[13]=0;b[14]=0;b[15]=1;return b};
 quat4.slerp=function(a,b,c,d){d||(d=a);var e=a[0]*b[0]+a[1]*b[1]+a[2]*b[2]+a[3]*b[3],g,f;if(1<=Math.abs(e))return d!==a&&(d[0]=a[0],d[1]=a[1],d[2]=a[2],d[3]=a[3]),d;g=Math.acos(e);f=Math.sqrt(1-e*e);if(0.001>Math.abs(f))return d[0]=0.5*a[0]+0.5*b[0],d[1]=0.5*a[1]+0.5*b[1],d[2]=0.5*a[2]+0.5*b[2],d[3]=0.5*a[3]+0.5*b[3],d;e=Math.sin((1-c)*g)/f;c=Math.sin(c*g)/f;d[0]=a[0]*e+b[0]*c;d[1]=a[1]*e+b[1]*c;d[2]=a[2]*e+b[2]*c;d[3]=a[3]*e+b[3]*c;return d};
 quat4.str=function(a){return"["+a[0]+", "+a[1]+", "+a[2]+", "+a[3]+"]"};
-(function() {
-	L7.FadeBase = function(config) {
-		_.extend(this, config);
-		this.elapsed = 0;
-		if(this.color) {
-			this.color = L7.Color.toArray(this.color);
-		}	
-	};
-
-	L7.FadeBase.prototype = {
-		update: function(delta, timestamp) {
-			this.elapsed += delta;
-			var percentage = this.elapsed / this.duration;
-			this.updateColor(this.color, percentage);
-
-			if(percentage > 1 && this.onComplete) {
-				this.onComplete(this);
-			}
-
-			this.board.update(delta, timestamp);
-		},
-
-		render: function(delta, context, anchorX, anchorY, timestamp) {
-			this.board.render(delta, context, anchorX, anchorY, timestamp);
-			context.save();
-			context.fillStyle = L7.Color.toCssString(this.color);
-			context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-			context.restore();
-		}
-	};
-
-	Object.defineProperty(L7.FadeBase.prototype, 'viewport', {
-			set: function(viewport) {
-				this._viewport = viewport;
-				if(this.board) {
-					this.board.viewport = viewport;
-				}
-			},
-			get: function() {
-				return this._viewport;
-			},
-			enumerable: true
-	});
-})();
-
-
-(function() {
-	L7.TransitionFadeIn = function(config) {
-		config.color = config.from;
-		L7.FadeBase.call(this, config);
-	};
-
-	L7.TransitionFadeIn.prototype = new L7.FadeBase();
-
-	L7.TransitionFadeIn.prototype.updateColor = function(color, percentage) {
-		color[3] = 1 - percentage;
-	};
-})();
-
-
-(function() {
-	L7.FadeOut = function(config) {
-		config.color = config.to;
-		L7.FadeBase.call(this, config);
-	};
-
-	L7.FadeOut.prototype = new L7.FadeBase();
-
-	L7.FadeOut.prototype.updateColor = function(color, percentage) {
-		color[3] = percentage;
-	};
-})();
-
-
-
-(function() {
-	L7.FadeOutIn = function(config) {
-		_.extend(this, config);
-		_.bindAll(this, '_onFadeOutComplete', '_onFadeInComplete');
-
-		this.delegate = new L7.FadeOut({
-			board: this.fromBoard,
-			to: this.color,
-			duration: this.duration / 2,
-			onComplete: this._onFadeOutComplete
-		});
-	};
-
-	L7.FadeOutIn.prototype = {
-		_onFadeOutComplete: function() {
-			this.delegate = new L7.FadeIn({
-				board: this.toBoard,
-				from: this.color,
-				duration: this.duration / 2,
-				onComplete: this._onFadeInComplete
-			});
-			this.delegate.viewport = this.viewport;
-		},
-
-		_onFadeInComplete: function() {
-			if (this.onComplete) {
-				this.onComplete();
-			} else if (this.game) {
-				this.game.replaceBoard(this.toBoard);
-			}
-		},
-
-		update: function() {
-			this.delegate.update.apply(this.delegate, arguments);
-		},
-		render: function() {
-			this.delegate.render.apply(this.delegate, arguments);
-		}
-	};
-
-	Object.defineProperty(L7.FadeOutIn.prototype, 'viewport', {
-		set: function(viewport) {
-			this._viewport = viewport;
-			if (this.delegate) {
-				this.delegate.viewport = viewport;
-			}
-		},
-		get: function() {
-			return this._viewport;
-		},
-		enumerable: true
-	});
-})();
-
 (function() {
 	if(typeof Array.prototype.add === 'undefined') {
 		Array.prototype.add = function(item) {

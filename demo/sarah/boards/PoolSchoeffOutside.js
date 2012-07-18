@@ -11,7 +11,7 @@
 
 		board.ani.together(function(ani) {
 			ani.frame({
-				targets: [lucy],
+				targets: lucy,
 				pieceSetIndex: 1,
 				rate: 150,
 				looping: 'backforth',

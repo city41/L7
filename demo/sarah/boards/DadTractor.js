@@ -27,7 +27,7 @@
 		});
 
 		dad.ani.frame({
-			targets: [dad],
+			targets: dad,
 			pieceSetIndex: 1,
 			rate: 400,
 			looping: 'backforth',
