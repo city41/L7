@@ -5,14 +5,14 @@ describe('ParallaxBoard', function() {
 			expect(p.boards.length).toBe(0);
 		});
 
-		it('should throw if given a board without a parallax ratio', function() {	
-			var fn = function() {
-				new L7.ParallaxBoard({
-					boards: [{}]
-				});
-			};
+		it('should set a default parallax ratio if given boards lack one', function() {
+			var boards = [{}];
 
-			expect(fn).toThrow();
+			var parallax = new L7.ParallaxBoard({
+				boards: boards
+			});
+
+			expect(boards[0].parallaxRatio).toBeDefined();
 		});
 	});
 
@@ -94,3 +94,4 @@ describe('ParallaxBoard', function() {
 	});
 
 });
+

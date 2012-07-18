@@ -389,8 +389,6 @@ describe("Board", function() {
 				var tile = board.tileAt(piece.position);
 				expect(tile.inhabitants.indexOf(piece) < 0).toBe(true);
 			});
-
-			expect(actor.board).toBeFalsy();
 		});
 
 		it('should add a free actor', function() {

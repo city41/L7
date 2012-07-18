@@ -30,7 +30,7 @@ describe('Tween', function() {
 	it('should use the specified easing function', function() {
 		var easedValue = 12;
 		var easingFunc = 'testEasingFunc';
-		Math[easingFunc] = function() { return easedValue; };
+		L7.Easing[easingFunc] = function() { return easedValue; };
 
 		var tween = new L7.Tween({
 			targets: [obj],
