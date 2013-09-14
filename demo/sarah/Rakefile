@@ -82,6 +82,7 @@ task :deploy => :minify do
 	cp Dir.glob("./*gif"), deploy_dir
 	cp Dir.glob("./*css"), deploy_dir
 	cp "./index.html", deploy_dir
+	cp "./CNAME", deploy_dir
 	
 	# bring in underscore and l7
 	cp "../../lib/third/underscore-min.js", deploy_dir
