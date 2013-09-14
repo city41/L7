@@ -69,3 +69,9 @@ a {
 	padding: 0;
 }
 
+.hosted-by {
+   position: fixed;
+   bottom: 0;
+   left: 10px;
+   font-size: 0.4em;
+}
